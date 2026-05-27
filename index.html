@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Emergenze Medico-Chirurgiche — Esame 29/05/2026</title>
+<style>
+/* ===== RESET & BASE ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f0f2f5; color: #1a1a2e; min-height: 100vh; }
+
+/* ===== HEADER ===== */
+.header { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); padding: 32px 24px 24px; text-align: center; }
+.header h1 { font-size: 26px; font-weight: 800; color: #fff; letter-spacing: -0.5px; }
+.header p { color: rgba(255,255,255,0.6); font-size: 14px; margin-top: 6px; }
+.exam-badge { display: inline-block; background: #e94560; color: #fff; font-size: 12px; font-weight: 700; padding: 4px 12px; border-radius: 20px; margin-top: 10px; }
+
+/* ===== PROGRESS BAR ===== */
+.progress-bar { background: #1a1a2e; padding: 12px 24px; display: flex; align-items: center; gap: 12px; }
+.progress-label { color: rgba(255,255,255,0.6); font-size: 12px; white-space: nowrap; }
+.progress-track { flex: 1; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; }
+.progress-fill { height: 6px; background: linear-gradient(90deg, #22c55e, #16a34a); border-radius: 3px; width: 0%; transition: width 1s ease; }
+.progress-count { color: #22c55e; font-size: 12px; font-weight: 700; white-space: nowrap; }
+
+/* ===== NAV SIDEBAR ===== */
+.layout { display: flex; min-height: calc(100vh - 130px); }
+.sidebar { width: 240px; min-width: 240px; background: #1a1a2e; padding: 20px 0; position: sticky; top: 0; height: calc(100vh - 130px); overflow-y: auto; }
+.sidebar-section { padding: 8px 16px 4px; font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.35); text-transform: uppercase; letter-spacing: .1em; }
+.sidebar a { display: flex; align-items: center; gap: 8px; padding: 8px 16px; font-size: 13px; color: rgba(255,255,255,0.65); text-decoration: none; transition: all .15s; border-left: 3px solid transparent; }
+.sidebar a:hover { background: rgba(255,255,255,0.05); color: #fff; }
+.sidebar a.active { background: rgba(255,255,255,0.08); color: #fff; border-left-color: var(--prof-color, #6366f1); }
+.sidebar a .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.sidebar a .checked { margin-left: auto; font-size: 11px; opacity: 0; transition: opacity .2s; }
+.sidebar a.done .checked { opacity: 1; color: #22c55e; }
+
+/* ===== MAIN CONTENT ===== */
+.main { flex: 1; padding: 24px; max-width: calc(100% - 240px); }
+
+/* ===== PROFESSOR SECTIONS ===== */
+.prof-section { margin-bottom: 40px; }
+.prof-header { display: flex; align-items: center; gap: 12px; padding: 16px 20px; border-radius: 12px 12px 0 0; margin-bottom: 0; }
+.prof-header h2 { font-size: 17px; font-weight: 800; color: #fff; }
+.prof-header .prof-sub { color: rgba(255,255,255,0.7); font-size: 13px; margin-left: auto; }
+.prof-emoji { font-size: 22px; }
+
+/* Professor color themes */
+.prof-pierdomenico .prof-header { background: linear-gradient(135deg, #1e40af, #3b82f6); }
+.prof-pierdomenico { --prof-color: #3b82f6; }
+.prof-mucilli .prof-header { background: linear-gradient(135deg, #991b1b, #ef4444); }
+.prof-mucilli { --prof-color: #ef4444; }
+.prof-guarracino .prof-header { background: linear-gradient(135deg, #065f46, #10b981); }
+.prof-guarracino { --prof-color: #10b981; }
+.prof-costantini .prof-header { background: linear-gradient(135deg, #6d28d9, #8b5cf6); }
+.prof-costantini { --prof-color: #8b5cf6; }
+
+/* ===== TOPIC CARDS ===== */
+.topic-card { background: #fff; border: 1px solid #e5e7eb; border-radius: 0 0 0 0; margin-bottom: 2px; overflow: hidden; }
+.topic-card:last-child { border-radius: 0 0 12px 12px; }
+.topic-header { display: flex; align-items: center; gap: 10px; padding: 14px 18px; cursor: pointer; user-select: none; transition: background .15s; border-left: 4px solid var(--prof-color, #6366f1); }
+.topic-header:hover { background: #f9fafb; }
+.topic-header h3 { font-size: 15px; font-weight: 700; color: #1a1a2e; flex: 1; }
+.topic-header .topic-date { font-size: 11px; color: #9ca3af; }
+.topic-header .chevron { font-size: 12px; color: #9ca3af; transition: transform .25s; }
+.topic-header .mark-done { font-size: 11px; padding: 3px 10px; border-radius: 12px; border: 1px solid #e5e7eb; background: #f9fafb; color: #6b7280; cursor: pointer; transition: all .15s; margin-left: 8px; }
+.topic-header .mark-done:hover { background: #dcfce7; border-color: #22c55e; color: #16a34a; }
+.topic-header .mark-done.done { background: #dcfce7; border-color: #22c55e; color: #16a34a; font-weight: 700; }
+.topic-body { display: none; padding: 20px 20px 24px; border-top: 1px solid #f3f4f6; }
+.topic-body.open { display: block; }
+.topic-header.open .chevron { transform: rotate(90deg); }
+
+/* ===== INNER CONTENT STYLES (restyle dei div interni) ===== */
+.topic-body h1 { display: none; } /* titolo già nel header */
+.topic-body .subtitle { display: none; }
+.topic-body h2 { font-size: 10px; font-weight: 700; color: #9ca3af; text-transform: uppercase; letter-spacing: .08em; margin: 16px 0 7px; padding-bottom: 3px; border-bottom: 1px solid #f3f4f6; }
+.topic-body h2:first-of-type { margin-top: 0; }
+.topic-body .card { background: #f8fafc; border: 1px solid #e9ecef; border-radius: 8px; padding: 11px 13px; margin-bottom: 7px; font-size: 13px; line-height: 1.65; }
+.topic-body .card-title { font-size: 13px; font-weight: 700; margin-bottom: 4px; }
+.topic-body .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.topic-body .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+.topic-body .four-col { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 8px; }
+.topic-body .badge { display: inline-block; font-size: 11px; font-weight: 600; border-radius: 4px; padding: 1px 6px; margin: 2px 2px 2px 0; }
+.topic-body .red { background:#fee2e2; color:#991b1b; }
+.topic-body .orange { background:#fef3c7; color:#92400e; }
+.topic-body .gray { background:#f1f1f1; color:#555; border:1px solid #e0e0e0; }
+.topic-body .blue { background:#dbeafe; color:#1e40af; }
+.topic-body .green { background:#d1fae5; color:#065f46; }
+.topic-body .purple { background:#ede9fe; color:#5b21b6; }
+.topic-body .badge-red { background:#fee2e2; color:#991b1b; }
+.topic-body .badge-blue { background:#dbeafe; color:#1e40af; }
+.topic-body .badge-gray { background:#f1f1f1; color:#555; border:1px solid #e0e0e0; }
+.topic-body .badge-warn { background:#fef3c7; color:#92400e; }
+.topic-body .badge-green { background:#d1fae5; color:#065f46; }
+.topic-body table { width:100%; border-collapse:collapse; font-size:13px; margin-bottom: 4px; }
+.topic-body th { text-align:left; font-weight:600; color:#666; padding:6px 9px; border-bottom:1px solid #e5e5e5; background:#f9fafb; }
+.topic-body td { padding:6px 9px; border-bottom:1px solid #f3f4f6; vertical-align:top; }
+.topic-body tr:last-child td { border-bottom:none; }
+.topic-body .warn { background:#fffbeb; border-left:3px solid #f59e0b; border-radius:5px; padding:8px 11px; font-size:13px; margin-bottom:7px; }
+.topic-body .info { background:#eff6ff; border-left:3px solid #3b82f6; border-radius:5px; padding:8px 11px; font-size:13px; margin-bottom:7px; }
+.topic-body .danger { background:#fef2f2; border-left:3px solid #ef4444; border-radius:5px; padding:8px 11px; font-size:13px; margin-bottom:7px; }
+.topic-body .green-box { background:#f0fdf4; border-left:3px solid #22c55e; border-radius:5px; padding:8px 11px; font-size:13px; margin-bottom:7px; }
+.topic-body .highlight { background:#fffbeb; border-left:3px solid #f59e0b; border-radius:4px; padding:8px 12px; font-size:13px; color:#1a1a2e; margin-bottom:8px; }
+
+/* Color accents per professore sul bordo delle card interne */
+.prof-pierdomenico .topic-body table th { background: #eff6ff; }
+.prof-mucilli .topic-body table th { background: #fef2f2; }
+.prof-guarracino .topic-body table th { background: #f0fdf4; }
+.prof-costantini .topic-body table th { background: #f5f3ff; }
+
+/* ===== DOMANDE D'ESAME ===== */
+.quiz-section { margin-top: 20px; background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%); border-radius: 10px; padding: 16px; }
+.quiz-section h4 { color: #c7d2fe; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; margin-bottom: 12px; }
+.quiz-q { background: rgba(255,255,255,0.07); border-radius: 8px; padding: 10px 14px; margin-bottom: 6px; cursor: pointer; }
+.quiz-q .q-text { color: #e0e7ff; font-size: 13px; font-weight: 500; }
+.quiz-q .q-answer { color: #a5b4fc; font-size: 13px; margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.1); display: none; }
+.quiz-q.revealed .q-answer { display: block; }
+.quiz-q .q-toggle { color: #6366f1; font-size: 11px; margin-top: 4px; }
+
+/* ===== MOBILE ===== */
+@media(max-width:768px) {
+  .sidebar { display: none; }
+  .main { max-width: 100%; padding: 16px; }
+  .two-col, .three-col, .four-col { grid-template-columns: 1fr !important; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>🏥 Emergenze Medico-Chirurgiche</h1>
+  <p>Schemi completi da tutte le sbobine · Organizzati per professore</p>
+  <div class="exam-badge">⏰ Esame: 29 Maggio 2026</div>
+</div>
+
+<div class="progress-bar">
+  <span class="progress-label">Argomenti studiati</span>
+  <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+  <span class="progress-count" id="progressCount">0 / 22</span>
+</div>
+
+<div class="layout">
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div class="sidebar-section">🫀 Pierdomenico</div>
+  <a href="#urg-iper" class="nav-link" data-topic="urg-iper"><span class="dot" style="background:#3b82f6"></span>Urgenze ipertensive<span class="checked">✓</span></a>
+  <a href="#scompenso" class="nav-link" data-topic="scompenso"><span class="dot" style="background:#3b82f6"></span>Scompenso cardiaco<span class="checked">✓</span></a>
+  <a href="#embolia" class="nav-link" data-topic="embolia"><span class="dot" style="background:#3b82f6"></span>Embolia polmonare<span class="checked">✓</span></a>
+  <a href="#fa" class="nav-link" data-topic="fa"><span class="dot" style="background:#3b82f6"></span>Fibrillazione atriale<span class="checked">✓</span></a>
+  <a href="#diabete" class="nav-link" data-topic="diabete"><span class="dot" style="background:#3b82f6"></span>Complicanze diabete<span class="checked">✓</span></a>
+  <a href="#bpco" class="nav-link" data-topic="bpco"><span class="dot" style="background:#3b82f6"></span>BPCO + Sincope + QT<span class="checked">✓</span></a>
+  <a href="#pericardite" class="nav-link" data-topic="pericardite"><span class="dot" style="background:#3b82f6"></span>Pericardite / Tamponamento<span class="checked">✓</span></a>
+
+  <div class="sidebar-section">🔴 Mucilli</div>
+  <a href="#emorragie" class="nav-link" data-topic="emorragie"><span class="dot" style="background:#ef4444"></span>Emorragie digestive<span class="checked">✓</span></a>
+  <a href="#intestinali" class="nav-link" data-topic="intestinali"><span class="dot" style="background:#ef4444"></span>Ischemia mesenterica<span class="checked">✓</span></a>
+  <a href="#addome-acuto" class="nav-link" data-topic="addome-acuto"><span class="dot" style="background:#ef4444"></span>Addome acuto<span class="checked">✓</span></a>
+  <a href="#traumi-addome" class="nav-link" data-topic="traumi-addome"><span class="dot" style="background:#ef4444"></span>Traumi addominali<span class="checked">✓</span></a>
+  <a href="#pancreatite" class="nav-link" data-topic="pancreatite"><span class="dot" style="background:#ef4444"></span>Pancreatite acuta<span class="checked">✓</span></a>
+  <a href="#traumi-torace" class="nav-link" data-topic="traumi-torace"><span class="dot" style="background:#ef4444"></span>Traumi toracici<span class="checked">✓</span></a>
+
+  <div class="sidebar-section">🟢 Guarracino</div>
+  <a href="#met" class="nav-link" data-topic="met"><span class="dot" style="background:#10b981"></span>MET / Emergenze intraospedaliere<span class="checked">✓</span></a>
+  <a href="#extraosp" class="nav-link" data-topic="extraosp"><span class="dot" style="background:#10b981"></span>Emergenze extraospedaliere<span class="checked">✓</span></a>
+  <a href="#anest" class="nav-link" data-topic="anest"><span class="dot" style="background:#10b981"></span>Valutazione anestesiologica<span class="checked">✓</span></a>
+  <a href="#ti" class="nav-link" data-topic="ti"><span class="dot" style="background:#10b981"></span>Terapia Intensiva / Shock<span class="checked">✓</span></a>
+  <a href="#resp" class="nav-link" data-topic="resp"><span class="dot" style="background:#10b981"></span>Insufficienza respiratoria / ARDS<span class="checked">✓</span></a>
+  <a href="#aki" class="nav-link" data-topic="aki"><span class="dot" style="background:#10b981"></span>AKI + Epatica + Politrauma<span class="checked">✓</span></a>
+
+  <div class="sidebar-section">🟣 Costantini</div>
+  <a href="#palliative" class="nav-link" data-topic="palliative"><span class="dot" style="background:#8b5cf6"></span>Cure palliative & Dolore<span class="checked">✓</span></a>
+  <a href="#lombare" class="nav-link" data-topic="lombare"><span class="dot" style="background:#8b5cf6"></span>Dolore lombosacrale<span class="checked">✓</span></a>
+  <a href="#oppiacei" class="nav-link" data-topic="oppiacei"><span class="dot" style="background:#8b5cf6"></span>Oppiacei<span class="checked">✓</span></a>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+<!-- ==================== PIERDOMENICO ==================== -->
+<div class="prof-section prof-pierdomenico">
+  <div class="prof-header">
+    <span class="prof-emoji">🫀</span>
+    <h2>Prof. Pierdomenico</h2>
+    <span class="prof-sub">Medicina Interna · Cardiologia · Endocrinologia</span>
+  </div>
+
+  <!-- URGENZE IPERTENSIVE -->
+  <div class="topic-card" id="urg-iper">
+    <div class="topic-header" onclick="toggleTopic(this)">
+      <h3>Urgenze ed Emergenze Ipertensive</h3>
+      <span class="topic-date">04/03/2026</span>
+      <button class="mark-done" onclick="markDone(event,'urg-iper')">Studiato ✓</button>
+      <span class="chevron">▶</span>
+    </div>
+    <div class="topic-body">
+      <h2>Definizioni chiave</h2>
+      <div class="two-col">
+        <div class="card" style="border-left:4px solid #3b82f6">
+          <div class="card-title" style="color:#1e40af">Urgenza ipertensiva</div>
+          PA &gt;180/110 mmHg <strong>senza</strong> danno d'organo acuto. Paziente asintomatico. Riduzione in <strong>24–48h</strong> con terapia orale.
+        </div>
+        <div class="card" style="border-left:4px solid #ef4444">
+          <div class="card-title" style="color:#991b1b">Emergenza ipertensiva</div>
+          PA &gt;180/110 mmHg <strong>con</strong> danno d'organo acuto. Riduzione <strong>immediata</strong> con terapia ev. Il tipo di organo colpito determina il target e il farmaco.
+        </div>
+      </div>
+      <div class="warn">⚠️ Il termine "crisi ipertensiva" è obsoleto dal 2017. Il danno d'organo distingue emergenza da urgenza, non il solo valore pressorio.</div>
+
+      <h2>Cause più frequenti di emergenza (studio italiano)</h2>
+      <div class="card">
+        <span class="badge red">EPA 30%</span><span class="badge red">Stroke 22%</span><span class="badge red">Infarto 17%</span><span class="badge orange">Dissezione aortica 7%</span><span class="badge gray">IRA 5%</span><span class="badge gray">Encefalopatia 4%</span>
+      </div>
+
+      <h2>Target pressori e farmaci per quadro clinico</h2>
+      <div class="card" style="padding:0;overflow:hidden;background:#fff;">
+        <table>
+          <thead><tr><th>Quadro</th><th>Target</th><th>Farmaco 1ª scelta</th></tr></thead>
+          <tbody>
+            <tr><td>IRA / Encefalopatia</td><td>↓ MAP 20–25%</td><td>Labetalolo ev</td></tr>
+            <tr><td>SCA / EPA</td><td>PAS &lt;140</td><td>Nitroderivato ev (± betabloccante)</td></tr>
+            <tr><td>Dissezione aortica</td><td>PAS ~120, FC &lt;60</td><td>Nitroderivato + betabloccante</td></tr>
+            <tr><td>Eclampsia</td><td>PA &lt;160/105</td><td>Labetalolo ev + Solfato di magnesio</td></tr>
+            <tr><td>Stroke emorragico</td><td>PA &lt;140/90</td><td>Riduzione graduale</td></tr>
+            <tr><td>Stroke ischemico + trombolisi</td><td>PA &lt;185/110 pre; &lt;180/105 post</td><td>Abbassare prima, mantenere 24h dopo</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>Farmaci pratici</h2>
+      <div class="two-col">
+        <div class="card" style="border-top:3px solid #3b82f6">
+          <div class="card-title">Labetalolo (Trandate)</div>
+          α1+β bloccante. Fiale 100mg. ½ fiala ev, ripetibile 3–4×, max 200mg. <span class="badge red">Controindicato BPCO/asma</span>
+        </div>
+        <div class="card" style="border-top:3px solid #f59e0b">
+          <div class="card-title">Nitroglicerina (Trinitrina)</div>
+          Inizio 10–20 µg/min, max 200 µg/min. Usare in EPA, SCA, dissezione.
+        </div>
+      </div>
+
+      <div class="quiz-section">
+        <h4>🎓 Domande tipiche da orale</h4>
+        <div class="quiz-q" onclick="revealAnswer(this)"><div class="q-text">Qual è la differenza tra urgenza ed emergenza ipertensiva?</div><div class="q-answer">La presenza o assenza di danno d'organo acuto, non il solo valore pressorio. Urgenza = PA &gt;180/110 senza danno d'organo → terapia orale in 24–48h. Emergenza = PA alta + danno d'organo acuto (EPA, stroke, SCA, dissezione, ecc.) → terapia ev immediata.</div><div class="q-toggle">Tocca per vedere la risposta</div></div>
+        <div class="quiz-q" onclick="revealAnswer(this)"><div class="q-text">In un paziente con stroke ischemico e PA 200/110, come ti comporti?</div><div class="q-answer">Se candidato a trombolisi: abbassare PA &lt;185/110 prima della trombolisi, poi mantenere &lt;180/105 per 24h. Se non candidato e PA ≥220/120: riduzione graduale del 15% nelle prime 24h. Non abbassare aggressivamente: l'ipertensione nello stroke ischemico è spesso compensatoria per mantenere la perfusione della penombra ischemica.</div><div class="q-toggle">Tocca per vedere la risposta</div></div>
+        <div class="quiz-q" onclick="revealAnswer(this)"><div class="q-text">Quale farmaco usi nella dissezione aortica e perché?</div><div class="q-answer">Nitroderivato ev + betabloccante (metoprololo) o labetalolo. Target: PAS ~120 mmHg e FC &lt;60 bpm. La riduzione della FC è cruciale quanto la PA: la forza dello shear stress sull'aorta dipende da dP/dt (variazione di pressione per unità di tempo), che si riduce diminuendo la FC. Il labetalolo è ideale perché agisce su entrambi.</div><div class="q-toggle">Tocca per vedere la risposta</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCOMPENSO CARDIACO -->
+  <div class="topic-card" id="scompenso">
+    <div class="topic-header" onclick="toggleTopic(this)">
+      <h3>Scompenso Cardiaco Acuto</h3>
+      <span class="topic-date">10/03/2026</span>
+      <button class="mark-done" onclick="markDone(event,'scompenso')">Studiato ✓</button>
+      <span class="chevron">▶</span>
+    </div>
+    <div class="topic-body">
+      <h2>Classificazione Wet/Dry – Warm/Cold</h2>
+      <div class="two-col">
+        <div class="card" style="border-top:3px solid #3b82f6"><div class="card-title" style="color:#1e40af">Wet & Warm 💧🌡️</div>Congesto + buona perfusione. Più frequente.<br><strong>Terapia:</strong> Furosemide ev + Nitroderivato ev.</div>
+        <div class="card" style="border-top:3px solid #ef4444"><div class="card-title" style="color:#991b1b">Wet & Cold 💧❄️</div>Congesto + ipoperfuso (freddo, sudato, ipoteso).<br><strong>Terapia:</strong> prima inotropi → poi decongestione.</div>
+      </div>
+      <div class="two-col">
+        <div class="card" style="border-top:3px solid #22c55e"><div class="card-title" style="color:#065f46">Dry & Warm ✅</div>Non congesto + buona perfusione. ~5% dei casi.</div>
+        <div class="card" style="border-top:3px solid #6b7280"><div class="card-title">Dry & Cold ⚫</div>Shock cardiogeno puro. Raro → UTIC.</div>
+      </div>
+      <h2>BNP / NT-proBNP</h2>
+      <div class="card" style="border-left:4px solid #3b82f6">
+        Ottimo VPN (negativo esclude scompenso). <strong>BNP:</strong> &lt;100 improbabile · 100–500 zona grigia · &gt;500 alta prob.<br>
+        <span class="badge red">ARNI (Sacubitril-Valsartan):</span> dosare solo NT-proBNP (il BNP è falsamente elevato).
+      </div>
+      <h2>Troponina — cinetica (frequente domanda!)</h2>
+      <div class="three-col">
+        <div class="card" style="border-top:3px solid #ef4444"><div class="card-title">IMA</div>Picco alto e rapido → discesa graduale</div>
+        <div class="card" style="border-top:3px solid #f59e0b"><div class="card-title">Scompenso non coronarico</div>Lieve rialzo stabile nel tempo (curva piatta)</div>
+        <div class="card" style="border-top:3px solid #8b5cf6"><div class="card-title">Miocardite</div>Aumento lento, ritorno lento</div>
+      </div>
+      <h2>Terapia pratica</h2>
+      <div class="card" style="padding:0;overflow:hidden;background:#fff;">
+        <table>
+          <thead><tr><th>Scenario</th><th>Farmaco</th><th>Dosaggio</th></tr></thead>
+          <tbody>
+            <tr><td>Congestione (de novo)</td><td>Furosemide ev</td><td>40 mg bolo</td></tr>
+            <tr><td>Congestione (cronico riacutizzato)</td><td>Furosemide ev: doppio dose orale</td><td>Es. 50mg PO → 100mg ev</td></tr>
+            <tr><td>EPA / PA alta + congestione</td><td>Nitroglicerina ev + Furosemide</td><td>2 fiale 5mg in 50cc, 3–6ml/h</td></tr>
+            <tr><td>Shock cardiogeno</td><td>Dobutamina</td><td>2–20 µg/kg/min</td></tr>
+            <tr><td>Ipotensione refrattaria</td><td>Noradrenalina</td><td>0.2–1.0 µg/kg/min</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="warn">Monitoraggio diuresi: efficace se &gt;100cc/h. Dopo 6h almeno 600cc. Se no → raddoppiare la dose. Max furosemide: 500mg/die.</div>
+      <div class="quiz-section">
+        <h4>🎓 Domande tipiche da orale</h4>
+        <div class="quiz-q" onclick="revealAnswer(this)"><div class="q-text">Un paziente con scompenso acuto ipoteso: cosa fai prima, il diuretico o l'inotropo?</div><div class="q-answer">Prima l'inotropo (Dobutamina) per stabilizzare la gittata cardiaca e la perfusione periferica. Solo dopo, una volta migliorata l'emodinamica, si può decongestire con il diuretico. Il diuretico in un paziente ipoteso peggiora ulteriormente la gittata (riduce il precarico di un cuore già in difficoltà).</div><div class="q-toggle">Tocca per vedere la risposta</div></div>
+        <div class="quiz-q" onclick="revealAnswer(this)"><div class="q-text">Perché con gli ARNI si usa NT-proBNP e non BNP?</div><div class="q-answer">Il Sacubitril inibisce la neprilisina, l'enzima che degrada il BNP. Quindi nei pazienti in terapia con ARNI il BNP è artificialmente elevato (non viene degradato), mentre il NT-proBNP non è substrato della neprilisina e rimane un marker affidabile.</div><div class="q-toggle">Tocca per vedere la risposta</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EMBOLIA POLMONARE -->
+  <div class="topic-card" id="embolia">
+    <div class="topic-header" onclick="toggleTopic(this)">
+      <h3>Embolia Polmonare</h3>
+      <span class="topic-date">11/03/2026</span>
+      <button class="mark-done" onclick="markDone(event,'embolia')">Studiato ✓</button>
+      <span class="chevron">▶</span>
+    </div>
+    <div class="topic-body">
+      <h2>3 scenari di alto rischio (instabilità emodinamica)</h2>
+      <div class="three-col">
+        <div class="card" style="border-top:3px solid #ef4444"><div class="card-title">Arresto cardiaco</div>Necessità di RCP</div>
+        <div class="card" style="border-top:3px solid #ef4444"><div class="card-title">Shock ostruttivo</div>PAS &lt;90 + segni ipoperfusione</div>
+        <div class="card" style="border-top:3px solid #ef4444"><div class="card-title">Ipotensione persistente</div>PAS &lt;90 o calo &gt;40 mmHg per &gt;15 min</div>
+      </div>
+      <h2>Iter diagnostico paziente STABILE</h2>
+      <div class="card" style="padding:0;overflow:hidden;background:#fff;">
+        <table>
+          <thead><tr><th>Probabilità pre-test</th><th>D-dimero</th><th>Passo</th></tr></thead>
+          <tbody>
+            <tr><td>Bassa / Intermedia</td><td>Negativo (&lt;0,5 µg/mL)</td><td><span class="badge green">EP esclusa</span></td></tr>
+            <tr><td>Bassa / Intermedia</td><td>Positivo</td><td>→ Angio-TC (CTPA)</td></tr>
+            <tr><td>Alta</td><td>—</td><td>→ Angio-TC diretta</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="info">D-dimero: ottimo VPN. Cut-off età-aggiustato: età × 10 µg/L. Sale anche in infezioni, neoplasie, epatopatie.</div>
+      <h2>Ecocardiografia — segni di sovraccarico VD</h2>
+      <div class="card" style="border-left:4px solid #8b5cf6">
+        RV/LV &gt;1 · Setto a "D" · VCI dilatata non collassabile · TAPSE &lt;16 mm · Segno di McConnell · Trombo mobile cavità destre (patognomonico).
+      </div>
+      <h2>Terapia anticoagulante</h2>
+      <div class="two-col">
+        <div class="card" style="border-top:3px solid #3b82f6">
+          <div class="card-title">DOAC</div>
+          Apixaban 10mg×2 per 7gg → 5mg×2. Rivaroxaban 15mg×2 per 3 sett → 20mg×1. <strong>Durata:</strong> fattori transitori 3–6 mesi; idiopatica/trombofilia → indefinita.
+        </div>
+        <div class="card" style="border-top:3px solid #ef4444">
+          <div class="card-title">Trombolisi (alto rischio)</div>
+          Solo in instabilità emodinamica + disfunzione VD. Supporto: Dobutamina + Noradrenalina. Casi estremi: ECMO.
+        </div>
+      </div>
+      <div class="quiz-section">
+        <h4>🎓 Domande tipiche da orale</h4>
+        <div class="quiz-q" onclick="revealAnswer(this)"><div class="q-text">Paziente con sincope + tachicardia + TVP all'eco venosa: cosa sospetti e cosa fai?</div><div class="q-answer">Sospetto embolia polmonare ad alto rischio. La sincope nel contesto di EP indica compromissione emodinamica significativa (17% delle EP). Eseguo eco bedside: se VD disfunzionante → angio-TC urgente se il paziente si stabilizza, o trombolisi empirica se instabile e TC non eseguibile. Anticoagulazione immediata.</div><div class="q-toggle">Tocca per vedere la risposta</div></div>
+        <div class="quiz-q" onclick="revealAnswer(this)"><div class="q-text">Qual è la differenza tra EP intermedio-alta e intermedio-bassa?</div><div class="q-answer">Entrambe hanno PESI III–V. L'intermedio-alta ha ANCHE disfunzione VD all'eco E troponina elevata (entrambi i criteri). L'intermedio-bassa ha PESI III–V ma VD ok O troponina normale. L'intermedio-alta va ricoverata in subintensiva con monitoraggio stretto; l'intermedio-bassa in reparto ordinario.</div><div class="q-toggle">Tocca per vedere la risposta</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FIBRILLAZIONE ATRIALE -->
+  <div class="topic-card" id="fa">
+    <div class="topic-header" onclick="toggleTopic(this)">
+      <h3>Fibrillazione Atriale</h3>
+      <span class="topic-date">24/03/2026</span>
+      <button class="mark-done" onclick="markDone(event,'fa')">Studiato ✓</button>
+      <span class="chevron">▶</span>
+    </div>
+    <div class="topic-body">
+      <h2>Classificazione</h2>
+      <div class="card" style="padding:0;overflow:hidden;background:#fff;">
+        <table>
+          <thead><tr><th>Forma</th><th>Durata</th><th>Note</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Prima diagnosi</strong></td><td>Primo episodio</td><td>—</td></tr>
+            <tr><td><strong>Parossistica</strong></td><td>Termina spontaneamente ≤7gg (spesso &lt;48h)</td><td>Forma tipica del PS</td></tr>
+            <tr><td><strong>Persistente</strong></td><td>7gg – 12 mesi</td><td>Decidere se cardiovertire</td></tr>
+            <tr><td><strong>Permanente</strong></td><td>&gt;12 mesi</td><td>Si accetta l'aritmia, controllo FC</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <h2>Gestione acuta — albero decisionale</h2>
+      <div class="two-col">
+        <div class="card" style="border-top:3px solid #ef4444"><div class="card-title" style="color:#991b1b">Instabile</div>→ Cardioversione elettrica IMMEDIATA (priorità è la vita)</div>
+        <div class="card" style="border-top:3px solid #3b82f6"><div class="card-title" style="color:#1e40af">Stabile</div>&lt;24h: puoi cardiovertire. 24–48h: eco transesofageo prima. &gt;48h: anticoagulazione 3 sett → CV → 4 sett dopo.</div>
+      </div>
+      <h2>Score CHA₂DS₂-VA</h2>
+      <div class="card" style="border-left:4px solid #8b5cf6">
+        <strong>C</strong>=Scompenso(1) · <strong>H</strong>=Ipertensione(1) · <strong>A₂</strong>=Età≥75(2) · <strong>D</strong>=Diabete(1) · <strong>S₂</strong>=Stroke/TIA(2) · <strong>V</strong>=Vasculopatia(1) · <strong>A</strong>=Età 65–74(1)<br>
+        Score ≥2 → anticoagulazione. Warfarin SOLO in stenosi mitralica moderata-severa e protesi meccanica.
+      </div>
+      <h2>DOAC in insufficienza renale</h2>
+      <div class="card">
+        Eliminazione renale: Dabigatran 80% → Edoxaban 50% → Rivaroxaban 35% → <span class="badge green">Apixaban 27% (preferito in IR)</span>
+      </div>
+      <div class="quiz-section">
+        <h4>🎓 Domande tipiche da orale</h4>
+        <div class="quiz-q" onclick="revealAnswer(this)"><div class="q-text">FA da 36 ore, paziente stabile: puoi cardiovertire?</div><div class="q-answer">No, o solo dopo eco transesofageo (TEE). La zona 24–48h è grigia: il rischio tromboembolico esiste ma non è definito. La scelta sicura è TEE per escludere trombi in auricola prima della cardioversione. Se TEE negativo si può cardiovertire e poi anticoagulare per 4 settimane. Se non disponibile il TEE: anticoagulazione per 3 settimane → CV programmata → anticoagulante 4 settimane dopo.</div><div class="q-toggle">Tocca per vedere la risposta</div></div>
+        <div class="quiz-q" onclick="revealAnswer(this)"><div class="q-text">Perché la Flecainide è controindicata nel paziente con cardiopatia strutturale?</div><div class="q-answer">La Flecainide è un antiaritmico di classe IC che blocca i canali del Na+ e rallenta significativamente la conduzione. In un cuore con cardiopatia strutturale (cicatrici, ipertrofia, fibrosi) ci sono già ritardi di conduzione: la Flecainide può creare circuiti di rientro e innescare TV/FV potenzialmente fatali. È sicura solo nel cuore strutturalmente normale.</div><div class="q-toggle">Tocca per vedere la risposta</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- COMPLICANZE DIABETE -->
+  <div class="topic-card" id="diabete">
+    <div class="topic-header" onclick="toggleTopic(this)">
+      <h3>Complicanze acute del Diabete Mellito</h3>
+      <span class="topic-date">18/03/2026</span>
+      <button class="mark-done" onclick="markDone(event,'diabete')">Studiato ✓</button>
+      <span class="chevron">▶</span>
+    </div>
+    <div class="topic-body">
+      <h2>Confronto rapido — 4 complicanze</h2>
+      <div class="card" style="padding:0;overflow:hidden;background:#fff;">
+        <table>
+          <thead><tr><th>Parametro</th><th style="color:#991b1b">DKA</th><th style="color:#92400e">SII</th><th style="color:#1e40af">Acidosi lattica</th><th style="color:#065f46">Ipoglicemia</th></tr></thead>
+          <tbody>
+            <tr><td>DM tipo</td><td>1</td><td>2</td><td>2 (metformina)</td><td>1 e 2</td></tr>
+            <tr><td>Glicemia</td><td><span class="badge red">↑↑ &gt;250</span></td><td><span class="badge red">↑↑↑ &gt;540</span></td><td><span class="badge green">Normale!</span></td><td><span class="badge green">↓↓ &lt;54</span></td></tr>
+            <tr><td>Chetosi</td><td><span class="badge red">Sì +++</span></td><td><span class="badge gray">No</span></td><td><span class="badge gray">No</span></td><td><span class="badge gray">No</span></td></tr>
+            <tr><td>Acidosi</td><td><span class="badge red">Sì (pH &lt;7,3)</span></td><td><span class="badge green">No (pH ≥7,35)</span></td><td><span class="badge red">Sì (molto bassa)</span></td><td><span class="badge gray">No</span></td></tr>
+            <tr><td>Lattati</td><td>Normali</td><td>Normali</td><td><span class="badge red">↑↑↑ &gt;5 mmol/L</span></td><td>Normali</td></tr>
+            <tr><td>1ª terapia</td><td>Reidratazione → insulina → K⁺</td><td>Come DKA (più cauta)</td><td>Stop metformina + dialisi</td><td>Glucosio po o ev</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <h2>DKA — regola del potassio</h2>
+      <div class="card" style="border-left:4px solid #ef4444">
+        <span class="badge red">K⁺ &lt;3,5</span> → Correggere K⁺ PRIMA dell'insulina!<br>
+        <span class="badge orange">K⁺ 3,5–5</span> → Somministrare K⁺ in parallelo all'insulina<br>
+        <span class="badge gray">K⁺ &gt;5</span> → Non intervenire sul K⁺<br>
+        Insulina ev: 0,1 UI/kg/h. Reidratazione: 1L nella 1ª ora. Non correggere glicemia troppo rapidamente → rischio edema cerebrale!
+      </div>
+      <h2>Ipoglicemia grave — terapia</h2>
+      <div class="two-col">
+        <div class="card" style="border-top:3px solid #22c55e"><div class="card-title">Cosciente</div>Zuccheri per os. Rivalutare dopo 15 min. Target 120–150 mg/dL (non 80 → rischio recidiva).</div>
+        <div class="card" style="border-top:3px solid #ef4444"><div class="card-title">Incosciente</div>Glucosata 33%: 1–2 fiale ev in bolo, poi infusione 5–10%. Se no accesso: Glucagone sc/im.</div>
+      </div>
+      <div class="quiz-section">
+        <h4>🎓 Domande tipiche da orale</h4>
+        <div class="quiz-q" onclick="revealAnswer(this)"><div class="q-text">Un paziente con DM2 in metformina arriva con dolore addominale, acidosi grave e glicemia 110. Cosa pensi?</div><div class="q-answer">Acidosi lattica da metformina. Il dato chiave è la glicemia normale con acidosi grave — esclude DKA (glicemia alta + chetosi) e SII (glicemia altissima). La metformina inibisce la fosforilazione ossidativa epatica → accumulo di lattato, soprattutto in IR. Trattamento: stop metformina, supporto, dialisi se grave.</div><div class="q-toggle">Tocca per vedere la risposta</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BPCO + SINCOPE + QT -->
+  <div class="topic-card" id="bpco">
+    <div class="topic-header" onclick="toggleTopic(this)">
+      <h3>BPCO riacutizzata · Sincope · Sindrome QT lungo</h3>
+      <span class="topic-date">24/03/2026</span>
+      <button class="mark-done" onclick="markDone(event,'bpco')">Studiato ✓</button>
+      <span class="chevron">▶</span>
+    </div>
+    <div class="topic-body">
+      <h2>BPCO riacutizzata — classificazione</h2>
+      <div class="three-col">
+        <div class="card" style="border-top:3px solid #22c55e"><div class="card-title" style="color:#065f46">Lieve</div>SpO₂ ≥90%, pH normale, FR &lt;24 → gestione ambulatoriale</div>
+        <div class="card" style="border-top:3px solid #f59e0b"><div class="card-title" style="color:#92400e">Moderata</div>SpO₂ &lt;90%, PaCO₂ &gt;45–47, pH normale → ricovero ordinario</div>
+        <div class="card" style="border-top:3px solid #ef4444"><div class="card-title" style="color:#991b1b">Severa</div>pH &lt;7,35 → NIV. pH &lt;7,25 + instabilità → VM invasiva</div>
+      </div>
+      <div class="info">O₂ target in BPCO: 88–92% (non sovra-ossigenare → blocco drive ipossico)</div>
+      <h2>Sincope — classificazione rapida</h2>
+      <div class="card">
+        <span class="badge blue">Riflessa (vasovagale)</span> Più frequente, giovani, posizionale/emotiva.<br>
+        <span class="badge orange">Ortostatica</span> Farmaci, neuropatia autonomica (diabete, amiloidosi).<br>
+        <span class="badge red">Cardiogena</span> BAV, sick sinus, TV, stenosi aortica, CMI. Sincope da sforzo o in posizione supina = ALTO RISCHIO → ricovero.
+      </div>
+      <h2>QT lungo acquisito</h2>
+      <div class="card" style="border-left:4px solid #8b5cf6">
+        QTc normale: ≤450ms (M) / ≤470ms (F). <strong>Pericolo: QTc &gt;500ms</strong> → Torsione di Punta → FV.<br>
+        <span class="badge red">Farmaci a rischio:</span> Amiodarone · Antipsicotici (Aloperidolo) · Macrolidi (Eritromicina, Claritromicina) · Chinolonici (Ciproflox) · Antidepressivi triciclici.<br><br>
+        <strong>Caso tipico:</strong> Anziano con FA in Amiodarone + polmonite trattata con macrolide + Aloperidolo per agitazione = pericolo reale!
+      </div>
+      <div class="quiz-section">
+        <h4>🎓 Domande tipiche da orale</h4>
+        <div class="quiz-q" onclick="revealAnswer(this)"><div class="q-text">Paziente con BPCO e pH 7,28. Cosa fai?</div><div class="q-answer">pH &lt;7,35 con PaCO₂ elevata = acidosi respiratoria in BPCO severa → indicazione alla NIV (BPAP). Inizio con broncodilatatori SABA, corticosteroidi ev, antibiotico se infezione. O₂ controllato target 88–92%. Se pH &lt;7,25 + confusione/shock → intubazione. La NIV è il cardine: riduce la mortalità, evita l'intubazione nel 75% dei casi.</div><div class="q-toggle">Tocca per vedere la risposta</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PERICARDITE -->
+  <div class="topic-card" id="pericardite">
+    <div class="topic-header" onclick="toggleTopic(this)">
+      <h3>Pericardite & Tamponamento cardiaco</h3>
+      <span class="topic-date">11/03/2026</span>
+      <button class="mark-done" onclick="markDone(event,'pericardite')">Studiato ✓</button>
+      <span class="chevron">▶</span>
+    </div>
+    <div class="topic-body">
+      <div class="two-col">
+        <div class="card" style="border-top:3px solid #f59e0b">
+          <div class="card-title">Pericardite</div>
+          Dolore retrosternale irradiato al trapezio, ↑ supina, ↓ inclinato avanti.<br>
+          ECG: sopraslivellamento ST diffuso a concavità superiore (eccetto aVR).<br>
+          <strong>Terapia:</strong> ASA/FANS + Colchicina. Steroidi solo se autoimmune/refrattaria.
+        </div>
+        <div class="card" style="border-top:3px solid #ef4444">
+          <div class="card-title">Tamponamento cardiaco</div>
+          Triade di Beck: ipotensione + turgore giugulari + toni attenuati. Polso paradosso &gt;10mmHg.<br>
+          ECG: basso voltaggio, alternanza elettrica.<br>
+          Eco: collasso protodiastolico VD (segno più specifico).<br>
+          <strong>Terapia:</strong> pericardiocentesi urgente.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== MUCILLI ==================== -->
+<div class="prof-section prof-mucilli">
+  <div class="prof-header">
+    <span class="prof-emoji">🔪</span>
+    <h2>Prof. Mucilli</h2>
+    <span class="prof-sub">Chirurgia d'urgenza · Chirurgia toracica</span>
+  </div>
+
+  <div class="topic-card" id="emorragie">
+    <div class="topic-header" onclick="toggleTopic(this)">
+      <h3>Emorragie digestive</h3>
+      <span class="topic-date">03/03/2026</span>
+      <button class="mark-done" onclick="markDone(event,'emorragie')">Studiato ✓</button>
+      <span class="chevron">▶</span>
+    </div>
+    <div class="topic-body">
+      <h2>Terminologia</h2>
+      <div class="card"><span class="badge red">Ematemesi</span> Vomito sangue (rosso vivo = varici; caffeano = ulcera) · <span class="badge red">Melena</span> Feci picee (sangue digerito) · <span class="badge orange">Enterorragia</span> Sangue parzialmente digerito · <span class="badge orange">Rettorragia</span> Sangue rosso vivo dal retto · <span class="badge gray">Sangue occulto</span> Anemizzazione cronica</div>
+      <div class="warn">Il colore non determina l'altezza: sanguinamento alto abbondante può uscire rosso vivo (effetto catartico).</div>
+      <h2>Escalation terapeutica</h2>
+      <div class="card" style="padding:0;overflow:hidden;background:#fff;">
+        <table>
+          <thead><tr><th>Livello</th><th>Trattamento</th></tr></thead>
+          <tbody>
+            <tr><td><span class="badge blue">1° Medico</span></td><td>IPP + Somatostatina/Octreotide + Terlipressina 2mg ev/4–6h</td></tr>
+            <tr><td><span class="badge orange">2° Endoscopico</span></td><td>EGDS: adrenalina, clip, legatura varici, coagulazione</td></tr>
+            <tr><td><span class="badge purple">3° TIPS</span></td><td>Shunt portocavale per varici refrattarie</td></tr>
+            <tr><td><span class="badge orange">4° Radiologia interv.</span></td><td>Angiografia + embolizzazione selettiva</td></tr>
+            <tr><td><span class="badge red">5° Chirurgia</span></td><td>&lt;5% dei casi. Solo se incontrollabile</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="quiz-section">
+        <h4>🎓 Domande tipiche da orale</h4>
+        <div class="quiz-q" onclick="revealAnswer(this)"><div class="q-text">Paziente cirrotico con ematemesi: quale farmaco somministri subito e perché?</div><div class="q-answer">Terlipressina (2mg ev ogni 4–6h, max 24h) o Somatostatina/Octreotide. Riducono il flusso splancnico e abbassano la pressione portale, diminuendo il sanguinamento da varici esofagee. Si somministrano subito, anche prima dell'endoscopia, perché dimostrano di ridurre la mortalità se iniziati precocemente. Si associa l'antibiotico (norfloxacina o ceftriaxone) perché i cirrotici con emorragia hanno alto rischio di sepsi batterica.</div><div class="q-toggle">Tocca per vedere la risposta</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="topic-card" id="intestinali">
+    <div class="topic-header" onclick="toggleTopic(this)">
+      <h3>Ischemia Mesenterica & Colite Ischemica</h3>
+      <span class="topic-date">17/03/2026</span>
+      <button class="mark-done" onclick="markDone(event,'intestinali')">Studiato ✓</button>
+      <span class="chevron">▶</span>
+    </div>
+    <div class="topic-body">
+      <h2>Triade clinica IMA</h2>
+      <div class="card" style="border-left:4px solid #ef4444">
+        <strong>1.</strong> Dolore intenso improvviso sproporzionato all'obiettività (addome trattabile inizialmente) ·
+        <strong>2.</strong> Vomito o diarrea ·
+        <strong>3.</strong> FA o IMA recente (forme emboliche 40–80%)
+      </div>
+      <div class="danger">Ischemia completa → infarto entro 6h. Per sopravvivere serve almeno 1,5m di ileo sano.</div>
+      <h2>Forme di IMA</h2>
+      <div class="card" style="padding:0;overflow:hidden;background:#fff;">
+        <table>
+          <thead><tr><th>Forma</th><th>%</th><th>Causa</th><th>Nota</th></tr></thead>
+          <tbody>
+            <tr><td><span class="badge red">Embolia AMS</span></td><td>40–50%</td><td>FA, valvulopatie</td><td>Risparmia duodeno (embolo 6–8cm dall'origine)</td></tr>
+            <tr><td><span class="badge red">Trombosi AMS</span></td><td>15–25%</td><td>Aterosclerosi</td><td>Ischemia più estesa (all'imbocco)</td></tr>
+            <tr><td><span class="badge blue">Trombosi venosa</span></td><td>5–15%</td><td>Trombofilia</td><td>Prognosi migliore (44% mortalità)</td></tr>
+            <tr><td><span class="badge gray">NOMI</span></td><td>5–15%</td><td>Shock (vasocostrizione)</td><td>Prognosi peggiore per estensione</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="topic-card" id="addome-acuto">
+    <div class="topic-header" onclick="toggleTopic(this)">
+      <h3>Addome Acuto & Occlusione Intestinale</h3>
+      <span class="topic-date">15/04/2026</span>
+      <button class="mark-done" onclick="markDone(event,'addome-acuto')">Studiato ✓</button>
+      <span class="chevron">▶</span>
+    </div>
+    <div class="topic-body">
+      <h2>Tempistica chirurgica</h2>
+      <div class="card" style="padding:0;overflow:hidden;background:#fff;">
+        <table>
+          <thead><tr><th>Urgenza</th><th>Entro</th><th>Condizione</th></tr></thead>
+          <tbody>
+            <tr><td><span class="badge red">Emergenza</span></td><td>Immediato</td><td>Rottura AAA, shock emorragico</td></tr>
+            <tr><td><span class="badge red">Urgenza assoluta</span></td><td>2h</td><td>Peritonite diffusa + shock settico</td></tr>
+            <tr><td><span class="badge orange">Urgenza</span></td><td>6h</td><td>Peritonite, infarto mesenterico, perforazione, volvolo, strozzamento</td></tr>
+            <tr><td><span class="badge orange">Urgenza relativa</span></td><td>6–12h</td><td>Appendicite, occlusione da tumore</td></tr>
+            <tr><td><span class="badge gray">Pre-elettivo</span></td><td>24–48h</td><td>Colecistite acuta (prima reidrata + antibiotico)</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <h2>Occlusione meccanica vs paralitica</h2>
+      <div class="two-col">
+        <div class="card" style="border-top:3px solid #ef4444"><div class="card-title">Meccanica</div>Ostacolo fisico (tumore, briglia, ernia, volvolo). Vomito alimentare (alta) o fecaloide (colica). Iperperistalsi iniziale → silenzio.</div>
+        <div class="card" style="border-top:3px solid #f59e0b"><div class="card-title">Paralitica (ileo dinamico)</div>Post-chirurgia, peritonite, farmaci oppioidi, disturbi metabolici. Distensione diffusa, assenza peristalsi.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="topic-card" id="traumi-addome">
+    <div class="topic-header" onclick="toggleTopic(this)">
+      <h3>Traumi Addominali</h3>
+      <span class="topic-date">25/03/2026</span>
+      <button class="mark-done" onclick="markDone(event,'traumi-addome')">Studiato ✓</button>
+      <span class="chevron">▶</span>
+    </div>
+    <div class="topic-body">
+      <h2>Organi più colpiti</h2>
+      <div class="card" style="padding:0;overflow:hidden;background:#fff;">
+        <table>
+          <thead><tr><th>Organo</th><th>Caratteristiche</th><th>Trattamento</th></tr></thead>
+          <tbody>
+            <tr><td><span class="badge red">Milza</span></td><td>Più colpita. Rottura in 2 tempi (subdola!). 500cc → morte se non trattata.</td><td>Lesione singola → embolizzazione. Multipla/spappolata → splenectomia.</td></tr>
+            <tr><td><span class="badge orange">Fegato</span></td><td>Ipocondrio dx. Fegato malato peggiore.</td><td>Conservativo anche con raccolte 15cm. Chirurgia solo in shock: sutura → packing → revisione a 48h.</td></tr>
+            <tr><td><span class="badge blue">Rene</span></td><td>Costa + vertebra = piano rigido. Ematuria.</td><td>Quasi mai chirurgia. Nefrectomia rarissima.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="info">E-FAST ecografica: primo esame. Spazio di Morrison, splenorenale, pelvi, pericardio. Liquido = emorragia → sala operatoria o radiologia interventistica.</div>
+    </div>
+  </div>
+
+  <div class="topic-card" id="pancreatite">
+    <div class="topic-header" onclick="toggleTopic(this)">
+      <h3>Pancreatite Acuta</h3>
+      <span class="topic-date">22/04/2026</span>
+      <button class="mark-done" onclick="markDone(event,'pancreatite')">Studiato ✓</button>
+      <span class="chevron">▶</span>
+    </div>
+    <div class="topic-body">
+      <h2>Classificazione di Atlanta</h2>
+      <div class="two-col">
+        <div class="card" style="border-top:3px solid #22c55e"><div class="card-title" style="color:#065f46">Edematosa (80%)</div>Decorso favorevole, si autolimita, bassa mortalità.</div>
+        <div class="card" style="border-top:3px solid #ef4444"><div class="card-title" style="color:#991b1b">Necrotico-emorragica (20%)</div>MOF, IR, ARDS. Mortalità 25–30%. Complicanze locali (ascessi, pseudocisti, fistole).</div>
+      </div>
+      <h2>Criteri di Ranson (&gt;3 = forma severa)</h2>
+      <div class="two-col">
+        <div class="card" style="border-left:4px solid #3b82f6"><div class="card-title">All'ingresso</div>Età &gt;55 · GB &gt;16.000 · Glicemia &gt;200 · LDH &gt;350 · GOT &gt;250</div>
+        <div class="card" style="border-left:4px solid #8b5cf6"><div class="card-title">A 48h</div>↓Ht &gt;10% · ↑Azotemia · Ca²⁺ &lt;8 · PaO₂ &lt;60 · Bilancio liquidi &gt;6L · Deficit basi &gt;4</div>
+      </div>
+      <div class="warn">⚠️ NO morfina (spasmo sfintere di Oddi) · NO ranitidina (causa pancreatite!) · NO antibiotici profilattici · NO digiuno nelle prime 48h nelle forme lievi · Rimozione calcolo: ERCP (non chirurgia aperta in fase acuta).</div>
+      <div class="quiz-section">
+        <h4>🎓 Domande tipiche da orale</h4>
+        <div class="quiz-q" onclick="revealAnswer(this)"><div class="q-text">Perché nella pancreatite è importante il calcio a 48h?</div><div class="q-answer">Il Ca²⁺ &lt;8 mg/dL a 48h è uno dei criteri di Ranson per pancreatite severa. Il calcio si deposita nelle aree di steato-necrosi peripancreatica: i lipidi liberati dalla lipolisi enzimatica saponificano (si legano al Ca²⁺) → ipocalcemia. Più estesa la necrosi, più calcio viene "sequestrato". L'ipocalcemia grave può causare tetania e aritmie.</div><div class="q-toggle">Tocca per vedere la risposta</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="topic-card" id="traumi-torace">
+    <div class="topic-header" onclick="toggleTopic(this)">
+      <h3>Traumi Toracici</h3>
+      <span class="topic-date">28/04/2026</span>
+      <button class="mark-done" onclick="markDone(event,'traumi-torace')">Studiato ✓</button>
+      <span class="chevron">▶</span>
+    </div>
+    <div class="topic-body">
+      <h2>Pneumotorace — 3 tipi</h2>
+      <div class="three-col">
+        <div class="card" style="border-top:3px solid #22c55e"><div class="card-title">Chiuso</div>Aria entra e rimane. Si riassorbe se &lt;15%. Drenaggio se &gt;15%.</div>
+        <div class="card" style="border-top:3px solid #f59e0b"><div class="card-title">Aperto</div>Aria entra e esce. Chiudere la breccia + drenaggio.</div>
+        <div class="card" style="border-top:3px solid #ef4444"><div class="card-title" style="color:#991b1b">Iperteso ⚠️ EMERGENZA</div>Valvola → aria entra, non esce → shift mediastino → FV → morte. Decompressione ago 2°–3° spazio intercostale su emiclaveare → drenaggio.</div>
+      </div>
+      <h2>Lembo mobile</h2>
+      <div class="card" style="border-left:4px solid #ef4444">≥2 fratture per costa su ≥2 coste contigue → movimento paradosso. Terapia se grave: IOT + VM a pressione positiva (stabilizza dall'interno). Rischio barotrauma.</div>
+      <h2>Emotorace</h2>
+      <div class="card"><span class="badge gray">Minimo &lt;300cc</span> <span class="badge orange">Moderato 350–1000cc</span> <span class="badge red">Massivo &gt;1500cc</span><br>Sempre drenaggio toracico. Se &gt;200cc/h → toracoscopia urgente.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== GUARRACINO ==================== -->
+<div class="prof-section prof-guarracino">
+  <div class="prof-header">
+    <span class="prof-emoji">🫁</span>
+    <h2>Prof. Guarracino</h2>
+    <span class="prof-sub">Anestesia · Rianimazione · Terapia Intensiva</span>
+  </div>
+
+  <div class="topic-card" id="met">
+    <div class="topic-header" onclick="toggleTopic(this)">
+      <h3>Emergenze Intraospedaliere & MET</h3>
+      <span class="topic-date">29/04/2026</span>
+      <button class="mark-done" onclick="markDone(event,'met')">Studiato ✓</button>
+      <span class="chevron">▶</span>
+    </div>
+    <div class="topic-body">
+      <h2>Valutazione ABCDE</h2>
+      <div class="card" style="padding:0;overflow:hidden;background:#fff;">
+        <table>
+          <thead><tr><th>Lettera</th><th>Valuta</th><th>Intervento chiave</th></tr></thead>
+          <tbody>
+            <tr><td><span class="badge green">A</span> Airway</td><td>Pervietà (parla? rumori?)</td><td>Guedel, maschera laringea, IOT. Cricotiroidotomia in extremis.</td></tr>
+            <tr><td><span class="badge green">B</span> Breathing</td><td>FR, SpO₂, EGA</td><td>O₂ target 94–98% (BPCO 88–92%). Escalation: occhialini → Venturi → HFNC → NIV → VM.</td></tr>
+            <tr><td><span class="badge green">C</span> Circulation</td><td>Polso, PA, refill, diuresi, ECG</td><td>Refill &gt;5s = shock. Non farsi ingannare da PA conservata con vasocostrizione!</td></tr>
+            <tr><td><span class="badge green">D</span> Disability</td><td>AVPU / GCS / pupille</td><td>GCS &lt;8 → intubazione.</td></tr>
+            <tr><td><span class="badge green">E</span> Exposure</td><td>Head to Toe</td><td>Temperatura, edemi, rash, escoriazioni.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <h2>NEWS — score di allerta</h2>
+      <div class="card">
+        <span class="badge gray">0</span> Routine · <span class="badge blue">1–4</span> Rivaluta · <span class="badge orange">singolo 3 o tot 5–6</span> Allerta · <span class="badge red">≥7</span> Rischio vita → attiva MET
+      </div>
+      <div class="info">Causa più comune di chiamata MET: insufficienza respiratoria. Il pz non muore se non si intuba — muore se non si ventila.</div>
+    </div>
+  </div>
+
+  <div class="topic-card" id="extraosp">
+    <div class="topic-header" onclick="toggleTopic(this)">
+      <h3>Emergenze Extraospedaliere & RCP</h3>
+      <span class="topic-date">05/05/2026</span>
+      <button class="mark-done" onclick="markDone(event,'extraosp')">Studiato ✓</button>
+      <span class="chevron">▶</span>
+    </div>
+    <div class="topic-body">
+      <h2>4H + 4T — cause reversibili arresto cardiaco</h2>
+      <div class="two-col">
+        <div class="card" style="border-top:3px solid #ef4444">
+          <div class="card-title" style="color:#991b1b">4H</div>
+          <span class="badge red">Ipossia</span> <span class="badge red">Iperkaliemia/elettroliti</span> <span class="badge red">Ipotermia</span> <span class="badge red">Ipovolemia</span>
+        </div>
+        <div class="card" style="border-top:3px solid #3b82f6">
+          <div class="card-title" style="color:#1e40af">4T</div>
+          <span class="badge blue">Tamponamento</span> <span class="badge blue">Pneumotorace iperteso</span> <span class="badge blue">Trombosi (SCA/EP)</span> <span class="badge blue">Tossici/Intossicazioni</span>
+        </div>
+      </div>
+      <div class="warn">Ogni minuto senza RCP = -10% sopravvivenza. Nei bambini: aggiungere Ipoglicemia!</div>
+      <h2>Reti tempo-dipendenti</h2>
+      <div class="three-col">
+        <div class="card" style="border-top:3px solid #ef4444"><div class="card-title">"Il tempo è muscolo"</div>Rete STEMI: ECG in ambulanza → trasmissione → sala di emodinamica diretta.</div>
+        <div class="card" style="border-top:3px solid #8b5cf6"><div class="card-title">"Il tempo è cervello"</div>Rete Stroke: stroke unit + neuroradiologia interventistica + trombectomia.</div>
+        <div class="card" style="border-top:3px solid #f59e0b"><div class="card-title">Rete Trauma</div>Trauma center: chirurgia, TC, neurochirurgia, radiologia interventistica.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="topic-card" id="anest">
+    <div class="topic-header" onclick="toggleTopic(this)">
+      <h3>Valutazione Anestesiologica Preoperatoria</h3>
+      <span class="topic-date">13/05/2026</span>
+      <button class="mark-done" onclick="markDone(event,'anest')">Studiato ✓</button>
+      <span class="chevron">▶</span>
+    </div>
+    <div class="topic-body">
+      <h2>Classificazione ASA</h2>
+      <div class="card" style="padding:0;overflow:hidden;background:#fff;">
+        <table>
+          <thead><tr><th>ASA</th><th>Descrizione</th><th>Esempi</th></tr></thead>
+          <tbody>
+            <tr><td><span class="badge green">ASA 1</span></td><td>Sano</td><td>Nessuna patologia</td></tr>
+            <tr><td><span class="badge blue">ASA 2</span></td><td>Malattia sistemica lieve</td><td>Fumatore, BMI 30–40, DM controllato, ipertensione trattata</td></tr>
+            <tr><td><span class="badge orange">ASA 3</span></td><td>Malattia sistemica severa</td><td>DM scompensato, obesità severa, dialisi, BPCO</td></tr>
+            <tr><td><span class="badge red">ASA 4</span></td><td>Pericolo di vita</td><td>IMA/stroke &lt;3 mesi, FE gravemente ridotta</td></tr>
+            <tr><td><span class="badge red">ASA 5</span></td><td>Moribondo</td><td>Chirurgia salvavita</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="warn">⚠️ Rx torace di routine NON va fatta. ECG non va fatto in chirurgia a basso rischio. Il 90% delle info viene da anamnesi + esame obiettivo!</div>
+      <h2>Farmaci perioperatori</h2>
+      <div class="two-col">
+        <div class="card" style="border-top:3px solid #22c55e"><div class="card-title">β-bloccanti e Aspirina</div><strong>NON sospendere</strong>. Sospendere i β-bloccanti aumenta il rischio di ischemia da rebound.</div>
+        <div class="card" style="border-top:3px solid #3b82f6"><div class="card-title">Doppia antiaggregazione</div>Sospendere il secondo antiaggregante, mantenere la cardioaspirina.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="topic-card" id="ti">
+    <div class="topic-header" onclick="toggleTopic(this)">
+      <h3>Terapia Intensiva · Shock · EGA</h3>
+      <span class="topic-date">19/05/2026</span>
+      <button class="mark-done" onclick="markDone(event,'ti')">Studiato ✓</button>
+      <span class="chevron">▶</span>
+    </div>
+    <div class="topic-body">
+      <h2>4 tipi di shock — riconoscimento</h2>
+      <div class="card" style="padding:0;overflow:hidden;background:#fff;">
+        <table>
+          <thead><tr><th>Tipo</th><th>Eco bedside</th><th>Terapia</th></tr></thead>
+          <tbody>
+            <tr><td><span class="badge red">Distributivo (settico)</span></td><td>Cuore ipercinetico, cavità vuote</td><td>Vasopressori (Noradrenalina)</td></tr>
+            <tr><td><span class="badge orange">Cardiogeno</span></td><td>Cuore grande, cinesi ridotta</td><td>Inotropi (Dobutamina), ECMO</td></tr>
+            <tr><td><span class="badge blue">Ipovolemico</span></td><td>Cavità piccole, VCI collassabile</td><td>Fluidi, emotrasfusioni</td></tr>
+            <tr><td><span class="badge purple">Ostruttivo</span></td><td>VD dilatato (EP); no sliding (PNX); VCI piena (tamponamento)</td><td>Trombolisi / pericardiocentesi / decompressione</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <h2>EGA — valori normali e Anion Gap</h2>
+      <div class="card" style="border-left:4px solid #10b981">
+        PaO₂ 80–100 · PaCO₂ 35–45 · pH 7,35–7,45 · HCO₃⁻ 22–26 · BE ±2 · Lattati &lt;2 mmol/L<br>
+        <strong>Anion Gap</strong> = Na⁺ − (Cl⁻ + HCO₃⁻) → normale 8–12. AG alto + acidosi metab = accumulo acidi (DKA, acidosi lattica, IR). AG normale = perdita HCO₃ (diarrea).
+      </div>
+      <div class="quiz-section">
+        <h4>🎓 Domande tipiche da orale</h4>
+        <div class="quiz-q" onclick="revealAnswer(this)"><div class="q-text">La ventilazione a pressione positiva agisce solo sul polmone o anche sul cuore?</div><div class="q-answer">Agisce su entrambi. Sul cuore destro: ↑ pressione intratoracica → ↓ ritorno venoso → ↓ precarico VD + distensione alveolare → ↑ resistenze vascolari polmonari → ↑ postcarico VD. Il VD tollera male la VM positiva. Sul cuore sinistro: ↑ pressione intratoracica → ↓ pressione transmurale VS → ↓ postcarico VS → migliora l'eiezione. Per questo la CPAP è utile nell'EPA!</div><div class="q-toggle">Tocca per vedere la risposta</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="topic-card" id="resp">
+    <div class="topic-header" onclick="toggleTopic(this)">
+      <h3>Insufficienza Respiratoria & ARDS</h3>
+      <span class="topic-date">19/05/2026</span>
+      <button class="mark-done" onclick="markDone(event,'resp')">Studiato ✓</button>
+      <span class="chevron">▶</span>
+    </div>
+    <div class="topic-body">
+      <h2>Tipo 1 vs Tipo 2</h2>
+      <div class="two-col">
+        <div class="card" style="border-top:3px solid #ef4444"><div class="card-title">Tipo 1 — Lung failure (ipossiemica)</div>PaO₂ bassa, PaCO₂ normale/bassa. Problema: scambi. Cause: shunt, V/Q mismatch, edema, polmonite.</div>
+        <div class="card" style="border-top:3px solid #8b5cf6"><div class="card-title">Tipo 2 — Pump failure (ipercapnica)</div>PaCO₂ alta → acidosi respiratoria. Problema: pompa (centro resp., miopatie, paralisi).</div>
+      </div>
+      <h2>ARDS — classificazione P/F</h2>
+      <div class="three-col">
+        <div class="card" style="border-top:3px solid #f59e0b"><div class="card-title">Lieve</div>PF 200–300</div>
+        <div class="card" style="border-top:3px solid #f97316"><div class="card-title">Moderata</div>PF 100–200</div>
+        <div class="card" style="border-top:3px solid #ef4444"><div class="card-title">Severa</div>PF &lt;100</div>
+      </div>
+      <div class="info">Pronazione: sessioni ≥16h. Recluta regioni posteriori, omogenizza V/Q, ↓ resistenze VD. Non risponde → ECMO.</div>
+    </div>
+  </div>
+
+  <div class="topic-card" id="aki">
+    <div class="topic-header" onclick="toggleTopic(this)">
+      <h3>AKI · Insufficienza Epatica · Politrauma</h3>
+      <span class="topic-date">20/05/2026</span>
+      <button class="mark-done" onclick="markDone(event,'aki')">Studiato ✓</button>
+      <span class="chevron">▶</span>
+    </div>
+    <div class="topic-body">
+      <h2>AKI — criteri KDIGO</h2>
+      <div class="card" style="border-left:4px solid #10b981">
+        <span class="badge red">Creatinina ↑ ≥0,3 mg/dL in 48h</span> oppure <span class="badge red">Creatinina ≥1,5× basale</span> oppure <span class="badge red">Diuresi &lt;0,5 mL/kg/h per ≥6h</span><br>
+        Diuretici nell'AKI: da evitare (↑ consumo O₂ nefroni già sofferenti). Accesso dialisi: NO succlavia (stenosi) → giugulare interna destra o femorale.
+      </div>
+      <h2>Triade letale del politrauma</h2>
+      <div class="danger"><strong>Coagulopatia + Ipotermia + Acidosi</strong> — si alimentano a vicenda. Contrasta con: riscaldamento, trasfusioni 1:1:1 (GRC:PFC:PLT), acido tranexamico precoce, TEG/ROTEM.</div>
+      <h2>Politrauma — ABCDE specifico</h2>
+      <div class="card" style="padding:0;overflow:hidden;background:#fff;">
+        <table>
+          <thead><tr><th>Step</th><th>Priorità nel trauma</th></tr></thead>
+          <tbody>
+            <tr><td><span class="badge green">A</span></td><td>Vie aeree + colonna cervicale. GCS &lt;8 → IOT. Sempre collare.</td></tr>
+            <tr><td><span class="badge green">B</span></td><td>PNX iperteso? → decompressione ago (2°–3° spazio, emiclaveare) → drenaggio.</td></tr>
+            <tr><td><span class="badge green">C</span></td><td>Emorragia → shock. Protocollo 1:1:1. Tourniquet. Acido tranexamico. REBOA se lesione grandi vasi.</td></tr>
+            <tr><td><span class="badge green">D</span></td><td>GCS, pupille. Bradicardia post-trauma = allarme (trauma midollare o ↑ PIC).</td></tr>
+            <tr><td><span class="badge green">E</span></td><td>E-FAST: Morrison, splenorenale, pelvi, pericardio. Liquido = emorragia → sala.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== COSTANTINI ==================== -->
+<div class="prof-section prof-costantini">
+  <div class="prof-header">
+    <span class="prof-emoji">🟣</span>
+    <h2>Prof. Costantini</h2>
+    <span class="prof-sub">Cure Palliative · Terapia del dolore · Medicina del dolore</span>
+  </div>
+
+  <div class="topic-card" id="palliative">
+    <div class="topic-header" onclick="toggleTopic(this)">
+      <h3>Cure Palliative & Terapia del Dolore</h3>
+      <span class="topic-date">21/04/2026</span>
+      <button class="mark-done" onclick="markDone(event,'palliative')">Studiato ✓</button>
+      <span class="chevron">▶</span>
+    </div>
+    <div class="topic-body">
+      <h2>Scala OMS — 3 gradini</h2>
+      <div class="three-col">
+        <div class="card" style="border-top:3px solid #22c55e"><div class="card-title">1° Gradino</div>FANS / Paracetamolo + adiuvanti + psicoterapia</div>
+        <div class="card" style="border-top:3px solid #f59e0b"><div class="card-title">2° Gradino</div>Oppiacei deboli (tramadolo, codeina) + precedenti</div>
+        <div class="card" style="border-top:3px solid #ef4444"><div class="card-title">3° Gradino</div>Oppiacei forti (morfina, ossicodone, fentanil) + precedenti</div>
+      </div>
+      <h2>Tecniche interventistiche</h2>
+      <div class="two-col">
+        <div class="card" style="border-left:4px solid #8b5cf6">
+          <div class="card-title">Pompa intratecale</div>
+          Morfina IT rapporto 1:100–150 vs orale. Ziconotide (conotossina, Ca²⁺ inibitore) → indicato in tumore pancreas, dolore refrattario.
+        </div>
+        <div class="card" style="border-left:4px solid #6366f1">
+          <div class="card-title">SCS — Elettrostimolazione midollare</div>
+          Dolore neuropatico refrattario, FBSS. Elettrocateteri peridurali collegati a stimolatore. Sempre bilaterale (rischio sindrome mirror pain).
+        </div>
+      </div>
+      <div class="info">Il dolore è il <strong>6° parametro vitale</strong>: deve essere registrato in cartella con scala e risposta alla terapia.</div>
+    </div>
+  </div>
+
+  <div class="topic-card" id="lombare">
+    <div class="topic-header" onclick="toggleTopic(this)">
+      <h3>Dolore nel distretto lombosacrale</h3>
+      <span class="topic-date">06/05/2026</span>
+      <button class="mark-done" onclick="markDone(event,'lombare')">Studiato ✓</button>
+      <span class="chevron">▶</span>
+    </div>
+    <div class="topic-body">
+      <h2>Diagnosi differenziale rapida</h2>
+      <div class="card" style="padding:0;overflow:hidden;background:#fff;">
+        <table>
+          <thead><tr><th>Patologia</th><th>Segno distintivo</th><th>Test</th></tr></thead>
+          <tbody>
+            <tr><td><span class="badge blue">Ernia discale / Radicolopatia</span></td><td>Dolore radicolare che scende al tallone</td><td>Lasègue + (L5/S1) · Wassermann + (L4)</td></tr>
+            <tr><td><span class="badge orange">Sindrome faccettale</span></td><td>Dolore paravertebrale/gluteo, NON al tallone</td><td>Test carico/scarico +, Lasègue −</td></tr>
+            <tr><td><span class="badge purple">Sacroileite</span></td><td>Dolore gluteo/inguine, peggiora seduti</td><td>Patrick-Faber, Gaenslen +</td></tr>
+            <tr><td><span class="badge gray">Stenosi canale spinale</span></td><td>Claudicatio neurogena (pochi metri poi stop)</td><td>DD con stenosi vascolare</td></tr>
+            <tr><td><span class="badge red">Cauda equina</span></td><td>Deficit motorio + sfinteriale</td><td>RM urgente + decompressione &lt;18–24h!</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <h2>Radicolopatia — quale radice?</h2>
+      <div class="card">
+        <span class="badge blue">L4</span> Dolore coscia anteriore. Wassermann +.<br>
+        <span class="badge blue">L5</span> Dolore posterior coscia e gamba, superficie anteriore. Lasègue +.<br>
+        <span class="badge blue">S1</span> Sciatica pura, tutto posteriore. Lasègue +.<br>
+      </div>
+      <div class="warn">La patologia all'imaging DEVE corrispondere ai sintomi clinici. Un'ernia L2-L3 non giustifica sintomatologia L5-S1!</div>
+    </div>
+  </div>
+
+  <div class="topic-card" id="oppiacei">
+    <div class="topic-header" onclick="toggleTopic(this)">
+      <h3>Oppiacei — schema rapido</h3>
+      <span class="topic-date">06/05/2026</span>
+      <button class="mark-done" onclick="markDone(event,'oppiacei')">Studiato ✓</button>
+      <span class="chevron">▶</span>
+    </div>
+    <div class="topic-body">
+      <h2>Farmaci principali</h2>
+      <div class="card" style="padding:0;overflow:hidden;background:#fff;">
+        <table>
+          <thead><tr><th>Farmaco</th><th>Potenza</th><th>Eliminazione</th><th>Uso pratico</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Tramadolo</strong></td><td>Debole-medio</td><td>Epatico (CYP)</td><td>II gradino. Rischio sindrome serotoninergica + triciclici.</td></tr>
+            <tr><td><strong>Morfina</strong></td><td>Riferimento</td><td>→ M6G (attivo) + M3G (iperalgesia)</td><td>Vasodilatazione → utile in EPA. Stipsi permanente.</td></tr>
+            <tr><td><strong>Ossicodone</strong></td><td>2× morfina</td><td>CYP2D6</td><td>Spesso + naloxone (riduce stipsi).</td></tr>
+            <tr><td><strong>Fentanil</strong></td><td>100× morfina</td><td>Epatico</td><td>Cerotti 72h. Rigidità toracica se bolo rapido.</td></tr>
+            <tr><td><strong>Buprenorfina</strong></td><td>Agonista parziale μ</td><td>Solo epatico</td><td><span class="badge green">Farmaco di riferimento in IR</span> (no renale)</td></tr>
+            <tr><td><strong>Naloxone</strong></td><td>Antagonista puro</td><td>—</td><td>Antidoto overdose. Anche intranasale.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="info">Effetto collaterale che NON passa: <span class="badge red">stipsi</span> (permanente per tutta la terapia). Nausea e sedazione invece migliorano nei primi giorni (tolleranza).</div>
+      <div class="quiz-section">
+        <h4>🎓 Domande tipiche da orale</h4>
+        <div class="quiz-q" onclick="revealAnswer(this)"><div class="q-text">Quale oppioide scegli in un paziente con insufficienza renale grave?</div><div class="q-answer">Buprenorfina: è l'unico oppioide eliminato esclusivamente per via epatica, senza accumulo renale. La morfina è pericolosa in IR perché il suo metabolita attivo M6G si accumula (insufficienza renale → nessuna clearance) e può causare depressione respiratoria prolungata. Il Fentanil transdermica è un'alternativa accettabile ma la Buprenorfina è la scelta di riferimento.</div><div class="q-toggle">Tocca per vedere la risposta</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- fine main -->
+</div><!-- fine layout -->
+
+<script>
+// Toggle topic open/close
+function toggleTopic(header) {
+  const body = header.nextElementSibling;
+  const isOpen = body.classList.contains('open');
+  body.classList.toggle('open', !isOpen);
+  header.classList.toggle('open', !isOpen);
+}
+
+// Mark as done
+function markDone(event, topicId) {
+  event.stopPropagation();
+  const btn = event.target;
+  btn.classList.toggle('done');
+  const isDone = btn.classList.contains('done');
+  btn.textContent = isDone ? '✓ Fatto!' : 'Studiato ✓';
+
+  // Update sidebar
+  const navLink = document.querySelector(`.nav-link[data-topic="${topicId}"]`);
+  if (navLink) navLink.classList.toggle('done', isDone);
+
+  updateProgress();
+  saveState();
+}
+
+function updateProgress() {
+  const total = document.querySelectorAll('.mark-done').length;
+  const done = document.querySelectorAll('.mark-done.done').length;
+  const pct = Math.round((done / total) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressCount').textContent = done + ' / ' + total;
+}
+
+function revealAnswer(el) {
+  el.classList.toggle('revealed');
+}
+
+// Persist state in localStorage
+function saveState() {
+  const state = {};
+  document.querySelectorAll('.mark-done').forEach(btn => {
+    const topicCard = btn.closest('.topic-card');
+    if (topicCard) state[topicCard.id] = btn.classList.contains('done');
+  });
+  try { localStorage.setItem('emergenze_study_state', JSON.stringify(state)); } catch(e) {}
+}
+
+function loadState() {
+  try {
+    const state = JSON.parse(localStorage.getItem('emergenze_study_state') || '{}');
+    Object.entries(state).forEach(([id, done]) => {
+      const card = document.getElementById(id);
+      if (!card || !done) return;
+      const btn = card.querySelector('.mark-done');
+      if (btn) {
+        btn.classList.add('done');
+        btn.textContent = '✓ Fatto!';
+      }
+      const navLink = document.querySelector(`.nav-link[data-topic="${id}"]`);
+      if (navLink) navLink.classList.add('done');
+    });
+    updateProgress();
+  } catch(e) {}
+}
+
+// Animate progress fill on load
+window.addEventListener('load', () => {
+  loadState();
+  setTimeout(() => {
+    document.getElementById('progressFill').style.transition = 'width 1s ease';
+  }, 100);
+});
+</script>
+</body>
+</html>
