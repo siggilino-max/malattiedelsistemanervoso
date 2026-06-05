@@ -1,1026 +1,1450 @@
+bash
+
 <!DOCTYPE html>
 <html lang="it">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Emergenze Medico-Chirurgiche — Esame 29/05/2026</title>
+<title>MSN 2026 — Malattie del Sistema Nervoso</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=IBM+Plex+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-/* ===== RESET & BASE ===== */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f0f2f5; color: #1a1a2e; min-height: 100vh; }
-
-/* ===== HEADER ===== */
-.header { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); padding: 32px 24px 24px; text-align: center; }
-.header h1 { font-size: 26px; font-weight: 800; color: #fff; letter-spacing: -0.5px; }
-.header p { color: rgba(255,255,255,0.6); font-size: 14px; margin-top: 6px; }
-.exam-badge { display: inline-block; background: #e94560; color: #fff; font-size: 12px; font-weight: 700; padding: 4px 12px; border-radius: 20px; margin-top: 10px; }
-
-/* ===== PROGRESS BAR ===== */
-.progress-bar { background: #1a1a2e; padding: 12px 24px; display: flex; align-items: center; gap: 12px; }
-.progress-label { color: rgba(255,255,255,0.6); font-size: 12px; white-space: nowrap; }
-.progress-track { flex: 1; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; }
-.progress-fill { height: 6px; background: linear-gradient(90deg, #22c55e, #16a34a); border-radius: 3px; width: 0%; transition: width 1s ease; }
-.progress-count { color: #22c55e; font-size: 12px; font-weight: 700; white-space: nowrap; }
-
-/* ===== NAV SIDEBAR ===== */
-.layout { display: flex; min-height: calc(100vh - 130px); }
-.sidebar { width: 240px; min-width: 240px; background: #1a1a2e; padding: 20px 0; position: sticky; top: 0; height: calc(100vh - 130px); overflow-y: auto; }
-.sidebar-section { padding: 8px 16px 4px; font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.35); text-transform: uppercase; letter-spacing: .1em; }
-.sidebar a { display: flex; align-items: center; gap: 8px; padding: 8px 16px; font-size: 13px; color: rgba(255,255,255,0.65); text-decoration: none; transition: all .15s; border-left: 3px solid transparent; }
-.sidebar a:hover { background: rgba(255,255,255,0.05); color: #fff; }
-.sidebar a.active { background: rgba(255,255,255,0.08); color: #fff; border-left-color: var(--prof-color, #6366f1); }
-.sidebar a .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-.sidebar a .checked { margin-left: auto; font-size: 11px; opacity: 0; transition: opacity .2s; }
-.sidebar a.done .checked { opacity: 1; color: #22c55e; }
-
-/* ===== MAIN CONTENT ===== */
-.main { flex: 1; padding: 24px; max-width: calc(100% - 240px); }
-
-/* ===== PROFESSOR SECTIONS ===== */
-.prof-section { margin-bottom: 40px; }
-.prof-header { display: flex; align-items: center; gap: 12px; padding: 16px 20px; border-radius: 12px 12px 0 0; margin-bottom: 0; }
-.prof-header h2 { font-size: 17px; font-weight: 800; color: #fff; }
-.prof-header .prof-sub { color: rgba(255,255,255,0.7); font-size: 13px; margin-left: auto; }
-.prof-emoji { font-size: 22px; }
-
-/* Professor color themes */
-.prof-pierdomenico .prof-header { background: linear-gradient(135deg, #1e40af, #3b82f6); }
-.prof-pierdomenico { --prof-color: #3b82f6; }
-.prof-mucilli .prof-header { background: linear-gradient(135deg, #991b1b, #ef4444); }
-.prof-mucilli { --prof-color: #ef4444; }
-.prof-guarracino .prof-header { background: linear-gradient(135deg, #065f46, #10b981); }
-.prof-guarracino { --prof-color: #10b981; }
-.prof-costantini .prof-header { background: linear-gradient(135deg, #6d28d9, #8b5cf6); }
-.prof-costantini { --prof-color: #8b5cf6; }
-
-/* ===== TOPIC CARDS ===== */
-.topic-card { background: #fff; border: 1px solid #e5e7eb; border-radius: 0 0 0 0; margin-bottom: 2px; overflow: hidden; }
-.topic-card:last-child { border-radius: 0 0 12px 12px; }
-.topic-header { display: flex; align-items: center; gap: 10px; padding: 14px 18px; cursor: pointer; user-select: none; transition: background .15s; border-left: 4px solid var(--prof-color, #6366f1); }
-.topic-header:hover { background: #f9fafb; }
-.topic-header h3 { font-size: 15px; font-weight: 700; color: #1a1a2e; flex: 1; }
-.topic-header .topic-date { font-size: 11px; color: #9ca3af; }
-.topic-header .chevron { font-size: 12px; color: #9ca3af; transition: transform .25s; }
-.topic-header .mark-done { font-size: 11px; padding: 3px 10px; border-radius: 12px; border: 1px solid #e5e7eb; background: #f9fafb; color: #6b7280; cursor: pointer; transition: all .15s; margin-left: 8px; }
-.topic-header .mark-done:hover { background: #dcfce7; border-color: #22c55e; color: #16a34a; }
-.topic-header .mark-done.done { background: #dcfce7; border-color: #22c55e; color: #16a34a; font-weight: 700; }
-.topic-body { display: none; padding: 20px 20px 24px; border-top: 1px solid #f3f4f6; }
-.topic-body.open { display: block; }
-.topic-header.open .chevron { transform: rotate(90deg); }
-
-/* ===== INNER CONTENT STYLES (restyle dei div interni) ===== */
-.topic-body h1 { display: none; } /* titolo già nel header */
-.topic-body .subtitle { display: none; }
-.topic-body h2 { font-size: 10px; font-weight: 700; color: #9ca3af; text-transform: uppercase; letter-spacing: .08em; margin: 16px 0 7px; padding-bottom: 3px; border-bottom: 1px solid #f3f4f6; }
-.topic-body h2:first-of-type { margin-top: 0; }
-.topic-body .card { background: #f8fafc; border: 1px solid #e9ecef; border-radius: 8px; padding: 11px 13px; margin-bottom: 7px; font-size: 13px; line-height: 1.65; }
-.topic-body .card-title { font-size: 13px; font-weight: 700; margin-bottom: 4px; }
-.topic-body .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-.topic-body .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
-.topic-body .four-col { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 8px; }
-.topic-body .badge { display: inline-block; font-size: 11px; font-weight: 600; border-radius: 4px; padding: 1px 6px; margin: 2px 2px 2px 0; }
-.topic-body .red { background:#fee2e2; color:#991b1b; }
-.topic-body .orange { background:#fef3c7; color:#92400e; }
-.topic-body .gray { background:#f1f1f1; color:#555; border:1px solid #e0e0e0; }
-.topic-body .blue { background:#dbeafe; color:#1e40af; }
-.topic-body .green { background:#d1fae5; color:#065f46; }
-.topic-body .purple { background:#ede9fe; color:#5b21b6; }
-.topic-body .badge-red { background:#fee2e2; color:#991b1b; }
-.topic-body .badge-blue { background:#dbeafe; color:#1e40af; }
-.topic-body .badge-gray { background:#f1f1f1; color:#555; border:1px solid #e0e0e0; }
-.topic-body .badge-warn { background:#fef3c7; color:#92400e; }
-.topic-body .badge-green { background:#d1fae5; color:#065f46; }
-.topic-body table { width:100%; border-collapse:collapse; font-size:13px; margin-bottom: 4px; }
-.topic-body th { text-align:left; font-weight:600; color:#666; padding:6px 9px; border-bottom:1px solid #e5e5e5; background:#f9fafb; }
-.topic-body td { padding:6px 9px; border-bottom:1px solid #f3f4f6; vertical-align:top; }
-.topic-body tr:last-child td { border-bottom:none; }
-.topic-body .warn { background:#fffbeb; border-left:3px solid #f59e0b; border-radius:5px; padding:8px 11px; font-size:13px; margin-bottom:7px; }
-.topic-body .info { background:#eff6ff; border-left:3px solid #3b82f6; border-radius:5px; padding:8px 11px; font-size:13px; margin-bottom:7px; }
-.topic-body .danger { background:#fef2f2; border-left:3px solid #ef4444; border-radius:5px; padding:8px 11px; font-size:13px; margin-bottom:7px; }
-.topic-body .green-box { background:#f0fdf4; border-left:3px solid #22c55e; border-radius:5px; padding:8px 11px; font-size:13px; margin-bottom:7px; }
-.topic-body .highlight { background:#fffbeb; border-left:3px solid #f59e0b; border-radius:4px; padding:8px 12px; font-size:13px; color:#1a1a2e; margin-bottom:8px; }
-
-/* Color accents per professore sul bordo delle card interne */
-.prof-pierdomenico .topic-body table th { background: #eff6ff; }
-.prof-mucilli .topic-body table th { background: #fef2f2; }
-.prof-guarracino .topic-body table th { background: #f0fdf4; }
-.prof-costantini .topic-body table th { background: #f5f3ff; }
-
-/* ===== DOMANDE D'ESAME ===== */
-.quiz-section { margin-top: 20px; background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%); border-radius: 10px; padding: 16px; }
-.quiz-section h4 { color: #c7d2fe; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; margin-bottom: 12px; }
-.quiz-q { background: rgba(255,255,255,0.07); border-radius: 8px; padding: 10px 14px; margin-bottom: 6px; cursor: pointer; }
-.quiz-q .q-text { color: #e0e7ff; font-size: 13px; font-weight: 500; }
-.quiz-q .q-answer { color: #a5b4fc; font-size: 13px; margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.1); display: none; }
-.quiz-q.revealed .q-answer { display: block; }
-.quiz-q .q-toggle { color: #6366f1; font-size: 11px; margin-top: 4px; }
-
-/* ===== MOBILE ===== */
-@media(max-width:768px) {
-  .sidebar { display: none; }
-  .main { max-width: 100%; padding: 16px; }
-  .two-col, .three-col, .four-col { grid-template-columns: 1fr !important; }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#08090b;
+  --s1:#0f1114;
+  --s2:#161920;
+  --s3:#1d2129;
+  --s4:#252b34;
+  --b1:rgba(255,255,255,0.05);
+  --b2:rgba(255,255,255,0.09);
+  --b3:rgba(255,255,255,0.14);
+  --tx:#eceef2;
+  --tx2:#8a909f;
+  --tx3:#545b6a;
+  --n:#5ba3d9;--nb:rgba(91,163,217,.12);--nbd:rgba(91,163,217,.25);
+  --p:#4dbb8a;--pb:rgba(77,187,138,.12);--pbd:rgba(77,187,138,.25);
+  --c:#d97b5b;--cb:rgba(217,123,91,.12);--cbd:rgba(217,123,91,.25);
+  --r:#d9b95b;--rb:rgba(217,185,91,.12);--rbd:rgba(217,185,91,.25);
+  --done:#2a5c42;
+  --rad:10px;--rad-lg:16px;--rad-xl:22px;
 }
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--tx);font-family:'Outfit',sans-serif;font-size:15px;line-height:1.7;min-height:100vh}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:200;background:rgba(8,9,11,.94);backdrop-filter:blur(18px);border-bottom:1px solid var(--b1);display:flex;align-items:center;gap:0;height:54px;padding:0 24px;overflow-x:auto}
+.nav-brand{font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:500;color:var(--tx);letter-spacing:.04em;margin-right:28px;flex-shrink:0;cursor:pointer}
+nav a{color:var(--tx2);text-decoration:none;font-size:13px;font-weight:500;padding:0 14px;height:54px;display:flex;align-items:center;border-bottom:2px solid transparent;white-space:nowrap;transition:color .18s,border-color .18s;cursor:pointer}
+nav a:hover{color:var(--tx)}
+nav a.act{color:var(--tx);border-bottom-color:var(--n)}
+
+/* LAYOUT */
+.page{max-width:1080px;margin:0 auto;padding:52px 24px 100px}
+.sec{display:none}.sec.act{display:block}
+
+/* TYPE */
+h1{font-family:'Playfair Display',serif;font-size:38px;line-height:1.15;color:var(--tx);margin-bottom:8px}
+h2{font-family:'Playfair Display',serif;font-size:26px;color:var(--tx);margin-bottom:18px}
+.sub{color:var(--tx2);font-size:14px;margin-bottom:40px}
+.lbl{font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.1em;color:var(--tx3);margin-bottom:10px}
+
+/* STAT CARDS */
+.stat-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:32px}
+.stat-c{background:var(--s1);border:1px solid var(--b1);border-radius:var(--rad-lg);padding:20px 18px}
+.stat-n{font-family:'Playfair Display',serif;font-size:38px;color:var(--tx);line-height:1}
+.stat-l{font-size:12px;color:var(--tx3);margin-top:4px}
+
+/* PROGRESS */
+.prog-wrap{margin-bottom:44px}
+.prog-bg{background:var(--s2);border-radius:99px;height:6px;overflow:hidden}
+.prog-fill{background:linear-gradient(90deg,var(--n),var(--p));height:100%;border-radius:99px;transition:width .5s ease}
+.prog-lbl{display:flex;justify-content:space-between;font-size:11px;color:var(--tx3);margin-top:5px}
+
+/* CALENDAR */
+.legend{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:28px}
+.leg-i{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--tx2)}
+.leg-d{width:9px;height:9px;border-radius:50%}
+.wk-block{margin-bottom:36px}
+.wk-lbl{font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:var(--tx3);margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--b1)}
+.days-g{display:grid;grid-template-columns:repeat(7,1fr);gap:7px}
+@media(max-width:680px){.days-g{grid-template-columns:repeat(3,1fr)}}
+.day-c{background:var(--s1);border:1px solid var(--b1);border-radius:var(--rad);padding:10px;min-height:88px;cursor:pointer;transition:border-color .18s,background .18s;position:relative}
+.day-c:hover{border-color:var(--b2);background:var(--s2)}
+.day-c.done{border-color:var(--done);background:rgba(42,92,66,.08)}
+.day-c.done .d-content{opacity:.55}
+.d-date{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--tx3);margin-bottom:6px}
+.d-sess{display:flex;flex-direction:column;gap:3px}
+.chk{position:absolute;top:7px;right:7px;width:17px;height:17px;border-radius:50%;background:var(--done);display:none;align-items:center;justify-content:center;font-size:9px;color:#7effc7}
+.day-c.done .chk{display:flex}
+.tag{font-size:9px;font-weight:500;padding:3px 7px;border-radius:4px;line-height:1.4;display:block}
+.tn{background:var(--nb);color:var(--n);border:1px solid var(--nbd)}
+.tp{background:var(--pb);color:var(--p);border:1px solid var(--pbd)}
+.tc{background:var(--cb);color:var(--c);border:1px solid var(--cbd)}
+.tr{background:var(--rb);color:var(--r);border:1px solid var(--rbd)}
+.te{background:rgba(139,95,255,.12);color:#a07cff;border:1px solid rgba(139,95,255,.3)}
+
+/* SCHEMAS */
+.prof-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:28px}
+.pbtn{padding:7px 16px;border-radius:99px;border:1px solid var(--b2);background:var(--s1);color:var(--tx2);font-size:12px;font-weight:500;cursor:pointer;transition:all .18s;font-family:'Outfit',sans-serif}
+.pbtn:hover{background:var(--s2);color:var(--tx)}
+.pbtn.an{background:var(--nb);color:var(--n);border-color:var(--nbd)}
+.pbtn.ap{background:var(--pb);color:var(--p);border-color:var(--pbd)}
+.pbtn.ac{background:var(--cb);color:var(--c);border-color:var(--cbd)}
+.prof-pan{display:none}.prof-pan.act{display:block}
+
+/* TOPIC CARD */
+.topic-c{background:var(--s1);border:1px solid var(--b1);border-radius:var(--rad-lg);margin-bottom:12px;overflow:hidden}
+.topic-h{padding:15px 18px;cursor:pointer;display:flex;align-items:center;gap:12px;transition:background .18s;user-select:none}
+.topic-h:hover{background:var(--s2)}
+.topic-h.open{background:var(--s2);border-bottom:1px solid var(--b1)}
+.t-badge{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:500;flex-shrink:0}
+.t-title{flex:1;font-size:14px;font-weight:500;color:var(--tx)}
+.t-arrow{color:var(--tx3);transition:transform .22s;font-size:14px;flex-shrink:0}
+.topic-h.open .t-arrow{transform:rotate(180deg)}
+.topic-body{padding:20px;display:none}
+.topic-h.open + .topic-body{display:block}
+
+/* SCHEMA GRID */
+.sch-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+@media(max-width:600px){.sch-grid{grid-template-columns:1fr}}
+.sch-full{grid-column:1/-1}
+.sch-box{background:var(--s2);border:1px solid var(--b1);border-radius:var(--rad);padding:14px 16px}
+.sch-ttl{font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.07em;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--b1)}
+.sch-box ul{list-style:none;padding:0}
+.sch-box li{font-size:12px;color:var(--tx2);padding:4px 0;border-bottom:1px solid rgba(255,255,255,.02);display:flex;align-items:flex-start;gap:7px;line-height:1.55}
+.sch-box li:last-child{border-bottom:none}
+.sch-box li::before{content:'›';color:var(--tx3);flex-shrink:0;margin-top:1px}
+.sch-box li b{color:var(--tx)}
+.sch-box li i{color:var(--r);font-style:normal}
+
+/* KEYWORD HIGHLIGHT */
+.kw{display:inline;background:rgba(91,163,217,.12);color:var(--n);padding:0 4px;border-radius:3px;font-family:'IBM Plex Mono',monospace;font-size:11px}
+
+/* LEARN BTN */
+.learn-btn{padding:8px 18px;border-radius:99px;border:1px solid var(--b2);background:transparent;color:var(--tx2);font-size:12px;font-weight:500;cursor:pointer;transition:all .18s;font-family:'Outfit',sans-serif}
+.learn-btn:hover{border-color:var(--p);color:var(--p)}
+.learn-btn.learned{background:var(--pb);color:var(--p);border-color:var(--pbd)}
+
+/* STATS PAGE */
+.area-row{background:var(--s1);border:1px solid var(--b1);border-radius:var(--rad);padding:14px 18px;margin-bottom:10px;display:flex;align-items:center;gap:16px}
+.area-info{flex:1}
+.area-name{font-size:13px;font-weight:500;margin-bottom:5px}
+.area-pb{background:var(--s2);border-radius:99px;height:5px;overflow:hidden}
+.area-pf{height:100%;border-radius:99px;transition:width .4s}
+.area-ct{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--tx2);min-width:48px;text-align:right}
 </style>
 </head>
 <body>
+<nav>
+  <div class="nav-brand" onclick="show('home')">MSN &#8491;26</div>
+  <a onclick="show('calendario')" id="nav-calendario">Calendario</a>
+  <a onclick="show('schemi')" id="nav-schemi">Schemi</a>
+  <a onclick="show('stats')" id="nav-stats">Progresso</a>
+</nav>
 
-<div class="header">
-  <h1>🏥 Emergenze Medico-Chirurgiche</h1>
-  <p>Schemi completi da tutte le sbobine · Organizzati per professore</p>
-  <div class="exam-badge">⏰ Esame: 29 Maggio 2026</div>
-</div>
-
-<div class="progress-bar">
-  <span class="progress-label">Argomenti studiati</span>
-  <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
-  <span class="progress-count" id="progressCount">0 / 22</span>
-</div>
-
-<div class="layout">
-
-<!-- SIDEBAR -->
-<div class="sidebar">
-  <div class="sidebar-section">🫀 Pierdomenico</div>
-  <a href="#urg-iper" class="nav-link" data-topic="urg-iper"><span class="dot" style="background:#3b82f6"></span>Urgenze ipertensive<span class="checked">✓</span></a>
-  <a href="#scompenso" class="nav-link" data-topic="scompenso"><span class="dot" style="background:#3b82f6"></span>Scompenso cardiaco<span class="checked">✓</span></a>
-  <a href="#embolia" class="nav-link" data-topic="embolia"><span class="dot" style="background:#3b82f6"></span>Embolia polmonare<span class="checked">✓</span></a>
-  <a href="#fa" class="nav-link" data-topic="fa"><span class="dot" style="background:#3b82f6"></span>Fibrillazione atriale<span class="checked">✓</span></a>
-  <a href="#diabete" class="nav-link" data-topic="diabete"><span class="dot" style="background:#3b82f6"></span>Complicanze diabete<span class="checked">✓</span></a>
-  <a href="#bpco" class="nav-link" data-topic="bpco"><span class="dot" style="background:#3b82f6"></span>BPCO + Sincope + QT<span class="checked">✓</span></a>
-  <a href="#pericardite" class="nav-link" data-topic="pericardite"><span class="dot" style="background:#3b82f6"></span>Pericardite / Tamponamento<span class="checked">✓</span></a>
-
-  <div class="sidebar-section">🔴 Mucilli</div>
-  <a href="#emorragie" class="nav-link" data-topic="emorragie"><span class="dot" style="background:#ef4444"></span>Emorragie digestive<span class="checked">✓</span></a>
-  <a href="#intestinali" class="nav-link" data-topic="intestinali"><span class="dot" style="background:#ef4444"></span>Ischemia mesenterica<span class="checked">✓</span></a>
-  <a href="#addome-acuto" class="nav-link" data-topic="addome-acuto"><span class="dot" style="background:#ef4444"></span>Addome acuto<span class="checked">✓</span></a>
-  <a href="#traumi-addome" class="nav-link" data-topic="traumi-addome"><span class="dot" style="background:#ef4444"></span>Traumi addominali<span class="checked">✓</span></a>
-  <a href="#pancreatite" class="nav-link" data-topic="pancreatite"><span class="dot" style="background:#ef4444"></span>Pancreatite acuta<span class="checked">✓</span></a>
-  <a href="#traumi-torace" class="nav-link" data-topic="traumi-torace"><span class="dot" style="background:#ef4444"></span>Traumi toracici<span class="checked">✓</span></a>
-
-  <div class="sidebar-section">🟢 Guarracino</div>
-  <a href="#met" class="nav-link" data-topic="met"><span class="dot" style="background:#10b981"></span>MET / Emergenze intraospedaliere<span class="checked">✓</span></a>
-  <a href="#extraosp" class="nav-link" data-topic="extraosp"><span class="dot" style="background:#10b981"></span>Emergenze extraospedaliere<span class="checked">✓</span></a>
-  <a href="#anest" class="nav-link" data-topic="anest"><span class="dot" style="background:#10b981"></span>Valutazione anestesiologica<span class="checked">✓</span></a>
-  <a href="#ti" class="nav-link" data-topic="ti"><span class="dot" style="background:#10b981"></span>Terapia Intensiva / Shock<span class="checked">✓</span></a>
-  <a href="#resp" class="nav-link" data-topic="resp"><span class="dot" style="background:#10b981"></span>Insufficienza respiratoria / ARDS<span class="checked">✓</span></a>
-  <a href="#aki" class="nav-link" data-topic="aki"><span class="dot" style="background:#10b981"></span>AKI + Epatica + Politrauma<span class="checked">✓</span></a>
-
-  <div class="sidebar-section">🟣 Costantini</div>
-  <a href="#palliative" class="nav-link" data-topic="palliative"><span class="dot" style="background:#8b5cf6"></span>Cure palliative & Dolore<span class="checked">✓</span></a>
-  <a href="#lombare" class="nav-link" data-topic="lombare"><span class="dot" style="background:#8b5cf6"></span>Dolore lombosacrale<span class="checked">✓</span></a>
-  <a href="#oppiacei" class="nav-link" data-topic="oppiacei"><span class="dot" style="background:#8b5cf6"></span>Oppiacei<span class="checked">✓</span></a>
-</div>
-
-<!-- MAIN -->
-<div class="main">
-
-<!-- ==================== PIERDOMENICO ==================== -->
-<div class="prof-section prof-pierdomenico">
-  <div class="prof-header">
-    <span class="prof-emoji">🫀</span>
-    <h2>Prof. Pierdomenico</h2>
-    <span class="prof-sub">Medicina Interna · Cardiologia · Endocrinologia</span>
+<!-- HOME -->
+<div class="page sec act" id="home">
+  <h1>Malattie del<br><em>Sistema Nervoso</em></h1>
+  <p class="sub">Esame: <b style="color:var(--r)">25 giugno 2026</b> &nbsp;·&nbsp; Neurologia · Psichiatria · Neurochirurgia</p>
+  <div class="stat-row" id="home-stats">
+    <div class="stat-c"><div class="stat-n" id="hs-g">--</div><div class="stat-l">giorni all'esame</div></div>
+    <div class="stat-c"><div class="stat-n" id="hs-d">0</div><div class="stat-l">giorni completati</div></div>
+    <div class="stat-c"><div class="stat-n" id="hs-t">0</div><div class="stat-l">argomenti imparati</div></div>
+    <div class="stat-c"><div class="stat-n" id="hs-p">0%</div><div class="stat-l">completamento</div></div>
   </div>
-
-  <!-- URGENZE IPERTENSIVE -->
-  <div class="topic-card" id="urg-iper">
-    <div class="topic-header" onclick="toggleTopic(this)">
-      <h3>Urgenze ed Emergenze Ipertensive</h3>
-      <span class="topic-date">04/03/2026</span>
-      <button class="mark-done" onclick="markDone(event,'urg-iper')">Studiato ✓</button>
-      <span class="chevron">▶</span>
-    </div>
-    <div class="topic-body">
-      <h2>Definizioni chiave</h2>
-      <div class="two-col">
-        <div class="card" style="border-left:4px solid #3b82f6">
-          <div class="card-title" style="color:#1e40af">Urgenza ipertensiva</div>
-          PA &gt;180/110 mmHg <strong>senza</strong> danno d'organo acuto. Paziente asintomatico. Riduzione in <strong>24–48h</strong> con terapia orale.
-        </div>
-        <div class="card" style="border-left:4px solid #ef4444">
-          <div class="card-title" style="color:#991b1b">Emergenza ipertensiva</div>
-          PA &gt;180/110 mmHg <strong>con</strong> danno d'organo acuto. Riduzione <strong>immediata</strong> con terapia ev. Il tipo di organo colpito determina il target e il farmaco.
-        </div>
-      </div>
-      <div class="warn">⚠️ Il termine "crisi ipertensiva" è obsoleto dal 2017. Il danno d'organo distingue emergenza da urgenza, non il solo valore pressorio.</div>
-
-      <h2>Cause più frequenti di emergenza (studio italiano)</h2>
-      <div class="card">
-        <span class="badge red">EPA 30%</span><span class="badge red">Stroke 22%</span><span class="badge red">Infarto 17%</span><span class="badge orange">Dissezione aortica 7%</span><span class="badge gray">IRA 5%</span><span class="badge gray">Encefalopatia 4%</span>
-      </div>
-
-      <h2>Target pressori e farmaci per quadro clinico</h2>
-      <div class="card" style="padding:0;overflow:hidden;background:#fff;">
-        <table>
-          <thead><tr><th>Quadro</th><th>Target</th><th>Farmaco 1ª scelta</th></tr></thead>
-          <tbody>
-            <tr><td>IRA / Encefalopatia</td><td>↓ MAP 20–25%</td><td>Labetalolo ev</td></tr>
-            <tr><td>SCA / EPA</td><td>PAS &lt;140</td><td>Nitroderivato ev (± betabloccante)</td></tr>
-            <tr><td>Dissezione aortica</td><td>PAS ~120, FC &lt;60</td><td>Nitroderivato + betabloccante</td></tr>
-            <tr><td>Eclampsia</td><td>PA &lt;160/105</td><td>Labetalolo ev + Solfato di magnesio</td></tr>
-            <tr><td>Stroke emorragico</td><td>PA &lt;140/90</td><td>Riduzione graduale</td></tr>
-            <tr><td>Stroke ischemico + trombolisi</td><td>PA &lt;185/110 pre; &lt;180/105 post</td><td>Abbassare prima, mantenere 24h dopo</td></tr>
-          </tbody>
-        </table>
-      </div>
-
-      <h2>Farmaci pratici</h2>
-      <div class="two-col">
-        <div class="card" style="border-top:3px solid #3b82f6">
-          <div class="card-title">Labetalolo (Trandate)</div>
-          α1+β bloccante. Fiale 100mg. ½ fiala ev, ripetibile 3–4×, max 200mg. <span class="badge red">Controindicato BPCO/asma</span>
-        </div>
-        <div class="card" style="border-top:3px solid #f59e0b">
-          <div class="card-title">Nitroglicerina (Trinitrina)</div>
-          Inizio 10–20 µg/min, max 200 µg/min. Usare in EPA, SCA, dissezione.
-        </div>
-      </div>
-
-      <div class="quiz-section">
-        <h4>🎓 Domande tipiche da orale</h4>
-        <div class="quiz-q" onclick="revealAnswer(this)"><div class="q-text">Qual è la differenza tra urgenza ed emergenza ipertensiva?</div><div class="q-answer">La presenza o assenza di danno d'organo acuto, non il solo valore pressorio. Urgenza = PA &gt;180/110 senza danno d'organo → terapia orale in 24–48h. Emergenza = PA alta + danno d'organo acuto (EPA, stroke, SCA, dissezione, ecc.) → terapia ev immediata.</div><div class="q-toggle">Tocca per vedere la risposta</div></div>
-        <div class="quiz-q" onclick="revealAnswer(this)"><div class="q-text">In un paziente con stroke ischemico e PA 200/110, come ti comporti?</div><div class="q-answer">Se candidato a trombolisi: abbassare PA &lt;185/110 prima della trombolisi, poi mantenere &lt;180/105 per 24h. Se non candidato e PA ≥220/120: riduzione graduale del 15% nelle prime 24h. Non abbassare aggressivamente: l'ipertensione nello stroke ischemico è spesso compensatoria per mantenere la perfusione della penombra ischemica.</div><div class="q-toggle">Tocca per vedere la risposta</div></div>
-        <div class="quiz-q" onclick="revealAnswer(this)"><div class="q-text">Quale farmaco usi nella dissezione aortica e perché?</div><div class="q-answer">Nitroderivato ev + betabloccante (metoprololo) o labetalolo. Target: PAS ~120 mmHg e FC &lt;60 bpm. La riduzione della FC è cruciale quanto la PA: la forza dello shear stress sull'aorta dipende da dP/dt (variazione di pressione per unità di tempo), che si riduce diminuendo la FC. Il labetalolo è ideale perché agisce su entrambi.</div><div class="q-toggle">Tocca per vedere la risposta</div></div>
-      </div>
-    </div>
+  <div class="prog-wrap">
+    <div class="prog-bg"><div class="prog-fill" id="home-bar" style="width:0%"></div></div>
+    <div class="prog-lbl"><span>Inizio studio</span><span>Esame 25 giugno</span></div>
   </div>
-
-  <!-- SCOMPENSO CARDIACO -->
-  <div class="topic-card" id="scompenso">
-    <div class="topic-header" onclick="toggleTopic(this)">
-      <h3>Scompenso Cardiaco Acuto</h3>
-      <span class="topic-date">10/03/2026</span>
-      <button class="mark-done" onclick="markDone(event,'scompenso')">Studiato ✓</button>
-      <span class="chevron">▶</span>
-    </div>
-    <div class="topic-body">
-      <h2>Classificazione Wet/Dry – Warm/Cold</h2>
-      <div class="two-col">
-        <div class="card" style="border-top:3px solid #3b82f6"><div class="card-title" style="color:#1e40af">Wet & Warm 💧🌡️</div>Congesto + buona perfusione. Più frequente.<br><strong>Terapia:</strong> Furosemide ev + Nitroderivato ev.</div>
-        <div class="card" style="border-top:3px solid #ef4444"><div class="card-title" style="color:#991b1b">Wet & Cold 💧❄️</div>Congesto + ipoperfuso (freddo, sudato, ipoteso).<br><strong>Terapia:</strong> prima inotropi → poi decongestione.</div>
-      </div>
-      <div class="two-col">
-        <div class="card" style="border-top:3px solid #22c55e"><div class="card-title" style="color:#065f46">Dry & Warm ✅</div>Non congesto + buona perfusione. ~5% dei casi.</div>
-        <div class="card" style="border-top:3px solid #6b7280"><div class="card-title">Dry & Cold ⚫</div>Shock cardiogeno puro. Raro → UTIC.</div>
-      </div>
-      <h2>BNP / NT-proBNP</h2>
-      <div class="card" style="border-left:4px solid #3b82f6">
-        Ottimo VPN (negativo esclude scompenso). <strong>BNP:</strong> &lt;100 improbabile · 100–500 zona grigia · &gt;500 alta prob.<br>
-        <span class="badge red">ARNI (Sacubitril-Valsartan):</span> dosare solo NT-proBNP (il BNP è falsamente elevato).
-      </div>
-      <h2>Troponina — cinetica (frequente domanda!)</h2>
-      <div class="three-col">
-        <div class="card" style="border-top:3px solid #ef4444"><div class="card-title">IMA</div>Picco alto e rapido → discesa graduale</div>
-        <div class="card" style="border-top:3px solid #f59e0b"><div class="card-title">Scompenso non coronarico</div>Lieve rialzo stabile nel tempo (curva piatta)</div>
-        <div class="card" style="border-top:3px solid #8b5cf6"><div class="card-title">Miocardite</div>Aumento lento, ritorno lento</div>
-      </div>
-      <h2>Terapia pratica</h2>
-      <div class="card" style="padding:0;overflow:hidden;background:#fff;">
-        <table>
-          <thead><tr><th>Scenario</th><th>Farmaco</th><th>Dosaggio</th></tr></thead>
-          <tbody>
-            <tr><td>Congestione (de novo)</td><td>Furosemide ev</td><td>40 mg bolo</td></tr>
-            <tr><td>Congestione (cronico riacutizzato)</td><td>Furosemide ev: doppio dose orale</td><td>Es. 50mg PO → 100mg ev</td></tr>
-            <tr><td>EPA / PA alta + congestione</td><td>Nitroglicerina ev + Furosemide</td><td>2 fiale 5mg in 50cc, 3–6ml/h</td></tr>
-            <tr><td>Shock cardiogeno</td><td>Dobutamina</td><td>2–20 µg/kg/min</td></tr>
-            <tr><td>Ipotensione refrattaria</td><td>Noradrenalina</td><td>0.2–1.0 µg/kg/min</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="warn">Monitoraggio diuresi: efficace se &gt;100cc/h. Dopo 6h almeno 600cc. Se no → raddoppiare la dose. Max furosemide: 500mg/die.</div>
-      <div class="quiz-section">
-        <h4>🎓 Domande tipiche da orale</h4>
-        <div class="quiz-q" onclick="revealAnswer(this)"><div class="q-text">Un paziente con scompenso acuto ipoteso: cosa fai prima, il diuretico o l'inotropo?</div><div class="q-answer">Prima l'inotropo (Dobutamina) per stabilizzare la gittata cardiaca e la perfusione periferica. Solo dopo, una volta migliorata l'emodinamica, si può decongestire con il diuretico. Il diuretico in un paziente ipoteso peggiora ulteriormente la gittata (riduce il precarico di un cuore già in difficoltà).</div><div class="q-toggle">Tocca per vedere la risposta</div></div>
-        <div class="quiz-q" onclick="revealAnswer(this)"><div class="q-text">Perché con gli ARNI si usa NT-proBNP e non BNP?</div><div class="q-answer">Il Sacubitril inibisce la neprilisina, l'enzima che degrada il BNP. Quindi nei pazienti in terapia con ARNI il BNP è artificialmente elevato (non viene degradato), mentre il NT-proBNP non è substrato della neprilisina e rimane un marker affidabile.</div><div class="q-toggle">Tocca per vedere la risposta</div></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- EMBOLIA POLMONARE -->
-  <div class="topic-card" id="embolia">
-    <div class="topic-header" onclick="toggleTopic(this)">
-      <h3>Embolia Polmonare</h3>
-      <span class="topic-date">11/03/2026</span>
-      <button class="mark-done" onclick="markDone(event,'embolia')">Studiato ✓</button>
-      <span class="chevron">▶</span>
-    </div>
-    <div class="topic-body">
-      <h2>3 scenari di alto rischio (instabilità emodinamica)</h2>
-      <div class="three-col">
-        <div class="card" style="border-top:3px solid #ef4444"><div class="card-title">Arresto cardiaco</div>Necessità di RCP</div>
-        <div class="card" style="border-top:3px solid #ef4444"><div class="card-title">Shock ostruttivo</div>PAS &lt;90 + segni ipoperfusione</div>
-        <div class="card" style="border-top:3px solid #ef4444"><div class="card-title">Ipotensione persistente</div>PAS &lt;90 o calo &gt;40 mmHg per &gt;15 min</div>
-      </div>
-      <h2>Iter diagnostico paziente STABILE</h2>
-      <div class="card" style="padding:0;overflow:hidden;background:#fff;">
-        <table>
-          <thead><tr><th>Probabilità pre-test</th><th>D-dimero</th><th>Passo</th></tr></thead>
-          <tbody>
-            <tr><td>Bassa / Intermedia</td><td>Negativo (&lt;0,5 µg/mL)</td><td><span class="badge green">EP esclusa</span></td></tr>
-            <tr><td>Bassa / Intermedia</td><td>Positivo</td><td>→ Angio-TC (CTPA)</td></tr>
-            <tr><td>Alta</td><td>—</td><td>→ Angio-TC diretta</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="info">D-dimero: ottimo VPN. Cut-off età-aggiustato: età × 10 µg/L. Sale anche in infezioni, neoplasie, epatopatie.</div>
-      <h2>Ecocardiografia — segni di sovraccarico VD</h2>
-      <div class="card" style="border-left:4px solid #8b5cf6">
-        RV/LV &gt;1 · Setto a "D" · VCI dilatata non collassabile · TAPSE &lt;16 mm · Segno di McConnell · Trombo mobile cavità destre (patognomonico).
-      </div>
-      <h2>Terapia anticoagulante</h2>
-      <div class="two-col">
-        <div class="card" style="border-top:3px solid #3b82f6">
-          <div class="card-title">DOAC</div>
-          Apixaban 10mg×2 per 7gg → 5mg×2. Rivaroxaban 15mg×2 per 3 sett → 20mg×1. <strong>Durata:</strong> fattori transitori 3–6 mesi; idiopatica/trombofilia → indefinita.
-        </div>
-        <div class="card" style="border-top:3px solid #ef4444">
-          <div class="card-title">Trombolisi (alto rischio)</div>
-          Solo in instabilità emodinamica + disfunzione VD. Supporto: Dobutamina + Noradrenalina. Casi estremi: ECMO.
-        </div>
-      </div>
-      <div class="quiz-section">
-        <h4>🎓 Domande tipiche da orale</h4>
-        <div class="quiz-q" onclick="revealAnswer(this)"><div class="q-text">Paziente con sincope + tachicardia + TVP all'eco venosa: cosa sospetti e cosa fai?</div><div class="q-answer">Sospetto embolia polmonare ad alto rischio. La sincope nel contesto di EP indica compromissione emodinamica significativa (17% delle EP). Eseguo eco bedside: se VD disfunzionante → angio-TC urgente se il paziente si stabilizza, o trombolisi empirica se instabile e TC non eseguibile. Anticoagulazione immediata.</div><div class="q-toggle">Tocca per vedere la risposta</div></div>
-        <div class="quiz-q" onclick="revealAnswer(this)"><div class="q-text">Qual è la differenza tra EP intermedio-alta e intermedio-bassa?</div><div class="q-answer">Entrambe hanno PESI III–V. L'intermedio-alta ha ANCHE disfunzione VD all'eco E troponina elevata (entrambi i criteri). L'intermedio-bassa ha PESI III–V ma VD ok O troponina normale. L'intermedio-alta va ricoverata in subintensiva con monitoraggio stretto; l'intermedio-bassa in reparto ordinario.</div><div class="q-toggle">Tocca per vedere la risposta</div></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- FIBRILLAZIONE ATRIALE -->
-  <div class="topic-card" id="fa">
-    <div class="topic-header" onclick="toggleTopic(this)">
-      <h3>Fibrillazione Atriale</h3>
-      <span class="topic-date">24/03/2026</span>
-      <button class="mark-done" onclick="markDone(event,'fa')">Studiato ✓</button>
-      <span class="chevron">▶</span>
-    </div>
-    <div class="topic-body">
-      <h2>Classificazione</h2>
-      <div class="card" style="padding:0;overflow:hidden;background:#fff;">
-        <table>
-          <thead><tr><th>Forma</th><th>Durata</th><th>Note</th></tr></thead>
-          <tbody>
-            <tr><td><strong>Prima diagnosi</strong></td><td>Primo episodio</td><td>—</td></tr>
-            <tr><td><strong>Parossistica</strong></td><td>Termina spontaneamente ≤7gg (spesso &lt;48h)</td><td>Forma tipica del PS</td></tr>
-            <tr><td><strong>Persistente</strong></td><td>7gg – 12 mesi</td><td>Decidere se cardiovertire</td></tr>
-            <tr><td><strong>Permanente</strong></td><td>&gt;12 mesi</td><td>Si accetta l'aritmia, controllo FC</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <h2>Gestione acuta — albero decisionale</h2>
-      <div class="two-col">
-        <div class="card" style="border-top:3px solid #ef4444"><div class="card-title" style="color:#991b1b">Instabile</div>→ Cardioversione elettrica IMMEDIATA (priorità è la vita)</div>
-        <div class="card" style="border-top:3px solid #3b82f6"><div class="card-title" style="color:#1e40af">Stabile</div>&lt;24h: puoi cardiovertire. 24–48h: eco transesofageo prima. &gt;48h: anticoagulazione 3 sett → CV → 4 sett dopo.</div>
-      </div>
-      <h2>Score CHA₂DS₂-VA</h2>
-      <div class="card" style="border-left:4px solid #8b5cf6">
-        <strong>C</strong>=Scompenso(1) · <strong>H</strong>=Ipertensione(1) · <strong>A₂</strong>=Età≥75(2) · <strong>D</strong>=Diabete(1) · <strong>S₂</strong>=Stroke/TIA(2) · <strong>V</strong>=Vasculopatia(1) · <strong>A</strong>=Età 65–74(1)<br>
-        Score ≥2 → anticoagulazione. Warfarin SOLO in stenosi mitralica moderata-severa e protesi meccanica.
-      </div>
-      <h2>DOAC in insufficienza renale</h2>
-      <div class="card">
-        Eliminazione renale: Dabigatran 80% → Edoxaban 50% → Rivaroxaban 35% → <span class="badge green">Apixaban 27% (preferito in IR)</span>
-      </div>
-      <div class="quiz-section">
-        <h4>🎓 Domande tipiche da orale</h4>
-        <div class="quiz-q" onclick="revealAnswer(this)"><div class="q-text">FA da 36 ore, paziente stabile: puoi cardiovertire?</div><div class="q-answer">No, o solo dopo eco transesofageo (TEE). La zona 24–48h è grigia: il rischio tromboembolico esiste ma non è definito. La scelta sicura è TEE per escludere trombi in auricola prima della cardioversione. Se TEE negativo si può cardiovertire e poi anticoagulare per 4 settimane. Se non disponibile il TEE: anticoagulazione per 3 settimane → CV programmata → anticoagulante 4 settimane dopo.</div><div class="q-toggle">Tocca per vedere la risposta</div></div>
-        <div class="quiz-q" onclick="revealAnswer(this)"><div class="q-text">Perché la Flecainide è controindicata nel paziente con cardiopatia strutturale?</div><div class="q-answer">La Flecainide è un antiaritmico di classe IC che blocca i canali del Na+ e rallenta significativamente la conduzione. In un cuore con cardiopatia strutturale (cicatrici, ipertrofia, fibrosi) ci sono già ritardi di conduzione: la Flecainide può creare circuiti di rientro e innescare TV/FV potenzialmente fatali. È sicura solo nel cuore strutturalmente normale.</div><div class="q-toggle">Tocca per vedere la risposta</div></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- COMPLICANZE DIABETE -->
-  <div class="topic-card" id="diabete">
-    <div class="topic-header" onclick="toggleTopic(this)">
-      <h3>Complicanze acute del Diabete Mellito</h3>
-      <span class="topic-date">18/03/2026</span>
-      <button class="mark-done" onclick="markDone(event,'diabete')">Studiato ✓</button>
-      <span class="chevron">▶</span>
-    </div>
-    <div class="topic-body">
-      <h2>Confronto rapido — 4 complicanze</h2>
-      <div class="card" style="padding:0;overflow:hidden;background:#fff;">
-        <table>
-          <thead><tr><th>Parametro</th><th style="color:#991b1b">DKA</th><th style="color:#92400e">SII</th><th style="color:#1e40af">Acidosi lattica</th><th style="color:#065f46">Ipoglicemia</th></tr></thead>
-          <tbody>
-            <tr><td>DM tipo</td><td>1</td><td>2</td><td>2 (metformina)</td><td>1 e 2</td></tr>
-            <tr><td>Glicemia</td><td><span class="badge red">↑↑ &gt;250</span></td><td><span class="badge red">↑↑↑ &gt;540</span></td><td><span class="badge green">Normale!</span></td><td><span class="badge green">↓↓ &lt;54</span></td></tr>
-            <tr><td>Chetosi</td><td><span class="badge red">Sì +++</span></td><td><span class="badge gray">No</span></td><td><span class="badge gray">No</span></td><td><span class="badge gray">No</span></td></tr>
-            <tr><td>Acidosi</td><td><span class="badge red">Sì (pH &lt;7,3)</span></td><td><span class="badge green">No (pH ≥7,35)</span></td><td><span class="badge red">Sì (molto bassa)</span></td><td><span class="badge gray">No</span></td></tr>
-            <tr><td>Lattati</td><td>Normali</td><td>Normali</td><td><span class="badge red">↑↑↑ &gt;5 mmol/L</span></td><td>Normali</td></tr>
-            <tr><td>1ª terapia</td><td>Reidratazione → insulina → K⁺</td><td>Come DKA (più cauta)</td><td>Stop metformina + dialisi</td><td>Glucosio po o ev</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <h2>DKA — regola del potassio</h2>
-      <div class="card" style="border-left:4px solid #ef4444">
-        <span class="badge red">K⁺ &lt;3,5</span> → Correggere K⁺ PRIMA dell'insulina!<br>
-        <span class="badge orange">K⁺ 3,5–5</span> → Somministrare K⁺ in parallelo all'insulina<br>
-        <span class="badge gray">K⁺ &gt;5</span> → Non intervenire sul K⁺<br>
-        Insulina ev: 0,1 UI/kg/h. Reidratazione: 1L nella 1ª ora. Non correggere glicemia troppo rapidamente → rischio edema cerebrale!
-      </div>
-      <h2>Ipoglicemia grave — terapia</h2>
-      <div class="two-col">
-        <div class="card" style="border-top:3px solid #22c55e"><div class="card-title">Cosciente</div>Zuccheri per os. Rivalutare dopo 15 min. Target 120–150 mg/dL (non 80 → rischio recidiva).</div>
-        <div class="card" style="border-top:3px solid #ef4444"><div class="card-title">Incosciente</div>Glucosata 33%: 1–2 fiale ev in bolo, poi infusione 5–10%. Se no accesso: Glucagone sc/im.</div>
-      </div>
-      <div class="quiz-section">
-        <h4>🎓 Domande tipiche da orale</h4>
-        <div class="quiz-q" onclick="revealAnswer(this)"><div class="q-text">Un paziente con DM2 in metformina arriva con dolore addominale, acidosi grave e glicemia 110. Cosa pensi?</div><div class="q-answer">Acidosi lattica da metformina. Il dato chiave è la glicemia normale con acidosi grave — esclude DKA (glicemia alta + chetosi) e SII (glicemia altissima). La metformina inibisce la fosforilazione ossidativa epatica → accumulo di lattato, soprattutto in IR. Trattamento: stop metformina, supporto, dialisi se grave.</div><div class="q-toggle">Tocca per vedere la risposta</div></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- BPCO + SINCOPE + QT -->
-  <div class="topic-card" id="bpco">
-    <div class="topic-header" onclick="toggleTopic(this)">
-      <h3>BPCO riacutizzata · Sincope · Sindrome QT lungo</h3>
-      <span class="topic-date">24/03/2026</span>
-      <button class="mark-done" onclick="markDone(event,'bpco')">Studiato ✓</button>
-      <span class="chevron">▶</span>
-    </div>
-    <div class="topic-body">
-      <h2>BPCO riacutizzata — classificazione</h2>
-      <div class="three-col">
-        <div class="card" style="border-top:3px solid #22c55e"><div class="card-title" style="color:#065f46">Lieve</div>SpO₂ ≥90%, pH normale, FR &lt;24 → gestione ambulatoriale</div>
-        <div class="card" style="border-top:3px solid #f59e0b"><div class="card-title" style="color:#92400e">Moderata</div>SpO₂ &lt;90%, PaCO₂ &gt;45–47, pH normale → ricovero ordinario</div>
-        <div class="card" style="border-top:3px solid #ef4444"><div class="card-title" style="color:#991b1b">Severa</div>pH &lt;7,35 → NIV. pH &lt;7,25 + instabilità → VM invasiva</div>
-      </div>
-      <div class="info">O₂ target in BPCO: 88–92% (non sovra-ossigenare → blocco drive ipossico)</div>
-      <h2>Sincope — classificazione rapida</h2>
-      <div class="card">
-        <span class="badge blue">Riflessa (vasovagale)</span> Più frequente, giovani, posizionale/emotiva.<br>
-        <span class="badge orange">Ortostatica</span> Farmaci, neuropatia autonomica (diabete, amiloidosi).<br>
-        <span class="badge red">Cardiogena</span> BAV, sick sinus, TV, stenosi aortica, CMI. Sincope da sforzo o in posizione supina = ALTO RISCHIO → ricovero.
-      </div>
-      <h2>QT lungo acquisito</h2>
-      <div class="card" style="border-left:4px solid #8b5cf6">
-        QTc normale: ≤450ms (M) / ≤470ms (F). <strong>Pericolo: QTc &gt;500ms</strong> → Torsione di Punta → FV.<br>
-        <span class="badge red">Farmaci a rischio:</span> Amiodarone · Antipsicotici (Aloperidolo) · Macrolidi (Eritromicina, Claritromicina) · Chinolonici (Ciproflox) · Antidepressivi triciclici.<br><br>
-        <strong>Caso tipico:</strong> Anziano con FA in Amiodarone + polmonite trattata con macrolide + Aloperidolo per agitazione = pericolo reale!
-      </div>
-      <div class="quiz-section">
-        <h4>🎓 Domande tipiche da orale</h4>
-        <div class="quiz-q" onclick="revealAnswer(this)"><div class="q-text">Paziente con BPCO e pH 7,28. Cosa fai?</div><div class="q-answer">pH &lt;7,35 con PaCO₂ elevata = acidosi respiratoria in BPCO severa → indicazione alla NIV (BPAP). Inizio con broncodilatatori SABA, corticosteroidi ev, antibiotico se infezione. O₂ controllato target 88–92%. Se pH &lt;7,25 + confusione/shock → intubazione. La NIV è il cardine: riduce la mortalità, evita l'intubazione nel 75% dei casi.</div><div class="q-toggle">Tocca per vedere la risposta</div></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- PERICARDITE -->
-  <div class="topic-card" id="pericardite">
-    <div class="topic-header" onclick="toggleTopic(this)">
-      <h3>Pericardite & Tamponamento cardiaco</h3>
-      <span class="topic-date">11/03/2026</span>
-      <button class="mark-done" onclick="markDone(event,'pericardite')">Studiato ✓</button>
-      <span class="chevron">▶</span>
-    </div>
-    <div class="topic-body">
-      <div class="two-col">
-        <div class="card" style="border-top:3px solid #f59e0b">
-          <div class="card-title">Pericardite</div>
-          Dolore retrosternale irradiato al trapezio, ↑ supina, ↓ inclinato avanti.<br>
-          ECG: sopraslivellamento ST diffuso a concavità superiore (eccetto aVR).<br>
-          <strong>Terapia:</strong> ASA/FANS + Colchicina. Steroidi solo se autoimmune/refrattaria.
-        </div>
-        <div class="card" style="border-top:3px solid #ef4444">
-          <div class="card-title">Tamponamento cardiaco</div>
-          Triade di Beck: ipotensione + turgore giugulari + toni attenuati. Polso paradosso &gt;10mmHg.<br>
-          ECG: basso voltaggio, alternanza elettrica.<br>
-          Eco: collasso protodiastolico VD (segno più specifico).<br>
-          <strong>Terapia:</strong> pericardiocentesi urgente.
-        </div>
-      </div>
-    </div>
+  <div style="display:flex;gap:10px;flex-wrap:wrap">
+    <button class="pbtn" onclick="show('calendario')">→ Calendario</button>
+    <button class="pbtn" onclick="show('schemi')">→ Schemi di studio</button>
   </div>
 </div>
 
-<!-- ==================== MUCILLI ==================== -->
-<div class="prof-section prof-mucilli">
-  <div class="prof-header">
-    <span class="prof-emoji">🔪</span>
-    <h2>Prof. Mucilli</h2>
-    <span class="prof-sub">Chirurgia d'urgenza · Chirurgia toracica</span>
+<!-- CALENDARIO -->
+<div class="page sec" id="calendario">
+  <h1>Calendario</h1>
+  <p class="sub">Clicca su un giorno per segnarlo come completato</p>
+  <div class="legend">
+    <div class="leg-i"><div class="leg-d" style="background:var(--n)"></div>Neurologia</div>
+    <div class="leg-i"><div class="leg-d" style="background:var(--p)"></div>Psichiatria</div>
+    <div class="leg-i"><div class="leg-d" style="background:var(--c)"></div>Neurochirurgia</div>
+    <div class="leg-i"><div class="leg-d" style="background:var(--r)"></div>Ripetizione</div>
   </div>
-
-  <div class="topic-card" id="emorragie">
-    <div class="topic-header" onclick="toggleTopic(this)">
-      <h3>Emorragie digestive</h3>
-      <span class="topic-date">03/03/2026</span>
-      <button class="mark-done" onclick="markDone(event,'emorragie')">Studiato ✓</button>
-      <span class="chevron">▶</span>
-    </div>
-    <div class="topic-body">
-      <h2>Terminologia</h2>
-      <div class="card"><span class="badge red">Ematemesi</span> Vomito sangue (rosso vivo = varici; caffeano = ulcera) · <span class="badge red">Melena</span> Feci picee (sangue digerito) · <span class="badge orange">Enterorragia</span> Sangue parzialmente digerito · <span class="badge orange">Rettorragia</span> Sangue rosso vivo dal retto · <span class="badge gray">Sangue occulto</span> Anemizzazione cronica</div>
-      <div class="warn">Il colore non determina l'altezza: sanguinamento alto abbondante può uscire rosso vivo (effetto catartico).</div>
-      <h2>Escalation terapeutica</h2>
-      <div class="card" style="padding:0;overflow:hidden;background:#fff;">
-        <table>
-          <thead><tr><th>Livello</th><th>Trattamento</th></tr></thead>
-          <tbody>
-            <tr><td><span class="badge blue">1° Medico</span></td><td>IPP + Somatostatina/Octreotide + Terlipressina 2mg ev/4–6h</td></tr>
-            <tr><td><span class="badge orange">2° Endoscopico</span></td><td>EGDS: adrenalina, clip, legatura varici, coagulazione</td></tr>
-            <tr><td><span class="badge purple">3° TIPS</span></td><td>Shunt portocavale per varici refrattarie</td></tr>
-            <tr><td><span class="badge orange">4° Radiologia interv.</span></td><td>Angiografia + embolizzazione selettiva</td></tr>
-            <tr><td><span class="badge red">5° Chirurgia</span></td><td>&lt;5% dei casi. Solo se incontrollabile</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="quiz-section">
-        <h4>🎓 Domande tipiche da orale</h4>
-        <div class="quiz-q" onclick="revealAnswer(this)"><div class="q-text">Paziente cirrotico con ematemesi: quale farmaco somministri subito e perché?</div><div class="q-answer">Terlipressina (2mg ev ogni 4–6h, max 24h) o Somatostatina/Octreotide. Riducono il flusso splancnico e abbassano la pressione portale, diminuendo il sanguinamento da varici esofagee. Si somministrano subito, anche prima dell'endoscopia, perché dimostrano di ridurre la mortalità se iniziati precocemente. Si associa l'antibiotico (norfloxacina o ceftriaxone) perché i cirrotici con emorragia hanno alto rischio di sepsi batterica.</div><div class="q-toggle">Tocca per vedere la risposta</div></div>
-      </div>
-    </div>
-  </div>
-
-  <div class="topic-card" id="intestinali">
-    <div class="topic-header" onclick="toggleTopic(this)">
-      <h3>Ischemia Mesenterica & Colite Ischemica</h3>
-      <span class="topic-date">17/03/2026</span>
-      <button class="mark-done" onclick="markDone(event,'intestinali')">Studiato ✓</button>
-      <span class="chevron">▶</span>
-    </div>
-    <div class="topic-body">
-      <h2>Triade clinica IMA</h2>
-      <div class="card" style="border-left:4px solid #ef4444">
-        <strong>1.</strong> Dolore intenso improvviso sproporzionato all'obiettività (addome trattabile inizialmente) ·
-        <strong>2.</strong> Vomito o diarrea ·
-        <strong>3.</strong> FA o IMA recente (forme emboliche 40–80%)
-      </div>
-      <div class="danger">Ischemia completa → infarto entro 6h. Per sopravvivere serve almeno 1,5m di ileo sano.</div>
-      <h2>Forme di IMA</h2>
-      <div class="card" style="padding:0;overflow:hidden;background:#fff;">
-        <table>
-          <thead><tr><th>Forma</th><th>%</th><th>Causa</th><th>Nota</th></tr></thead>
-          <tbody>
-            <tr><td><span class="badge red">Embolia AMS</span></td><td>40–50%</td><td>FA, valvulopatie</td><td>Risparmia duodeno (embolo 6–8cm dall'origine)</td></tr>
-            <tr><td><span class="badge red">Trombosi AMS</span></td><td>15–25%</td><td>Aterosclerosi</td><td>Ischemia più estesa (all'imbocco)</td></tr>
-            <tr><td><span class="badge blue">Trombosi venosa</span></td><td>5–15%</td><td>Trombofilia</td><td>Prognosi migliore (44% mortalità)</td></tr>
-            <tr><td><span class="badge gray">NOMI</span></td><td>5–15%</td><td>Shock (vasocostrizione)</td><td>Prognosi peggiore per estensione</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-
-  <div class="topic-card" id="addome-acuto">
-    <div class="topic-header" onclick="toggleTopic(this)">
-      <h3>Addome Acuto & Occlusione Intestinale</h3>
-      <span class="topic-date">15/04/2026</span>
-      <button class="mark-done" onclick="markDone(event,'addome-acuto')">Studiato ✓</button>
-      <span class="chevron">▶</span>
-    </div>
-    <div class="topic-body">
-      <h2>Tempistica chirurgica</h2>
-      <div class="card" style="padding:0;overflow:hidden;background:#fff;">
-        <table>
-          <thead><tr><th>Urgenza</th><th>Entro</th><th>Condizione</th></tr></thead>
-          <tbody>
-            <tr><td><span class="badge red">Emergenza</span></td><td>Immediato</td><td>Rottura AAA, shock emorragico</td></tr>
-            <tr><td><span class="badge red">Urgenza assoluta</span></td><td>2h</td><td>Peritonite diffusa + shock settico</td></tr>
-            <tr><td><span class="badge orange">Urgenza</span></td><td>6h</td><td>Peritonite, infarto mesenterico, perforazione, volvolo, strozzamento</td></tr>
-            <tr><td><span class="badge orange">Urgenza relativa</span></td><td>6–12h</td><td>Appendicite, occlusione da tumore</td></tr>
-            <tr><td><span class="badge gray">Pre-elettivo</span></td><td>24–48h</td><td>Colecistite acuta (prima reidrata + antibiotico)</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <h2>Occlusione meccanica vs paralitica</h2>
-      <div class="two-col">
-        <div class="card" style="border-top:3px solid #ef4444"><div class="card-title">Meccanica</div>Ostacolo fisico (tumore, briglia, ernia, volvolo). Vomito alimentare (alta) o fecaloide (colica). Iperperistalsi iniziale → silenzio.</div>
-        <div class="card" style="border-top:3px solid #f59e0b"><div class="card-title">Paralitica (ileo dinamico)</div>Post-chirurgia, peritonite, farmaci oppioidi, disturbi metabolici. Distensione diffusa, assenza peristalsi.</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="topic-card" id="traumi-addome">
-    <div class="topic-header" onclick="toggleTopic(this)">
-      <h3>Traumi Addominali</h3>
-      <span class="topic-date">25/03/2026</span>
-      <button class="mark-done" onclick="markDone(event,'traumi-addome')">Studiato ✓</button>
-      <span class="chevron">▶</span>
-    </div>
-    <div class="topic-body">
-      <h2>Organi più colpiti</h2>
-      <div class="card" style="padding:0;overflow:hidden;background:#fff;">
-        <table>
-          <thead><tr><th>Organo</th><th>Caratteristiche</th><th>Trattamento</th></tr></thead>
-          <tbody>
-            <tr><td><span class="badge red">Milza</span></td><td>Più colpita. Rottura in 2 tempi (subdola!). 500cc → morte se non trattata.</td><td>Lesione singola → embolizzazione. Multipla/spappolata → splenectomia.</td></tr>
-            <tr><td><span class="badge orange">Fegato</span></td><td>Ipocondrio dx. Fegato malato peggiore.</td><td>Conservativo anche con raccolte 15cm. Chirurgia solo in shock: sutura → packing → revisione a 48h.</td></tr>
-            <tr><td><span class="badge blue">Rene</span></td><td>Costa + vertebra = piano rigido. Ematuria.</td><td>Quasi mai chirurgia. Nefrectomia rarissima.</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="info">E-FAST ecografica: primo esame. Spazio di Morrison, splenorenale, pelvi, pericardio. Liquido = emorragia → sala operatoria o radiologia interventistica.</div>
-    </div>
-  </div>
-
-  <div class="topic-card" id="pancreatite">
-    <div class="topic-header" onclick="toggleTopic(this)">
-      <h3>Pancreatite Acuta</h3>
-      <span class="topic-date">22/04/2026</span>
-      <button class="mark-done" onclick="markDone(event,'pancreatite')">Studiato ✓</button>
-      <span class="chevron">▶</span>
-    </div>
-    <div class="topic-body">
-      <h2>Classificazione di Atlanta</h2>
-      <div class="two-col">
-        <div class="card" style="border-top:3px solid #22c55e"><div class="card-title" style="color:#065f46">Edematosa (80%)</div>Decorso favorevole, si autolimita, bassa mortalità.</div>
-        <div class="card" style="border-top:3px solid #ef4444"><div class="card-title" style="color:#991b1b">Necrotico-emorragica (20%)</div>MOF, IR, ARDS. Mortalità 25–30%. Complicanze locali (ascessi, pseudocisti, fistole).</div>
-      </div>
-      <h2>Criteri di Ranson (&gt;3 = forma severa)</h2>
-      <div class="two-col">
-        <div class="card" style="border-left:4px solid #3b82f6"><div class="card-title">All'ingresso</div>Età &gt;55 · GB &gt;16.000 · Glicemia &gt;200 · LDH &gt;350 · GOT &gt;250</div>
-        <div class="card" style="border-left:4px solid #8b5cf6"><div class="card-title">A 48h</div>↓Ht &gt;10% · ↑Azotemia · Ca²⁺ &lt;8 · PaO₂ &lt;60 · Bilancio liquidi &gt;6L · Deficit basi &gt;4</div>
-      </div>
-      <div class="warn">⚠️ NO morfina (spasmo sfintere di Oddi) · NO ranitidina (causa pancreatite!) · NO antibiotici profilattici · NO digiuno nelle prime 48h nelle forme lievi · Rimozione calcolo: ERCP (non chirurgia aperta in fase acuta).</div>
-      <div class="quiz-section">
-        <h4>🎓 Domande tipiche da orale</h4>
-        <div class="quiz-q" onclick="revealAnswer(this)"><div class="q-text">Perché nella pancreatite è importante il calcio a 48h?</div><div class="q-answer">Il Ca²⁺ &lt;8 mg/dL a 48h è uno dei criteri di Ranson per pancreatite severa. Il calcio si deposita nelle aree di steato-necrosi peripancreatica: i lipidi liberati dalla lipolisi enzimatica saponificano (si legano al Ca²⁺) → ipocalcemia. Più estesa la necrosi, più calcio viene "sequestrato". L'ipocalcemia grave può causare tetania e aritmie.</div><div class="q-toggle">Tocca per vedere la risposta</div></div>
-      </div>
-    </div>
-  </div>
-
-  <div class="topic-card" id="traumi-torace">
-    <div class="topic-header" onclick="toggleTopic(this)">
-      <h3>Traumi Toracici</h3>
-      <span class="topic-date">28/04/2026</span>
-      <button class="mark-done" onclick="markDone(event,'traumi-torace')">Studiato ✓</button>
-      <span class="chevron">▶</span>
-    </div>
-    <div class="topic-body">
-      <h2>Pneumotorace — 3 tipi</h2>
-      <div class="three-col">
-        <div class="card" style="border-top:3px solid #22c55e"><div class="card-title">Chiuso</div>Aria entra e rimane. Si riassorbe se &lt;15%. Drenaggio se &gt;15%.</div>
-        <div class="card" style="border-top:3px solid #f59e0b"><div class="card-title">Aperto</div>Aria entra e esce. Chiudere la breccia + drenaggio.</div>
-        <div class="card" style="border-top:3px solid #ef4444"><div class="card-title" style="color:#991b1b">Iperteso ⚠️ EMERGENZA</div>Valvola → aria entra, non esce → shift mediastino → FV → morte. Decompressione ago 2°–3° spazio intercostale su emiclaveare → drenaggio.</div>
-      </div>
-      <h2>Lembo mobile</h2>
-      <div class="card" style="border-left:4px solid #ef4444">≥2 fratture per costa su ≥2 coste contigue → movimento paradosso. Terapia se grave: IOT + VM a pressione positiva (stabilizza dall'interno). Rischio barotrauma.</div>
-      <h2>Emotorace</h2>
-      <div class="card"><span class="badge gray">Minimo &lt;300cc</span> <span class="badge orange">Moderato 350–1000cc</span> <span class="badge red">Massivo &gt;1500cc</span><br>Sempre drenaggio toracico. Se &gt;200cc/h → toracoscopia urgente.</div>
-    </div>
-  </div>
+  <div id="cal-container"></div>
 </div>
 
-<!-- ==================== GUARRACINO ==================== -->
-<div class="prof-section prof-guarracino">
-  <div class="prof-header">
-    <span class="prof-emoji">🫁</span>
-    <h2>Prof. Guarracino</h2>
-    <span class="prof-sub">Anestesia · Rianimazione · Terapia Intensiva</span>
-  </div>
-
-  <div class="topic-card" id="met">
-    <div class="topic-header" onclick="toggleTopic(this)">
-      <h3>Emergenze Intraospedaliere & MET</h3>
-      <span class="topic-date">29/04/2026</span>
-      <button class="mark-done" onclick="markDone(event,'met')">Studiato ✓</button>
-      <span class="chevron">▶</span>
-    </div>
-    <div class="topic-body">
-      <h2>Valutazione ABCDE</h2>
-      <div class="card" style="padding:0;overflow:hidden;background:#fff;">
-        <table>
-          <thead><tr><th>Lettera</th><th>Valuta</th><th>Intervento chiave</th></tr></thead>
-          <tbody>
-            <tr><td><span class="badge green">A</span> Airway</td><td>Pervietà (parla? rumori?)</td><td>Guedel, maschera laringea, IOT. Cricotiroidotomia in extremis.</td></tr>
-            <tr><td><span class="badge green">B</span> Breathing</td><td>FR, SpO₂, EGA</td><td>O₂ target 94–98% (BPCO 88–92%). Escalation: occhialini → Venturi → HFNC → NIV → VM.</td></tr>
-            <tr><td><span class="badge green">C</span> Circulation</td><td>Polso, PA, refill, diuresi, ECG</td><td>Refill &gt;5s = shock. Non farsi ingannare da PA conservata con vasocostrizione!</td></tr>
-            <tr><td><span class="badge green">D</span> Disability</td><td>AVPU / GCS / pupille</td><td>GCS &lt;8 → intubazione.</td></tr>
-            <tr><td><span class="badge green">E</span> Exposure</td><td>Head to Toe</td><td>Temperatura, edemi, rash, escoriazioni.</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <h2>NEWS — score di allerta</h2>
-      <div class="card">
-        <span class="badge gray">0</span> Routine · <span class="badge blue">1–4</span> Rivaluta · <span class="badge orange">singolo 3 o tot 5–6</span> Allerta · <span class="badge red">≥7</span> Rischio vita → attiva MET
-      </div>
-      <div class="info">Causa più comune di chiamata MET: insufficienza respiratoria. Il pz non muore se non si intuba — muore se non si ventila.</div>
-    </div>
-  </div>
-
-  <div class="topic-card" id="extraosp">
-    <div class="topic-header" onclick="toggleTopic(this)">
-      <h3>Emergenze Extraospedaliere & RCP</h3>
-      <span class="topic-date">05/05/2026</span>
-      <button class="mark-done" onclick="markDone(event,'extraosp')">Studiato ✓</button>
-      <span class="chevron">▶</span>
-    </div>
-    <div class="topic-body">
-      <h2>4H + 4T — cause reversibili arresto cardiaco</h2>
-      <div class="two-col">
-        <div class="card" style="border-top:3px solid #ef4444">
-          <div class="card-title" style="color:#991b1b">4H</div>
-          <span class="badge red">Ipossia</span> <span class="badge red">Iperkaliemia/elettroliti</span> <span class="badge red">Ipotermia</span> <span class="badge red">Ipovolemia</span>
-        </div>
-        <div class="card" style="border-top:3px solid #3b82f6">
-          <div class="card-title" style="color:#1e40af">4T</div>
-          <span class="badge blue">Tamponamento</span> <span class="badge blue">Pneumotorace iperteso</span> <span class="badge blue">Trombosi (SCA/EP)</span> <span class="badge blue">Tossici/Intossicazioni</span>
-        </div>
-      </div>
-      <div class="warn">Ogni minuto senza RCP = -10% sopravvivenza. Nei bambini: aggiungere Ipoglicemia!</div>
-      <h2>Reti tempo-dipendenti</h2>
-      <div class="three-col">
-        <div class="card" style="border-top:3px solid #ef4444"><div class="card-title">"Il tempo è muscolo"</div>Rete STEMI: ECG in ambulanza → trasmissione → sala di emodinamica diretta.</div>
-        <div class="card" style="border-top:3px solid #8b5cf6"><div class="card-title">"Il tempo è cervello"</div>Rete Stroke: stroke unit + neuroradiologia interventistica + trombectomia.</div>
-        <div class="card" style="border-top:3px solid #f59e0b"><div class="card-title">Rete Trauma</div>Trauma center: chirurgia, TC, neurochirurgia, radiologia interventistica.</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="topic-card" id="anest">
-    <div class="topic-header" onclick="toggleTopic(this)">
-      <h3>Valutazione Anestesiologica Preoperatoria</h3>
-      <span class="topic-date">13/05/2026</span>
-      <button class="mark-done" onclick="markDone(event,'anest')">Studiato ✓</button>
-      <span class="chevron">▶</span>
-    </div>
-    <div class="topic-body">
-      <h2>Classificazione ASA</h2>
-      <div class="card" style="padding:0;overflow:hidden;background:#fff;">
-        <table>
-          <thead><tr><th>ASA</th><th>Descrizione</th><th>Esempi</th></tr></thead>
-          <tbody>
-            <tr><td><span class="badge green">ASA 1</span></td><td>Sano</td><td>Nessuna patologia</td></tr>
-            <tr><td><span class="badge blue">ASA 2</span></td><td>Malattia sistemica lieve</td><td>Fumatore, BMI 30–40, DM controllato, ipertensione trattata</td></tr>
-            <tr><td><span class="badge orange">ASA 3</span></td><td>Malattia sistemica severa</td><td>DM scompensato, obesità severa, dialisi, BPCO</td></tr>
-            <tr><td><span class="badge red">ASA 4</span></td><td>Pericolo di vita</td><td>IMA/stroke &lt;3 mesi, FE gravemente ridotta</td></tr>
-            <tr><td><span class="badge red">ASA 5</span></td><td>Moribondo</td><td>Chirurgia salvavita</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="warn">⚠️ Rx torace di routine NON va fatta. ECG non va fatto in chirurgia a basso rischio. Il 90% delle info viene da anamnesi + esame obiettivo!</div>
-      <h2>Farmaci perioperatori</h2>
-      <div class="two-col">
-        <div class="card" style="border-top:3px solid #22c55e"><div class="card-title">β-bloccanti e Aspirina</div><strong>NON sospendere</strong>. Sospendere i β-bloccanti aumenta il rischio di ischemia da rebound.</div>
-        <div class="card" style="border-top:3px solid #3b82f6"><div class="card-title">Doppia antiaggregazione</div>Sospendere il secondo antiaggregante, mantenere la cardioaspirina.</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="topic-card" id="ti">
-    <div class="topic-header" onclick="toggleTopic(this)">
-      <h3>Terapia Intensiva · Shock · EGA</h3>
-      <span class="topic-date">19/05/2026</span>
-      <button class="mark-done" onclick="markDone(event,'ti')">Studiato ✓</button>
-      <span class="chevron">▶</span>
-    </div>
-    <div class="topic-body">
-      <h2>4 tipi di shock — riconoscimento</h2>
-      <div class="card" style="padding:0;overflow:hidden;background:#fff;">
-        <table>
-          <thead><tr><th>Tipo</th><th>Eco bedside</th><th>Terapia</th></tr></thead>
-          <tbody>
-            <tr><td><span class="badge red">Distributivo (settico)</span></td><td>Cuore ipercinetico, cavità vuote</td><td>Vasopressori (Noradrenalina)</td></tr>
-            <tr><td><span class="badge orange">Cardiogeno</span></td><td>Cuore grande, cinesi ridotta</td><td>Inotropi (Dobutamina), ECMO</td></tr>
-            <tr><td><span class="badge blue">Ipovolemico</span></td><td>Cavità piccole, VCI collassabile</td><td>Fluidi, emotrasfusioni</td></tr>
-            <tr><td><span class="badge purple">Ostruttivo</span></td><td>VD dilatato (EP); no sliding (PNX); VCI piena (tamponamento)</td><td>Trombolisi / pericardiocentesi / decompressione</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <h2>EGA — valori normali e Anion Gap</h2>
-      <div class="card" style="border-left:4px solid #10b981">
-        PaO₂ 80–100 · PaCO₂ 35–45 · pH 7,35–7,45 · HCO₃⁻ 22–26 · BE ±2 · Lattati &lt;2 mmol/L<br>
-        <strong>Anion Gap</strong> = Na⁺ − (Cl⁻ + HCO₃⁻) → normale 8–12. AG alto + acidosi metab = accumulo acidi (DKA, acidosi lattica, IR). AG normale = perdita HCO₃ (diarrea).
-      </div>
-      <div class="quiz-section">
-        <h4>🎓 Domande tipiche da orale</h4>
-        <div class="quiz-q" onclick="revealAnswer(this)"><div class="q-text">La ventilazione a pressione positiva agisce solo sul polmone o anche sul cuore?</div><div class="q-answer">Agisce su entrambi. Sul cuore destro: ↑ pressione intratoracica → ↓ ritorno venoso → ↓ precarico VD + distensione alveolare → ↑ resistenze vascolari polmonari → ↑ postcarico VD. Il VD tollera male la VM positiva. Sul cuore sinistro: ↑ pressione intratoracica → ↓ pressione transmurale VS → ↓ postcarico VS → migliora l'eiezione. Per questo la CPAP è utile nell'EPA!</div><div class="q-toggle">Tocca per vedere la risposta</div></div>
-      </div>
-    </div>
-  </div>
-
-  <div class="topic-card" id="resp">
-    <div class="topic-header" onclick="toggleTopic(this)">
-      <h3>Insufficienza Respiratoria & ARDS</h3>
-      <span class="topic-date">19/05/2026</span>
-      <button class="mark-done" onclick="markDone(event,'resp')">Studiato ✓</button>
-      <span class="chevron">▶</span>
-    </div>
-    <div class="topic-body">
-      <h2>Tipo 1 vs Tipo 2</h2>
-      <div class="two-col">
-        <div class="card" style="border-top:3px solid #ef4444"><div class="card-title">Tipo 1 — Lung failure (ipossiemica)</div>PaO₂ bassa, PaCO₂ normale/bassa. Problema: scambi. Cause: shunt, V/Q mismatch, edema, polmonite.</div>
-        <div class="card" style="border-top:3px solid #8b5cf6"><div class="card-title">Tipo 2 — Pump failure (ipercapnica)</div>PaCO₂ alta → acidosi respiratoria. Problema: pompa (centro resp., miopatie, paralisi).</div>
-      </div>
-      <h2>ARDS — classificazione P/F</h2>
-      <div class="three-col">
-        <div class="card" style="border-top:3px solid #f59e0b"><div class="card-title">Lieve</div>PF 200–300</div>
-        <div class="card" style="border-top:3px solid #f97316"><div class="card-title">Moderata</div>PF 100–200</div>
-        <div class="card" style="border-top:3px solid #ef4444"><div class="card-title">Severa</div>PF &lt;100</div>
-      </div>
-      <div class="info">Pronazione: sessioni ≥16h. Recluta regioni posteriori, omogenizza V/Q, ↓ resistenze VD. Non risponde → ECMO.</div>
-    </div>
-  </div>
-
-  <div class="topic-card" id="aki">
-    <div class="topic-header" onclick="toggleTopic(this)">
-      <h3>AKI · Insufficienza Epatica · Politrauma</h3>
-      <span class="topic-date">20/05/2026</span>
-      <button class="mark-done" onclick="markDone(event,'aki')">Studiato ✓</button>
-      <span class="chevron">▶</span>
-    </div>
-    <div class="topic-body">
-      <h2>AKI — criteri KDIGO</h2>
-      <div class="card" style="border-left:4px solid #10b981">
-        <span class="badge red">Creatinina ↑ ≥0,3 mg/dL in 48h</span> oppure <span class="badge red">Creatinina ≥1,5× basale</span> oppure <span class="badge red">Diuresi &lt;0,5 mL/kg/h per ≥6h</span><br>
-        Diuretici nell'AKI: da evitare (↑ consumo O₂ nefroni già sofferenti). Accesso dialisi: NO succlavia (stenosi) → giugulare interna destra o femorale.
-      </div>
-      <h2>Triade letale del politrauma</h2>
-      <div class="danger"><strong>Coagulopatia + Ipotermia + Acidosi</strong> — si alimentano a vicenda. Contrasta con: riscaldamento, trasfusioni 1:1:1 (GRC:PFC:PLT), acido tranexamico precoce, TEG/ROTEM.</div>
-      <h2>Politrauma — ABCDE specifico</h2>
-      <div class="card" style="padding:0;overflow:hidden;background:#fff;">
-        <table>
-          <thead><tr><th>Step</th><th>Priorità nel trauma</th></tr></thead>
-          <tbody>
-            <tr><td><span class="badge green">A</span></td><td>Vie aeree + colonna cervicale. GCS &lt;8 → IOT. Sempre collare.</td></tr>
-            <tr><td><span class="badge green">B</span></td><td>PNX iperteso? → decompressione ago (2°–3° spazio, emiclaveare) → drenaggio.</td></tr>
-            <tr><td><span class="badge green">C</span></td><td>Emorragia → shock. Protocollo 1:1:1. Tourniquet. Acido tranexamico. REBOA se lesione grandi vasi.</td></tr>
-            <tr><td><span class="badge green">D</span></td><td>GCS, pupille. Bradicardia post-trauma = allarme (trauma midollare o ↑ PIC).</td></tr>
-            <tr><td><span class="badge green">E</span></td><td>E-FAST: Morrison, splenorenale, pelvi, pericardio. Liquido = emorragia → sala.</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
+<!-- SCHEMI -->
+<div class="page sec" id="schemi">
+  <h1>Schemi per Argomento</h1>
+  <p class="sub">Ogni schema è estratto fedelmente dalle sbobine. Clicca per aprire, segna ciò che hai imparato.</p>
+  <div class="prof-bar" id="prof-bar"></div>
+  <div id="prof-panels"></div>
 </div>
 
-<!-- ==================== COSTANTINI ==================== -->
-<div class="prof-section prof-costantini">
-  <div class="prof-header">
-    <span class="prof-emoji">🟣</span>
-    <h2>Prof. Costantini</h2>
-    <span class="prof-sub">Cure Palliative · Terapia del dolore · Medicina del dolore</span>
+<!-- STATS -->
+<div class="page sec" id="stats">
+  <h1>Progresso</h1>
+  <div class="stat-row">
+    <div class="stat-c"><div class="stat-n" id="st-d">0</div><div class="stat-l">giorni completati</div></div>
+    <div class="stat-c"><div class="stat-n" id="st-t">0</div><div class="stat-l">argomenti imparati</div></div>
+    <div class="stat-c"><div class="stat-n" id="st-p">0%</div><div class="stat-l">completamento</div></div>
+    <div class="stat-c"><div class="stat-n" id="st-g">--</div><div class="stat-l">giorni all'esame</div></div>
   </div>
-
-  <div class="topic-card" id="palliative">
-    <div class="topic-header" onclick="toggleTopic(this)">
-      <h3>Cure Palliative & Terapia del Dolore</h3>
-      <span class="topic-date">21/04/2026</span>
-      <button class="mark-done" onclick="markDone(event,'palliative')">Studiato ✓</button>
-      <span class="chevron">▶</span>
-    </div>
-    <div class="topic-body">
-      <h2>Scala OMS — 3 gradini</h2>
-      <div class="three-col">
-        <div class="card" style="border-top:3px solid #22c55e"><div class="card-title">1° Gradino</div>FANS / Paracetamolo + adiuvanti + psicoterapia</div>
-        <div class="card" style="border-top:3px solid #f59e0b"><div class="card-title">2° Gradino</div>Oppiacei deboli (tramadolo, codeina) + precedenti</div>
-        <div class="card" style="border-top:3px solid #ef4444"><div class="card-title">3° Gradino</div>Oppiacei forti (morfina, ossicodone, fentanil) + precedenti</div>
-      </div>
-      <h2>Tecniche interventistiche</h2>
-      <div class="two-col">
-        <div class="card" style="border-left:4px solid #8b5cf6">
-          <div class="card-title">Pompa intratecale</div>
-          Morfina IT rapporto 1:100–150 vs orale. Ziconotide (conotossina, Ca²⁺ inibitore) → indicato in tumore pancreas, dolore refrattario.
-        </div>
-        <div class="card" style="border-left:4px solid #6366f1">
-          <div class="card-title">SCS — Elettrostimolazione midollare</div>
-          Dolore neuropatico refrattario, FBSS. Elettrocateteri peridurali collegati a stimolatore. Sempre bilaterale (rischio sindrome mirror pain).
-        </div>
-      </div>
-      <div class="info">Il dolore è il <strong>6° parametro vitale</strong>: deve essere registrato in cartella con scala e risposta alla terapia.</div>
-    </div>
+  <div class="prog-wrap">
+    <div class="prog-bg"><div class="prog-fill" id="st-bar" style="width:0%"></div></div>
+    <div class="prog-lbl"><span>Argomenti</span><span id="st-frac">0 / 0</span></div>
   </div>
-
-  <div class="topic-card" id="lombare">
-    <div class="topic-header" onclick="toggleTopic(this)">
-      <h3>Dolore nel distretto lombosacrale</h3>
-      <span class="topic-date">06/05/2026</span>
-      <button class="mark-done" onclick="markDone(event,'lombare')">Studiato ✓</button>
-      <span class="chevron">▶</span>
-    </div>
-    <div class="topic-body">
-      <h2>Diagnosi differenziale rapida</h2>
-      <div class="card" style="padding:0;overflow:hidden;background:#fff;">
-        <table>
-          <thead><tr><th>Patologia</th><th>Segno distintivo</th><th>Test</th></tr></thead>
-          <tbody>
-            <tr><td><span class="badge blue">Ernia discale / Radicolopatia</span></td><td>Dolore radicolare che scende al tallone</td><td>Lasègue + (L5/S1) · Wassermann + (L4)</td></tr>
-            <tr><td><span class="badge orange">Sindrome faccettale</span></td><td>Dolore paravertebrale/gluteo, NON al tallone</td><td>Test carico/scarico +, Lasègue −</td></tr>
-            <tr><td><span class="badge purple">Sacroileite</span></td><td>Dolore gluteo/inguine, peggiora seduti</td><td>Patrick-Faber, Gaenslen +</td></tr>
-            <tr><td><span class="badge gray">Stenosi canale spinale</span></td><td>Claudicatio neurogena (pochi metri poi stop)</td><td>DD con stenosi vascolare</td></tr>
-            <tr><td><span class="badge red">Cauda equina</span></td><td>Deficit motorio + sfinteriale</td><td>RM urgente + decompressione &lt;18–24h!</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <h2>Radicolopatia — quale radice?</h2>
-      <div class="card">
-        <span class="badge blue">L4</span> Dolore coscia anteriore. Wassermann +.<br>
-        <span class="badge blue">L5</span> Dolore posterior coscia e gamba, superficie anteriore. Lasègue +.<br>
-        <span class="badge blue">S1</span> Sciatica pura, tutto posteriore. Lasègue +.<br>
-      </div>
-      <div class="warn">La patologia all'imaging DEVE corrispondere ai sintomi clinici. Un'ernia L2-L3 non giustifica sintomatologia L5-S1!</div>
-    </div>
-  </div>
-
-  <div class="topic-card" id="oppiacei">
-    <div class="topic-header" onclick="toggleTopic(this)">
-      <h3>Oppiacei — schema rapido</h3>
-      <span class="topic-date">06/05/2026</span>
-      <button class="mark-done" onclick="markDone(event,'oppiacei')">Studiato ✓</button>
-      <span class="chevron">▶</span>
-    </div>
-    <div class="topic-body">
-      <h2>Farmaci principali</h2>
-      <div class="card" style="padding:0;overflow:hidden;background:#fff;">
-        <table>
-          <thead><tr><th>Farmaco</th><th>Potenza</th><th>Eliminazione</th><th>Uso pratico</th></tr></thead>
-          <tbody>
-            <tr><td><strong>Tramadolo</strong></td><td>Debole-medio</td><td>Epatico (CYP)</td><td>II gradino. Rischio sindrome serotoninergica + triciclici.</td></tr>
-            <tr><td><strong>Morfina</strong></td><td>Riferimento</td><td>→ M6G (attivo) + M3G (iperalgesia)</td><td>Vasodilatazione → utile in EPA. Stipsi permanente.</td></tr>
-            <tr><td><strong>Ossicodone</strong></td><td>2× morfina</td><td>CYP2D6</td><td>Spesso + naloxone (riduce stipsi).</td></tr>
-            <tr><td><strong>Fentanil</strong></td><td>100× morfina</td><td>Epatico</td><td>Cerotti 72h. Rigidità toracica se bolo rapido.</td></tr>
-            <tr><td><strong>Buprenorfina</strong></td><td>Agonista parziale μ</td><td>Solo epatico</td><td><span class="badge green">Farmaco di riferimento in IR</span> (no renale)</td></tr>
-            <tr><td><strong>Naloxone</strong></td><td>Antagonista puro</td><td>—</td><td>Antidoto overdose. Anche intranasale.</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="info">Effetto collaterale che NON passa: <span class="badge red">stipsi</span> (permanente per tutta la terapia). Nausea e sedazione invece migliorano nei primi giorni (tolleranza).</div>
-      <div class="quiz-section">
-        <h4>🎓 Domande tipiche da orale</h4>
-        <div class="quiz-q" onclick="revealAnswer(this)"><div class="q-text">Quale oppioide scegli in un paziente con insufficienza renale grave?</div><div class="q-answer">Buprenorfina: è l'unico oppioide eliminato esclusivamente per via epatica, senza accumulo renale. La morfina è pericolosa in IR perché il suo metabolita attivo M6G si accumula (insufficienza renale → nessuna clearance) e può causare depressione respiratoria prolungata. Il Fentanil transdermica è un'alternativa accettabile ma la Buprenorfina è la scelta di riferimento.</div><div class="q-toggle">Tocca per vedere la risposta</div></div>
-      </div>
-    </div>
-  </div>
+  <p class="lbl" style="margin-top:28px">Per area</p>
+  <div id="area-bd"></div>
 </div>
-
-</div><!-- fine main -->
-</div><!-- fine layout -->
 
 <script>
-// Toggle topic open/close
-function toggleTopic(header) {
-  const body = header.nextElementSibling;
-  const isOpen = body.classList.contains('open');
-  body.classList.toggle('open', !isOpen);
-  header.classList.toggle('open', !isOpen);
+// ═══════════════ DATA ═══════════════
+
+const CAL = [
+  {w:"Settimana 1 — 2–8 giugno | Neuroanatomia + Malattie cerebrovascolari",days:[
+    {date:"Lun 2/6",id:"d1",sess:[{t:"n",tx:"Neuroanatomia di superficie e di sezione (Catani #1–2)"}]},
+    {date:"Mar 3/6",id:"d2",sess:[{t:"n",tx:"Anatomia delle connessioni e trattografia DTI (Catani #3–4)"}]},
+    {date:"Mer 4/6",id:"d3",sess:[{t:"n",tx:"Homunculus, sistema limbico, aprassia (Catani #5)"}]},
+    {date:"Gio 5/6",id:"d4",sess:[{t:"n",tx:"Ictus ischemico: fisiopatologia + circolo anteriore (Sensi #1)"}]},
+    {date:"Ven 6/6",id:"d5",sess:[{t:"n",tx:"Circolo posteriore e sindromi alterne (Sensi #2)"}]},
+    {date:"Sab 7/6",id:"d6",sess:[{t:"n",tx:"Ictus emorragico: intraparenchimale e subaracnoidea (Sensi #3)"}]},
+    {date:"Dom 8/6",id:"d7",sess:[{t:"r",tx:"⟳ Ripetizione: neuroanatomia + ictus"}]},
+  ]},
+  {w:"Settimana 2 — 9–15 giugno | Malattie neurodegenerative",days:[
+    {date:"Lun 9/6",id:"d8",sess:[{t:"n",tx:"Parkinson: epidemiologia, fisiopatologia, clinica (Sensi #4)"}]},
+    {date:"Mar 10/6",id:"d9",sess:[{t:"n",tx:"Terapia del Parkinson: L-DOPA, agonisti, DBS (Sensi #5)"}]},
+    {date:"Mer 11/6",id:"d10",sess:[{t:"n",tx:"SLA: patogenesi, clinica, criteri El Escorial (Sensi #6)"}]},
+    {date:"Gio 12/6",id:"d11",sess:[{t:"n",tx:"Huntington ed espansioni di triplette (Sensi #7)"}]},
+    {date:"Ven 13/6",id:"d12",sess:[{t:"n",tx:"Distrofia miotonica DM1/DM2 + Atassia di Friedreich (Sensi #8)"}]},
+    {date:"Sab 14/6",id:"d13",sess:[{t:"n",tx:"Alzheimer: amiloide, tau, terapia (Sensi #9–10)"}]},
+    {date:"Dom 15/6",id:"d14",sess:[{t:"r",tx:"⟳ Ripetizione: malattie neurodegenerative"}]},
+  ]},
+  {w:"Settimana 3 — 16–22 giugno | Neuroimmunologia + Neuromuscolari + NCH + Psichiatria",days:[
+    {date:"Lun 16/6",id:"d15",sess:[{t:"n",tx:"Parkinsonismi atipici (PSP, CBS, MSA) + non deg. (Russo #11)"},{t:"p",tx:"Psicopatologia, esame psichiatrico, schizofrenia (sera)"}]},
+    {date:"Mar 17/6",id:"d16",sess:[{t:"n",tx:"Epilessia (Dono #1)"},{t:"p",tx:"Terapia schizofrenia, disturbi umore (sera)"}]},
+    {date:"Mer 18/6",id:"d17",sess:[{t:"n",tx:"Meningiti ed encefaliti (Dono #2)"},{t:"p",tx:"Depressione, bipolare, ECT/TMS (sera)"}]},
+    {date:"Gio 19/6",id:"d18",sess:[{t:"n",tx:"Neuropatie periferiche + CMT (Di Muzio #1–2)"},{t:"p",tx:"Sostanze: oppioidi, stimolanti, cannabis (sera)"}]},
+    {date:"Ven 20/6",id:"d19",sess:[{t:"n",tx:"Miopatie e distrofie muscolari (Di Muzio #3)"},{t:"p",tx:"DOC, DCA, disturbi personalità, ansia (sera)"}]},
+    {date:"Sab 21/6",id:"d20",sess:[{t:"n",tx:"SM + Esame neurologico + GBS/CIDP (Tomassini #1–3)"},{t:"p",tx:"TSO, gambling, disturbi dissociativi (sera)"}]},
+    {date:"Dom 22/6",id:"d21",sess:[{t:"c",tx:"NCH: PIC + Trauma cranico + Spinale (Mangiola #1–2)"},{t:"c",tx:"NCH: Neuroncologia + Patologie sellari (Mangiola #3–4)"}]},
+  ]},
+  {w:"Giorni finali — 23–25 giugno | Ripetizione generale",days:[
+    {date:"Lun 23/6",id:"d22",sess:[{t:"r",tx:"⟳ Ripetizione neurologia (vascolari + neurodeg. + neuromusc.)"},{t:"r",tx:"⟳ Ripetizione neurochirurgia"}]},
+    {date:"Mar 24/6",id:"d23",sess:[{t:"r",tx:"⟳ Ripetizione psichiatria + punti deboli"}]},
+    {date:"Mer 25/6",id:"d24",sess:[{t:"e",tx:"🎓 ESAME"}]},
+    {date:"",id:"d25",sess:[]},{date:"",id:"d26",sess:[]},{date:"",id:"d27",sess:[]},{date:"",id:"d28",sess:[]},
+  ]},
+];
+
+// ═══════════════ PROFESSORS DATA ═══════════════
+const PROFS = [
+{id:"sensi",name:"Sensi",area:"n",label:"Neurologia",topics:[
+  {id:"s1",num:"#1",title:"Ictus — fisiopatologia, classificazione, circolo anteriore",schema:[
+    {title:"Classificazione e definizioni temporali",col:1,items:[
+      "<b>Ictus ischemico</b>: 87% dei casi — interruzione acuta del flusso ematico",
+      "<b>Ictus emorragico</b>: 13% dei casi — rottura di un vaso",
+      "<b>TIA</b>: deficit < 24h senza segni radiologici (né clinici né RMN)",
+      "<b>RIND</b>: deficit > 24h ma reversibile con restituzione completa",
+      "<b>Minor Stroke</b>: TC inizialmente negativa, ma RMN differita positiva",
+      "Ictus emorragico spesso più grave: il sangue comprime strutture del tronco encefalico (centri vitali)"
+    ]},
+    {title:"Fisiopatologia ischemica — sequenza molecolare",col:1,items:[
+      "Flusso normale: <b>50–55 mL/100g/min</b>",
+      "<b>< 20 mL</b>: inizio problemi di perfusione → penombra ischemica (recuperabile)",
+      "<b>< 12 mL</b>: necrosi irreversibile → core infartuale",
+      "Pompa Na/K ATPasi smette di funzionare → <b>edema citotossico</b>",
+      "Mancata ricaptazione glutammato → <b>eccitotossicità</b> (recettori NMDA, AMPA, metabotropi)",
+      "Ingresso massivo di Ca²⁺ (20.000× oltre il fisiologico) → attivazione enzimi Ca-dipendenti → morte neuronale",
+      "Neuroni postmitotici: una volta persi, non sono recuperabili",
+      "<i>Nota: non esistono neuroprotettori efficaci in acuto perché senza flusso il farmaco non raggiunge il tessuto</i>"
+    ]},
+    {title:"Cause e fattori di rischio",col:1,items:[
+      "<b>Aterosclerosi</b>: placca nelle biforcazioni → trombosi in situ o embolia a valle; parete rigida → rischio emorragico",
+      "<b>Cardioembolismo</b>: FA, valvulopatie, endocardite → emboli cardiogeni",
+      "<b>Malformazioni vascolari</b>: aneurismi, MAV, Moya-Moya (giovani)",
+      "Lacunari: occlusione piccole arterie perforanti (lipoidosi da HTA cronica)",
+      "<i>Non modificabili</i>: età, sesso, etnia, genetica",
+      "<i>Modificabili</i>: HTA, fumo, alcol, dislipidemia, diabete, obesità"
+    ]},
+    {title:"Circolo anteriore — sindromi cliniche",col:1,items:[
+      "<b>Cerebrale anteriore (ACA)</b>: deficit motorio/sensitivo arto inferiore controlaterale (rappresentazione mediale dell'homunculus)",
+      "<b>Cerebrale media (MCA)</b>: deficit motorio/sensitivo braccio e volto controlaterali + afasia (se emisfero dominante SX) + neglect (se emisfero DX)",
+      "<b>Coroidea anteriore</b>: emisindrome sensitivo-motoria + emianopsia omonima controlaterale",
+      "<b>Carotide interna</b>: amaurosi fugax ipsilaterale (a. oftalmica) + sindrome da MCA controlaterale",
+      "<b>Lesione pre-chiasmatica</b>: cecità monoculare ipsilaterale",
+      "<b>Lesione chiasmatica</b>: emianopsia bitemporale",
+      "<b>Lesione post-chiasmatica</b>: emianopsia omonima controlaterale"
+    ]},
+  ]},
+  {id:"s2",num:"#2",title:"Circolo posteriore, sindromi alterne, trattamento ictus ischemico",schema:[
+    {title:"Anatomia circolo posteriore",col:1,items:[
+      "<b>Arterie vertebrali</b> → tronco basilare → arterie cerebrali posteriori (PCA)",
+      "<b>PCA</b>: lobo occipitale, temporale infero-mediale (ippocampo), talamo, corpi genicolati",
+      "<b>Arteria basilare</b>: irrora tronco encefalico (mesencefalo→ponte→bulbo) + cervelletto",
+      "<b>PICA</b> (Post. Inf. Cerebellar A.): emisferi cerebellari posteriori + bulbo dorsale",
+      "<b>AICA</b> (Ant. Inf. Cerebellar A.): ponte anteriore + cervelletto anteriore",
+      "<b>SCA</b> (Superior Cerebellar A.): parte superiore cervelletto + ponte sup.",
+      "<b>Circolo di Willis</b>: comunicante posteriore connette circolo anteriore e posteriore (flusso retrogrado compensatorio possibile)"
+    ]},
+    {title:"Sindromi del circolo posteriore",col:1,items:[
+      "<b>PCA completa</b>: emianopsia omonima controlat. + amnesia anterograda (ippocampo) + emisindrome sensitiva talamica",
+      "<b>PCA bilaterale</b>: cortical blindness + amnesia totale + anosognosia (nega di non vedere)",
+      "<b>Basilare (tronco)</b>: locked-in syndrome (tetraplegico, cosciente, solo movimento verticale occhi) o coma",
+      "<b>PICA → Wallenberg</b>: vertigini, vomito, disfagia, raucedine, ipestesia facciale ipsilat., Horner ipsilat., atassia ipsilat., termica-dolorifica controlat.",
+      "<b>AICA</b>: sordità + vertigini + atassia ipsilaterale",
+      "Il circolo posteriore è <i>insidioso</i>: sintomi spesso atipici, diagnosi tardiva"
+    ]},
+    {title:"Principio delle sindromi alterne",col:1,items:[
+      "<b>REGOLA FONDAMENTALE</b>: nervo cranico <i>ipsilaterale</i> alla lesione + deficit lungo (motore/sensitivo) <i>controlaterale</i>",
+      "<b>Weber</b> (mesencefalo): III NC ipsilat. (ptosi, midriasi, strabismo divergente) + emiplegia controlat.",
+      "<b>Benedikt</b> (mesencefalo): III NC ipsilat. + movimenti involontari (tremore, atassia) controlat.",
+      "<b>Millard-Gubler</b> (ponte): VI + VII NC ipsilat. + emiplegia controlat.",
+      "<b>Foville</b> (ponte): paralisi sguardo coniugato ipsilat. + emiplegia controlat.",
+      "<b>Wallenberg</b> (bulbo dorsolaterale): PICA → vedi sopra",
+      "<b>OIN</b> (oftalmoplegia internucleare): lesione MLF → aduzione ipsilat. assente + nistagmo controlat. (tipica della SM)"
+    ]},
+    {title:"Trattamento ictus ischemico",col:1,items:[
+      "<b>tPA endovenoso</b>: entro 4.5h dall'esordio sintomi; controindicazioni: chirurgia recente, emorragia, PA > 185/110",
+      "<b>Trombectomia meccanica</b>: grandi vasi (ICA, MCA M1), finestra fino a 24h se penombra preservata (TC perfusione/DWI)",
+      "Antiaggreganti (ASA): 24-48h dopo (non con tPA)",
+      "Anticoagulanti in FA: warfarin o NOAC, posticipare 2-4 settimane in ictus ampio",
+      "Statine: riduzione LDL → prevenzione secondaria",
+      "Monitoraggio: PA, glicemia, temperatura, saturazione",
+      "Prevenzione secondaria: controllo PA, cessazione fumo, statine, antiaggreganti/anticoagulanti"
+    ]},
+  ]},
+  {id:"s3",num:"#3",title:"Ictus emorragico — intraparenchimale e subaracnoidea",schema:[
+    {title:"Forme primitive — ipertensiva",col:1,items:[
+      "Nel <b>giovane-adulto</b>: causa principale è ipertensione cronica non trattata → aneurismi e lipoialinosi della parete",
+      "Sedi tipiche: <b>putamen/capsula lenticolare</b> (più freq.), talamo, ponte, cervelletto, caudato",
+      "TC senza MDC: raccolta iperintensa con orletto ipodenso (edema perilesionale)"
+    ]},
+    {title:"Angiopatia amiloide (AAC) — anziani",col:1,items:[
+      "Deposito di <b>β-amiloide 40</b> (non 42) a livello della parete vasale",
+      "Sedi: prevalentemente <b>lobari</b>, spesso posteriori (occipitale, parietale)",
+      "<b>Criteri di Boston</b>: emorragia lobare sede atipica + microbleeding + siderosi corticale (RMN-SWI)",
+      "<i>IMPORTANTE</i>: antiaggreganti fortemente sconsigliati → alto rischio risanguinamento",
+      "Diagnosi: RMN con sequenze GRE e SWI"
+    ]},
+    {title:"Forme secondarie",col:1,items:[
+      "<b>MAV</b> (malformazioni arterovenose): continuità diretta arteria-vena senza capillari → turbolenza → rottura; sintomi: cefalea, epilessia, disturbi focali",
+      "<b>Cavernomi</b>: grovigli di vasi anomali congeniti → microemorragie ripetute",
+      "<b>Disturbi coagulazione</b>: terapia anticoagulante, trombocitopenia",
+      "<b>Tumori cerebrali</b>: neoangiogenesi fragile (GBL, melanoma)",
+      "<b>Simpatomimetici/cocaina</b>: vasospasmo + ipertensione acuta → rottura",
+      "<b>Aneurismi</b>: emorragia subaracnoidea → cefalea a colpo di tuono"
+    ]},
+    {title:"Clinica per sede e trattamento",col:1,items:[
+      "<b>Capsulolenticolare</b>: emisindrome sensitivo-motoria + emianopsia omonima controlat.",
+      "<b>Talamica</b>: emisindrome sensitiva + deviazione coniugata occhi verso il basso",
+      "<b>Pontina</b>: tetraplegia + locked-in / coma (reticolare ascendente) → alta mortalità",
+      "<b>Cerebellare</b>: atassia + vertigini + vomito → può dare idrocefalo acuto (IV ventricolo) → urgenza NCH",
+      "<b>Subaracnoidea</b>: cefalea a colpo di tuono + rigor nucale + fotofobia",
+      "<b>Trattamento</b>: PA media < 140 mmHg; idrocefalo → derivazione; MAV → angiografia ± embolizzazione; EVITARE anticoagulanti in AAC"
+    ]},
+  ]},
+  {id:"s4",num:"#4",title:"Morbo di Parkinson — epidemiologia, fisiopatologia, clinica",schema:[
+    {title:"TRAP — i 4 sintomi cardinali",col:1,items:[
+      "<b>T — Tremore a riposo</b>: 4–6 Hz, 'pill-rolling', asimmetrico, scompare con movimento volontario",
+      "<b>R — Rigidità</b>: ipertono plastico ('tubo di piombo') o 'a ruota dentata' (rigidità + tremore)",
+      "<b>A — Akinesia/Bradicinesia</b>: lentezza e riduzione ampiezza movimenti; micrografia, ipomimia faciale",
+      "<b>P — Instabilità posturale</b>: perdita riflessi posturali, camptocormia (flessione anteriore tronco), rischio cadute",
+      "Altri: facies amimica, voce ipofonica (dysarthria), scialorrea, disturbo marcia (festinazione)"
+    ]},
+    {title:"Fisiopatologia — α-sinucleina e corpi di Lewy",col:1,items:[
+      "Degenerazione progressiva neuroni dopaminergici della <b>substantia nigra pars compacta</b>",
+      "<b>Corpi di Lewy</b>: aggregati patologici di α-sinucleina → marcatore neuropatologico",
+      "<b>Via nigrostriatale</b>: ↓ dopamina → iperattivazione GPi → inibizione eccessiva talamica → ↓ output motorio",
+      "<b>Staging di Braak</b>: 6 stadi — inizia dal bulbo olfattivo e nucleo dorsale del vago (stadio 1–2) → substantia nigra (3–4) → neocorteccia (5–6)",
+      "Sinucleinopatie: Parkinson, DLB (demenza a corpi di Lewy), MSA — stessa proteina aberrante",
+      "<b>Connessione melanina-neuromelanina</b>: fenotipo tipico pz con carnagione chiara, occhi azzurri, capelli rossicci"
+    ]},
+    {title:"Epidemiologia e classificazione",col:1,items:[
+      "Seconda malattia neurodegenerativa per incidenza; picco 60–70 anni; M > F (nelle forme precoci)",
+      "<b>85%</b> idiopatico; <b>7–9%</b> iatrogeno (neurolettici); <b>3%</b> vascolare; <b>2.5%</b> MSA",
+      "Forme familiari: <b>LRRK2</b> (AD), <b>PINK1, Parkin</b> (AR), <b>SNCA</b>",
+      "Durata malattia tipica: 15–20 anni; PSP e MSA: 5–7 anni (decorso rapido)",
+      "Morti correlate: polmonite ab ingestis, embolia polmonare (allettamento)",
+      "Diagnosi clinica: non esistono biomarcatori ematici consolidati (ricerca in corso su α-sinucleina)"
+    ]},
+    {title:"Sintomi non motori — importanza clinica",col:1,items:[
+      "<b>Iposmia</b>: spesso pre-motoria (stadio Braak 1–2), utile come segnale prodromico",
+      "<b>RBD</b> (REM sleep Behavior Disorder): agisce durante sogno, marcatore prodromico forte",
+      "<b>Depressione</b> (40%), apatia, ansia — spesso sottodiagnosticate",
+      "<b>Disautonomia</b>: ipotensione ortostatica, costipazione, disfunzione urinaria, disfunzione erettile",
+      "<b>Dolore cronico</b>: dolore muscolare fastidioso, spesso misconosciuto",
+      "Deterioramento cognitivo tardivo → demenza di Lewy (DLB)",
+      "Allucinazioni (tipicamente visive) nelle fasi avanzate, spesso da farmaci dopaminergici"
+    ]},
+  ]},
+  {id:"s5",num:"#5",title:"Terapia del Morbo di Parkinson",schema:[
+    {title:"Levodopa (L-DOPA) — farmaco principe",col:1,items:[
+      "La dopamina <b>non attraversa la BEE</b> → si usa il precursore L-DOPA",
+      "Effetto 'strabiliante' nel paziente naive → base del <b>dopa-challenge diagnostico</b>",
+      "<b>Sempre associata</b> a inibitore della DOPA-decarbossilasi periferica (carbidopa 25 mg o benserazide) → schema 100+25",
+      "Emivita breve <b>3–4 ore</b> → somministrazioni multiple (schemi 7-11-15 o 7-12-16)",
+      "Assunzione <b>a stomaco vuoto</b> (le proteine del pasto competono con l'assorbimento intestinale)",
+      "Effetti collaterali iniziali: edemi arti inferiori, nausea (moderati)",
+      "<b>Effetti long-term</b>: wearing-off (il farmaco 'si esaurisce' prima della dose successiva), on-off, discinesie"
+    ]},
+    {title:"Dopamino-agonisti",col:1,items:[
+      "<b>Pramipexolo, ropiniruolo, rotigotina</b> (patch transdermica): agonismo diretto recettori D2/D3",
+      "Preferiti nei <b>pazienti giovani</b> per ritardare l'uso di L-DOPA e le discinesie",
+      "Effetti: sonnolenza improvvisa (attenzione alla guida!), <b>impulse control disorders</b> (gioco, sesso, cibo, shopping compulsivi), edemi declivi",
+      "<b>Apomorfina sc</b>: agonista potente, usata come 'rescue' nelle fasi off improvvise o per test diagnostico"
+    ]},
+    {title:"Altri farmaci",col:1,items:[
+      "<b>MAO-B inibitori</b> (rasagilina, selegilina): bloccano la degradazione della dopamina striatale → effetto sintomatico lieve + possibile neuroprotettivo",
+      "<b>COMT inibitori</b> (entacapone): bloccano catabolismo periferico della L-DOPA → prolungano e potenziano l'effetto (aggiunto alla dose)",
+      "<b>Amantadina</b>: meccanismo multiplo (anti-glutammato, dopaminomimetico) → riduce le discinesie nelle fasi avanzate",
+      "<b>Anticolinergici</b> (biperidene): utili per tremore; evitare negli anziani → confusione, ritenzione urinaria",
+      "<b>Clozapina</b>: per allucinazioni indotte da farmaci dopaminergici (senza peggiorare il parkinsonismo)"
+    ]},
+    {title:"Terapie avanzate e futuro",col:1,items:[
+      "<b>DBS (Deep Brain Stimulation)</b>: STN o GPi; indicato quando wearing-off e discinesie non controllabili farmacologicamente; non indicato se demenza",
+      "<b>L-DOPA duodenale (Duodopa/Lecigon)</b>: infusione continua tramite PEG-J → elimina fluttuazioni",
+      "<b>Apomorfina sc continua</b>: pompa sottocutanea; alternativa al DBS",
+      "<b>Terapia non farmacologica</b>: fisioterapia (marcia nordica, tapis roulant), logopedia (Lee Silverman), terapia occupazionale",
+      "<b>Prospettive future</b>: anticorpi anti-α-sinucleina, terapia genica con neurturina (GDNF), cellule staminali"
+    ]},
+  ]},
+  {id:"s6",num:"#6",title:"Sclerosi Laterale Amiotrofica (SLA)",schema:[
+    {title:"Epidemiologia e fattori di rischio",col:1,items:[
+      "Sopravvivenza a 10 anni: solo <b>15–20%</b> dei casi",
+      "Incidenza maggiore nei paesi industrializzati dell'emisfero nord; in aumento (correlata invecchiamento)",
+      "Picco 60–70 anni; forme precoci: M > F; forme tardive: F ≈ M",
+      "<b>Pesticidi ed erbicidi</b>: rischio aumentato in lavoratori agricoli e popolazioni rurali",
+      "<b>Sport agonistici</b>: calciatori, football americano — ipotesi: diserbanti sui campi, microtraumi, FANS protratti",
+      "<b>BMAA</b> (β-methylamino-L-alanine): agonista glutammatergico → cluster di Guam (farina di cycade) + cluster Canada",
+      "Genetica: <b>C9orf72</b> (espansione esanucleotide GGGGCC) → 36% forme genetiche; <b>SOD1</b> 20%; <b>FUS, TDP-43</b>"
+    ]},
+    {title:"Fisiopatologia — eccitotossicità e aggregati",col:1,items:[
+      "Degenerazione <b>1° motoneurone</b> (vie cortico-spinali e cortico-bulbare) + <b>2° motoneurone</b> (corna anteriori, nuclei cranici)",
+      "<b>Eccitotossicità glutammatergica</b>: ↑ glutammato nel liquor + deficit di ricaptazione gliale (GLT-1) → Ca²⁺ intracellulare → morte",
+      "<b>Aggregati TDP-43 e FUS</b>: disfunzione del processing dell'RNA → accumulo di proteine tossiche",
+      "C9orf72: produce <b>dipeptidi tossici</b> + sequestra proteine di legame a RNA",
+      "Disfunzione mitocondriale + stress ossidativo: target di edaravone",
+      "Le cellule gliali perdono capacità di re-uptake del glutammato → ulteriore accumulo sinaptico"
+    ]},
+    {title:"Clinica — segni 1° e 2° motoneurone",col:1,items:[
+      "<b>1° MN</b>: spasticità, Babinski +, riflessi vivaci/esaltati, iperreflessia",
+      "<b>2° MN</b>: atrofia muscolare, fascicolazioni, ipotonia, areflessia",
+      "<b>Forma spinale</b>: debolezza arti (onset distale → prossimale), poi diffusa",
+      "<b>Forma bulbare</b>: disfagia, disartria, atrofia + fascicolazioni lingua → aspirazione → polmonite",
+      "<b>SLA-FTD</b>: 15% — disfunzione esecutiva (frontale), non memoria; 'moria dei frontali'",
+      "<i>ECCEZIONI FONDAMENTALI</i>: motilità oculare (III, IV, VI) → INTATTA → comunicatori oculari nelle fasi terminali; sfintere → INTEGRO; sensibilità → ASSENTE"
+    ]},
+    {title:"Diagnosi e terapia",col:1,items:[
+      "<b>Criteri di El Escorial</b>: combinazione segni 1° + 2° MN in ≥ 3 regioni (bulbare, cervicale, toracica, lombare)",
+      "<b>EMG</b>: denervazione attiva (fibrillazioni, onde positive acute) in muscoli clinicamente silenti",
+      "RMN: esclude lesioni strutturali compressive; iperintensità corticospinale nei casi tipici",
+      "<b>Riluzolo</b>: anti-glutammato (blocco canali Na); unico farmaco con evidenza di +3 mesi sopravvivenza",
+      "<b>Edaravone</b>: antiossidante; modesto beneficio in sottogruppi selezionati",
+      "<b>NIV</b> (ventilazione non invasiva): quando FVC < 50% → prolunga sopravvivenza di mesi",
+      "<b>PEG</b>: gastrostomia percutanea endoscopica — disfagia grave; inserire prima che FVC scenda troppo",
+      "Comunicatori AAC: eye-tracking nelle fasi terminali (Hawking docet)"
+    ]},
+  ]},
+  {id:"s7",num:"#7",title:"Huntington ed espansioni di triplette",schema:[
+    {title:"Classificazione espansioni di triplette",col:1,items:[
+      "<b>ESPANSIONI CODIFICANTI</b> (producono proteina aberrante con poliglutamina): Huntington, SCA1/2/3/7, DRPLA, Sindrome di Kennedy",
+      "<b>ESPANSIONI NON CODIFICANTI</b> (interferiscono con RNA/splicing senza produrre proteina specifica): DM1, DM2, Atassia di Friedreich, X fragile",
+      "<b>C9orf72</b> (esanucleotide GGGGCC): forma dipeptidi tossici → SLA + FTD combinata",
+      "Principio generale: instabilità germinale → anticipazione (esordio sempre più precoce di generazione in generazione)",
+      "Instabilità somatica: accumulo randomico nelle divisioni cellulari"
+    ]},
+    {title:"Malattia di Huntington — genetica",col:1,items:[
+      "Gene <b>HTT</b> (cromosoma 4): espansione CAG (poliglutamina)",
+      "< 26 ripetizioni: normale; <b>27–35</b>: intermedio (instabile, no malattia); <b>36–39</b>: ridotta penetranza; <b>≥ 40</b>: malattia certa",
+      "<b>Anticipazione</b>: espansione aumenta nelle generazioni successive (soprattutto per trasmissione paterna)",
+      "Huntingtina mutante: <b>gain of function</b> tossica → aggregati nei neuroni striatali → morte selettiva caudato e putamen",
+      "AD, prevalenza 7/100.000; cluster in Abruzzo (Manoppello); cluster in Venezuela (Lake Maracaibo)"
+    ]},
+    {title:"Huntington — clinica e gestione",col:1,items:[
+      "<b>TRIADE</b>: disturbi movimento + disturbi cognitivi + disturbi psichiatrici",
+      "<b>Corea</b>: movimenti involontari asincroni di arti e tronco → progressivamente distonia",
+      "<b>Cognitivo</b>: disfunzione esecutiva (frontale) — NON inizialmente amnesica (≠ Alzheimer)",
+      "<b>Psichiatrico</b>: depressione (rischio suicidio ↑↑), irritabilità, apatia, psicosi — spesso precede diagnosi motoria",
+      "<i>Diagnosi precoce</i>: pazienti possono essere erroneamente etichettati come psichiatrici",
+      "Test predittivo genetico: disponibile, ma con obbligatorio counseling genetico",
+      "Durata malattia: 15–20 anni; morte per polmonite da aspirazione o cause cardiache",
+      "<i>No terapia curativa</i>: tetrabenazina (corea), antipsicotici (psicosi), antidepressivi"
+    ]},
+    {title:"Atassie spino-cerebellari (SCA)",col:1,items:[
+      "Mappate > 47 forme; tutte AD con espansione CAG (poliglutamina)",
+      "<b>SCA1</b> (ATXN1): atrofia cerebellare + tronco encefalico; esordio 3ª–4ª decade",
+      "<b>SCA2</b> (ATXN2): atrofia cerebellare + rallentamento PAS (movimenti oculari lenti)",
+      "<b>SCA3</b> (Machado-Joseph, ATXN3): più frequente al mondo; parkinsonismo + distonia + piramidalismi",
+      "<b>SCA7</b>: unica con degenerazione retinica → perdita progressiva del visus + atassia cerebellare",
+      "Diagnosi: test genetico specifico; terapia solo sintomatica"
+    ]},
+  ]},
+  {id:"s8",num:"#8",title:"Distrofia miotonica DM1/DM2 e Atassia di Friedreich",schema:[
+    {title:"DM1 (Steinert) — genetica e patogenesi",col:1,items:[
+      "Gene <b>DMPK</b>: espansione CTG in regione 3'UTR (non codificante); normale: 5–37; patologico: <b>> 50</b>",
+      "<b>Anticipazione</b>: numero repeats aumenta di generazione in generazione (trasmissione materna per forme congenite)",
+      "Meccanismo: RNA con CUG espanso <b>sequestra MBNL1</b> (proteina di legame all'RNA) → disregolazione splicing di centinaia di geni",
+      "Prevalenza: 1/8.000 — non rarissima",
+      "Decorso: correlato al numero di repeats: 50–99 (quasi asintomatico, solo cataratta) → adulto → giovanile → congenita (ipotonia neonatale grave)"
+    ]},
+    {title:"DM1 — clinica (multisistemica!)",col:1,items:[
+      "<b>Miotonia distale</b>: 'mano del benvenuto' — difficoltà a rilasciare la presa; miotonia percussoria sull'eminenza tenar",
+      "<b>Debolezza DISTALE</b> (≠ DM2 che è prossimale); ptosi palpebrale; debolezza muscoli facciali; atrofia temporale (cranio appiattito); calvizie precoce; labbro protruso",
+      "<b>Cardiaco</b>: difetti di conduzione → BAV, QRS alterato → rischio morte improvvisa → ECG obbligatorio",
+      "<b>Respiratorio</b>: insufficienza respiratoria + apnee notturne (polisonnografia)",
+      "<b>SNC</b>: ipersonnia/narcolessia (EDS diurna marcata); deficit cognitivo; apatia",
+      "<b>Endocrino</b>: insulino-resistenza, ipotiroidismo, ipogonadismo maschile (ginecomastia, infertilità)",
+      "<b>Occhio</b>: cataratta precoce (anche unico sintomo nelle forme lievi)",
+      "EMG: scarica miotonica = suono 'del calcio in picchiata' (caracteristico in neurologia)"
+    ]},
+    {title:"DM2 — differenze chiave",col:1,items:[
+      "Gene <b>CNBP</b>: espansione CCTG (tetranucleotide)",
+      "Debolezza <b>PROSSIMALE</b> (cingolo pelvico e scapolare) → contrario di DM1",
+      "Miotonia presente ma meno grave di DM1",
+      "Meno sintomi sistemici; <b>NO forma congenita</b>",
+      "Cataratta presente; miopatia a pattern diverso alla biopsia",
+      "Diagnosi: test genetico + EMG + ECG"
+    ]},
+    {title:"Atassia di Friedreich",col:1,items:[
+      "Gene <b>fratassina (FRDA)</b>: espansione GAA in introne 1 → silenziamento genico → ↓ fratassina",
+      "Meccanismo: ↓ fratassina → ↓ difesa dallo stress ossidativo mitocondriale → accumulo Fe²⁺ → danno radicali liberi",
+      "<b>Clinica</b>: atassia cerebellare progressiva (esordio < 25 anni), disartria, nistagmo, perdita propriocezione e vibrazione (DRG)",
+      "<b>Deformità scheletriche</b>: piede cavo (pes cavus), scoliosi",
+      "<b>Cardiomiopatia ipertrofica</b>: causa principale di morte",
+      "AR; no cura; fisioterapia + trattamento cardiomiopatia (β-bloccanti)"
+    ]},
+  ]},
+  {id:"s9",num:"#9",title:"Demenze — Alzheimer: amiloide e tau",schema:[
+    {title:"Ruolo dell'amiloide (APP → Aβ)",col:1,items:[
+      "APP clivata da β-secretasi + γ-secretasi → <b>Aβ40, Aβ41, Aβ42</b>",
+      "<b>Aβ42</b>: più amiloidogeno, forma oligomeri tossici → placche senili",
+      "<i>Importante</i>: i monomeri di Aβ hanno una funzione fisiologica protettiva (analisi filogenetica: conservata in tutti i vertebrati)",
+      "Evidenze anatomopatologiche: materiale infettivo (batteri, virus) trovato nelle placche → ipotesi 'spugna protettiva' del SNC",
+      "L'amiloide è <b>trigger ma non unico motore</b> della degenerazione",
+      "Distribuzione 'a macchia di leopardo' (discontinua)"
+    ]},
+    {title:"Ruolo della proteina tau",col:1,items:[
+      "Tau fisiologica: stabilizza i <b>microtubuli</b> del citoscheletro assonale",
+      "Tau <b>iperfosforilata</b>: perde funzione stabilizzante → disaggregazione citoscheletro → degenerazione assonale",
+      "<b>Propagazione per continuità (sinaptotropismo)</b>: tau aggregata trasmessa ai neuroni adiacenti attraverso sinapsi → interfere con proteasoma e endosomi",
+      "<b>Staging di Braak (tau)</b>: stadio I–II (entorhinale e ippocampo) → III–IV (associativo) → V–VI (neocorteccia diffusa)",
+      "<b>Tau-PET</b>: correla meglio con declino cognitivo rispetto ad amiloide-PET → più predittiva",
+      "Distribuzione progressiva (continua) — differente dall'amiloide"
+    ]},
+    {title:"Meccanismi patogenetici aggiuntivi",col:1,items:[
+      "↓ <b>BDNF</b>: deficit neurotropismo → ↓ plasticità sinaptica → ↓ formazione nuove sinapsi",
+      "<b>Eccitotossicità glutammatergica</b>: sovrastimolazione NMDA → target di memantina",
+      "<b>Disfunzione mitocondriale</b> + stress ossidativo (comune a SLA, Parkinson, Alzheimer)",
+      "<b>Neuroinfiammazione</b>: attivazione microglia, ↑ IL-1β e TNF-α → correlato con farmacoresistenza",
+      "<b>Asse intestino-cervello</b>: disbiosi microbiota → ↓ precursori serotonina",
+      "Asse HPA disregolato: cortisolo piatto al mattino, ↑ serale",
+      "Tutte queste vie sono target terapeutici potenziali"
+    ]},
+    {title:"Fattori di rischio e diagnostica",col:1,items:[
+      "<b>APOE4</b>: allele più importante per rischio sporadico → ↑ 3× (eterozigote) o 10× (omozigote)",
+      "<b>Forme familiari</b> (< 1%): mutazioni APP, PS1, PS2 → Alzheimer precoce < 65 anni",
+      "<b>Sindrome di Down</b>: trisomia 21 → 3 copie APP → placche già a 30–40 anni",
+      "<i>Fattori modificabili</i>: istruzione (riserva cognitiva), attività fisica, dieta mediterranea",
+      "<i>Fattori vascolari</i>: HTA, diabete, dislipidemia, fumo → aumentano rischio",
+      "Biomarcatori liquorali: ↓ Aβ42/Aβ40 ratio, ↑ p-tau, ↑ t-tau",
+      "Imaging: amiloide-PET e tau-PET (ricerca); FDG-PET (ipometabolismo temporo-parietale); RMN (atrofia ippocampale)"
+    ]},
+  ]},
+  {id:"s10",num:"#10",title:"Terapia Alzheimer e demenze non-Alzheimer",schema:[
+    {title:"Farmaci sintomatici disponibili",col:1,items:[
+      "<b>Inibitori AChE</b>: donepezil, rivastigmina, galantamina → ↑ acetilcolina sinaptica → rallentano declino",
+      "<b>Memantina</b>: antagonista recettore NMDA → blocca eccitotossicità; indicata per demenza moderata-grave",
+      "Associazione donepezil + memantina: efficace nelle fasi avanzate",
+      "<i>Nessun farmaco attuale guarisce o inverte la malattia</i>"
+    ]},
+    {title:"Anticorpi monoclonali anti-amiloide",col:1,items:[
+      "<b>Aducanumab</b>: primo a dimostrare ↓↓ placche amiloidi; beneficio clinico NON confermato (CDR-SB +0.39 → sotto soglia clinica) → <b>ritirato dal commercio</b>",
+      "<b>Lecanemab</b>: ↓ amiloide a 18 mesi; miglioramento CDR-SB ~0.5 punti (statisticamente sign., clinicamente modesto); nessuna chiara divergenza nelle curve di estensione a lungo termine",
+      "<b>Donanemab</b>: rimozione amiloide già a 6 mesi; beneficio ~3 punti su 144 (DRS); <b>paradosso</b>: rimozione fisicamente ≤ 10 µL di placche ma perdita volume cerebrale 2 mL",
+      "<b>ARIA</b> (Amyloid-Related Imaging Abnormalities): microemorragie/edema vasogenico alla RMN → 15–20% dei trattati → possibile interruzione",
+      "Costo: ~28.000–30.000 €/anno + monitoraggio RMN seriale + PET + screening genetico",
+      "Indicazioni selettive: fase precoce/lieve, amiloide-PET+, preferibilmente APOE4 neg. o eterozigote"
+    ]},
+    {title:"Demenze non-Alzheimer",col:1,items:[
+      "<b>DLB</b> (demenza a corpi di Lewy): fluttuazioni cognitive + allucinazioni visive vivide + parkinsonismo; RBD; <b>ipersensibilità ai neurolettici tipici → EVITARE</b> (rischio crisi parkinsoniana grave)",
+      "<b>FTD</b> (frontotemporale): disinibizione, apatia, comportamenti antisociali (variante comportamentale); demenza semantica (variante temporale SX); afasia non fluente",
+      "<b>Demenza vascolare</b>: dopo ictus o in malattia dei piccoli vasi; andamento 'a gradini' (peggioramento stepwise); fattori di rischio vascolari",
+      "<b>Tauopatie</b> (PSP, CBD): presentazione clinica varia; tau 4R; prognosi peggiore di Alzheimer"
+    ]},
+    {title:"Strumenti di valutazione e sfide terapeutiche",col:1,items:[
+      "<b>MMSE</b>: screening rapido; 0–30; < 24 = deficit cognitivo",
+      "<b>CDR-SB</b> (sum of boxes): 0–18; più sensibile per fasi precoci; usato nei trial clinici",
+      "<b>DRS</b> (Dementia Rating Scale): 0–144; usato nel trial Donanemab",
+      "Neuropsicologia completa: memoria episodica, esecutivo, linguaggio, visuospaziale",
+      "<b>Problema strutturale</b>: i trial arruolano pazienti nelle fasi PRECOCI — quindi chi ha demenza lieve-moderata già conclamata NON è il target dei nuovi farmaci",
+      "Bias nei trial: pazienti possono intuire il trattamento (ARIA, infusioni) → contaminazione del cieco"
+    ]},
+  ]},
+]},
+
+{id:"russo",name:"Russo",area:"n",label:"Neurologia",topics:[
+  {id:"r1",num:"#11",title:"Parkinsonismi atipici degenerativi e non degenerativi",schema:[
+    {title:"PSP — Paralisi Sopranucleare Progressiva",col:1,items:[
+      "<b>Tauopatia 4R</b>; marcatore neuropatologico patognomonico: <b>TUFT ASTROCYTES</b> (astrociti a ciuffo)",
+      "Rappresenta il <b>5%</b> dei parkinsonismi rigido-acinetici; esordio ~65 anni",
+      "Decorso rapido: qualità vita compromessa al 7° anno, morte entro 10 anni",
+      "Forma sporadica; alcune forme familiari: gene tau (MAPT), stesso spettro FTD",
+      "Distribuzione neurodegenerazione: mesencefalo → gangli della base → cervelletto → corteccia",
+      "<b>Imaging</b>: atrofia mesencefalo → 'colibrì sign' (sagittale RMN)",
+      "Risposta L-DOPA: <b>scarsa o assente</b> (≠ Parkinson); assenza di tremore tipico"
+    ]},
+    {title:"PSP — clinica",col:1,items:[
+      "<b>Paralisi sopranucleare dello sguardo verticale</b> (verso il basso): segno distintivo; 'sopranucleare' = sopra i nuclei dei nervi cranici",
+      "<b>Cadute all'indietro precoci</b>: instabilità posturale prominente fin dall'esordio (nel Parkinson compare tardi)",
+      "<b>Rigidità assiale</b> (collo e tronco) > appendicolare",
+      "<b>Fenotipi cognitivi</b>: disfunzione frontale (≠ Parkinson che non dà demenza all'esordio)",
+      "Blefarospasmo, discinesie facciali",
+      "PSP-RS (forma classica): rigidità assiale + oftalmoplegia + demenza frontale"
+    ]},
+    {title:"CBS — Sindrome Corticobasale",col:1,items:[
+      "<b>Tauopatia</b> (spettro PSP/FTD); neuropatologia: 'astrociti a placca' (diversi da PSP)",
+      "<b>Asimmetria marcata</b>: uno dei criteri fondamentali",
+      "<b>Aprassia dell'arto</b>: incapacità di eseguire movimenti appresi",
+      "<b>Alien hand syndrome</b>: l'arto 'si muove da solo' senza controllo volontario",
+      "Distonia focale dell'arto, mioclono, tremore posturale",
+      "Deficit cognitivo: afasia non fluente, aprassia",
+      "Imaging: atrofia parietale asimmetrica (contralaterale all'arto più colpito)"
+    ]},
+    {title:"MSA e Parkinsonismi non degenerativi",col:1,items:[
+      "<b>MSA (Atrofia Multisistemica)</b>: sinucleinopatia; <b>GCI</b> (glial cytoplasmic inclusions) in oligodendrociti",
+      "MSA-P: parkinsonismo rigido-acinetico, risposta L-DOPA modesta; MSA-C: atassia cerebellare + parkinsonismo",
+      "<b>Disautonomia marcata</b>: ipotensione ortostatica severa, incontinenza/ritenzione urinaria (caratteristica)",
+      "RMN: <b>hot cross bun sign</b> nel ponte + atrofia cerebellare/mielinica",
+      "<b>Vascolare</b>: lacune ai GB o white matter; parkinsonismo 'lower body' (marcia); no tremore; no risposta L-DOPA",
+      "<b>Iatrogeno</b>: neurolettici (blocco D2) → tipici > atipici; reversibile alla sospensione",
+      "<b>Idrocefalo normoteso (NPH)</b>: triade Hakim-Adams: <i>demenza + atassia marcia + incontinenza</i>; trattamento: derivazione ventricolo-peritoneale",
+      "<b>Wilson</b>: ↓ ceruloplasminemia; depositi Cu² → parkinsonismo + epatopatia + anello di Kayser-Fleischer"
+    ]},
+  ]},
+]},
+
+{id:"dono",name:"Dono",area:"n",label:"Neurologia",topics:[
+  {id:"dn1",num:"#1",title:"Epilessia — classificazione, diagnosi e terapia",schema:[
+    {title:"Definizioni fondamentali",col:1,items:[
+      "<b>Crisi epilettica</b>: evento parossistico da scarica neuronale ipersincrona e ipereccitabile",
+      "<b>Epilessia</b>: ≥ 2 crisi non provocate a > 24h di distanza; OPPURE 1 crisi con rischio di recidiva > 60% (basato su EEG/RMN)",
+      "<b>Crisi provocate</b>: da fattori metabolici acuti (iponatriemia, ipoglicemia, febbre, astinenza alcol) → NON è epilessia",
+      "<b>PNEA</b> (crisi psicogene non epilettiche): disturbo funzionale/conversivo — nessuna ipereccitabilità neuronale; diagnosi: video-EEG"
+    ]},
+    {title:"Classificazione crisi (ILAE 2017)",col:1,items:[
+      "<b>FOCALI</b>: esordio in una rete neuronale di un emisfero",
+      "Focale senza alterazione coscienza (ex: parziale semplice) → con alterazione coscienza (ex: parziale complessa)",
+      "<b>GENERALIZZATE</b>: coinvolgimento bilaterale simultaneo",
+      "Assenza (tipica e atipica), mioclonica, tonica, clonica, tonica-clonica, atonica",
+      "Con o senza <b>generalizzazione secondaria</b> (focale → generalizzata via corpo calloso)",
+      "<b>Tipo sconosciuto</b>: dati insufficienti per classificare"
+    ]},
+    {title:"Sindromi epilettiche specifiche",col:1,items:[
+      "<b>Assenza infantile</b>: 3 Hz punta-onda generalizzata; scatenata da iperventilazione; soppessa da luci stroboscopiche",
+      "<b>JME</b> (Epilessia mioclonica giovanile): mioclonie mattutine al risveglio + GTCS; EEG 4–6 Hz punta-onda polifasica",
+      "<b>NFLE</b> (Epilessia notturna frontale): crisi ipermotorie notturne; spesso scambiata per parasomnie o disturbi psichiatrici",
+      "<b>Sindrome di West</b>: spasmi infantili + ipsaritmia EEG + ritardo sviluppo; trattamento: ACTH, vigabatrin",
+      "<b>Lennox-Gastaut</b>: multiforme, farmacoresistente; punta-onda lenta < 2.5 Hz; esordio infanzia"
+    ]},
+    {title:"Terapia anti-crisi (ASM)",col:1,items:[
+      "<b>Valproato</b>: ampio spettro (generalizzate + focali); 1ª scelta in JME; teratogeno (evitare in donne)",
+      "<b>Levetiracetam</b>: ampio spettro; buon profilo sicurezza; meccanismo SV2A",
+      "<b>Lamotrigina</b>: buon profilo; utile in generalizzate e focali; titolazione lenta (rischio Stevens-Johnson)",
+      "<b>Carbamazepina</b>: crisi focali (1ª scelta); può aggravare assenze e mioclonie",
+      "<b>BDZ</b>: status epilepticus (lorazepam ev → diazepam rettale → midazolam im)",
+      "<b>Status epilepticus refrattario</b>: BDZ → fenitoina/levetiracetam → propofol/tiopentale (coma farmacologico)",
+      "<b>Chirurgia</b>: dopo video-EEG e SEEG per localizzazione focus; valutare in 20–40% dei refrattari",
+      "Altre: VNS, DBS (nucleo anteriore talamo), dieta chetogenica (pediatrica)"
+    ]},
+  ]},
+  {id:"dn2",num:"#2",title:"Malattie infettive del SN — meningiti ed encefaliti",schema:[
+    {title:"Meningite batterica — patogeni per età",col:1,items:[
+      "<b>Neonati</b>: Streptococcus agalactiae (gruppo B), E. coli, Listeria",
+      "<b>Bambini/giovani adulti</b>: Neisseria meningitidis (meningococco) → forme epidemiche, petecchie/porpora",
+      "<b>Adulti/anziani</b>: Streptococcus pneumoniae (pneumococco) → più frequente in assoluto",
+      "<b>Anziani/immunocompromessi</b>: Listeria monocytogenes",
+      "Haemophilus influenzae: drasticamente ridotto con vaccinazione (Hib)"
+    ]},
+    {title:"Clinica e diagnosi meningite batterica",col:1,items:[
+      "Triade classica: <b>febbre + cefalea + rigor nucale</b> — presente solo nel 40–50% (no sensibilità)",
+      "<b>Segno di Kernig</b>: anca flessa 90°, estensione gamba → dolore/resistenza",
+      "<b>Segno di Brudzinski</b>: flessione passiva collo → flessione involontaria ginocchia",
+      "<b>Petecchie/porpora</b>: N. meningitidis → sepsi meningococcica → CID → urgenza assoluta",
+      "Eseguire <b>TC prima di LP</b> se: alterazione coscienza, papilledema, deficit focali (rischio erniazione)",
+      "<b>Liquor</b>: ↑↑ PMN, ↓ glucosio (< 50% glicemia), ↑↑ proteine, gram + eventuale, coltura",
+      "<b>Terapia empirica PRIMA dei risultati</b>: ceftriaxone + desametasone ev (riduce infiammazione e complicanze)"
+    ]},
+    {title:"Encefaliti virali",col:1,items:[
+      "<b>HSV-1</b>: encefalite limbitica; coinvolge lobo temporale (comportamento bizzarro, amnesia, crisi epilettiche)",
+      "Diagnosi HSV: PCR su liquor + RMN (↑ segnale T2/FLAIR lobo temporale e insola)",
+      "Trattamento: <b>aciclovir ev</b> — se non trattata mortalità 70%; sequele gravi",
+      "<b>Enterovirus</b>: forme epidemiche; età pediatrica; generalmente benigna",
+      "<b>CMV</b>: immunocompromessi (HIV con CD4 < 100); 'occhio di gufo' (inclusioni); ganciclovir",
+      "<b>Rabbia</b>: quasi sempre fatale dopo comparsa sintomi; rigorosissima profilassi post-esposizione"
+    ]},
+    {title:"Meningite fungina e encefalite autoimmune",col:1,items:[
+      "<b>Cryptococcus neoformans</b>: immunocompromessi (HIV, trapiantati); tinta indiana del liquor; diagnosi: Ag cryptococcico siero e liquor; terapia: amfotericina B + fluconazolo",
+      "<b>Encefalite NMDAR</b>: giovani donne, spesso paraneoplastica (teratoma ovarico → 50% dei casi)",
+      "Clinica NMDAR: fase prodromica (febbre, cefalea) → sintomi psichiatrici → crisi → disautonomia → coma",
+      "Diagnosi: Ac anti-GluN1 (anti-NMDAR) su siero e liquor",
+      "Terapia: cortisonici + IgIV + plasmaferesi (1° linea) → rituximab (2° linea); rimozione tumore se presente",
+      "Prognosi: buona se trattata precocemente (recupero anche da coma prolungato)"
+    ]},
+  ]},
+]},
+
+{id:"dimuzio",name:"Di Muzio",area:"n",label:"Neurologia",topics:[
+  {id:"dm1",num:"#1–2",title:"Neuropatie periferiche — classificazione, CMT, neuropatie ereditarie",schema:[
+    {title:"Classificazione topografica",col:1,items:[
+      "<b>Mononeuropatia</b>: 1 nervo (tunnel carpale = n. mediano, ulnare al gomito, peroneo alla testa del perone)",
+      "<b>Mononeuropatia multipla (MMN)</b>: più nervi non contigui in modo asimmetrico → vasculiti, lebbra, diabete",
+      "<b>Polineuropatia</b>: SNP diffuso, simmetrico, lunghezza-dipendente (distale → prossimale)",
+      "<b>Poliradicolopatia</b>: radici nervose multiple (GBS acuta)"
+    ]},
+    {title:"Classificazione fisiopatologica — EMG fondamentale",col:1,items:[
+      "<b>DEMIELINIZZANTE</b>: ↓↓ velocità di conduzione nervosa (VCN < 38 m/s per n. mediano), ↑ latenza distale, onde F ritardate/assenti",
+      "<b>ASSONALE</b>: ↓ ampiezza potenziale d'azione (CMAP, SNAP), VCN normale o lievemente ridotta",
+      "Mista: CMT2, CIDP",
+      "Questa distinzione è <b>fondamentale per la diagnosi eziologica</b> → demielinizzante = probabile genetica o infiammatoria; assonale = tossica, metabolica"
+    ]},
+    {title:"CMT — Charcot-Marie-Tooth",col:1,items:[
+      "Storia: Charcot e Marie descrissero 'midollo', ma Tooth corresse: è patologia del <b>nervo periferico</b>",
+      "Clinica: atrofia distale 'a bottiglia di champagne rovesciata', piede cavo, dita a martello, andatura steppante",
+      "<b>Nessuna contrattura</b> (≠ distrofie muscolari); storia familiare",
+      "<b>CMT1 (HMSN I)</b>: demielinizzante; VCN < 38 m/s; biopsia: bulbi di cipolla; PMP22 duplicazione (17p11.2) nel 70–80%",
+      "<b>CMT2 (HMSN II)</b>: assonale; ampiezza ↓, VCN quasi normale; P0, MFN2",
+      "<b>CMT3 (Dejerine-Sottas)</b>: grave demielinizzante; esordio infanzia; ipotonia severa",
+      "<b>CMTX</b>: X-linked; Connexina 32 (Cx32/GJB1); maschi più colpiti",
+      "<b>HNPP</b>: neuropatia ereditaria con liability alle pressioni → delezione PMP22"
+    ]},
+    {title:"Diagnosi e cause acquisite",col:1,items:[
+      "EMG/ENG: esame cardine — VCN per demielinizzante vs assonale",
+      "Pannello genetico: 1ª scelta (> 90 geni identificati); biopsia: 2ª scelta se genetica negativa",
+      "Evitare: <b>neurotossici</b> (alcol, isoniazide, vincristina, platino, taxani) nei pazienti CMT",
+      "<b>Diabete</b>: causa più frequente di polineuropatia acquisita; lunghezza-dipendente",
+      "<b>Alcolismo</b>: carenza B1 + tossicità diretta",
+      "<b>Vasculiti</b>: mononeuropatia multipla (PAN, Wegener, crioglobuline, lupus)",
+      "<b>Paraneoplastica</b>: Ac anti-Hu (SCLC) → neuropatia sensitiva pura (DRG)"
+    ]},
+  ]},
+  {id:"dm2",num:"#3",title:"Miopatie e distrofie muscolari",schema:[
+    {title:"Approccio diagnostico alle miopatie",col:1,items:[
+      "<b>CK</b>: marcatore principale di necrosi della fibra muscolare; ↑ in miopatie necrotizzanti; normale nelle congenite",
+      "<b>EMG</b>: tracciato miopatico (potenziali brevi, polifasici, ampiezza ridotta); utile per distinzione neuropatia/miopatia",
+      "<b>Genetica</b>: prima scelta oggi per miopatie ereditarie; counseling obbligatorio prima di biopsia",
+      "<b>Biopsia muscolare</b>: se genetica negativa; pattern istopatologici specifici (fibre necrotiche, rimmed vacuoles, etc.)",
+      "<b>Anamnesi familiare</b>: spesso ereditarie → diagnosi precoce in familiari a rischio"
+    ]},
+    {title:"Distrofie muscolari di Duchenne e Becker",col:1,items:[
+      "Gene <b>distrofina</b>: Xp21 — X-linked recessiva",
+      "<b>Duchenne (DMD)</b>: esordio < 5 anni; CK 50–100× normale; manovra di Gowers (si alza usando le mani sulle ginocchia); pseudoipertrofia polpacci (sostituzione fibra con grasso e connettivo)",
+      "<b>Becker (BMD)</b>: forma allelica più mite; camminano dopo i 15 anni; esordio adolescenza-adulto",
+      "Cardiomiopatia dilatativa: <b>valutare SEMPRE</b> con ecocardiografia; causa principale di morte",
+      "Terapia: <b>cortisonici</b> (prednisone/deflazacort: rallentano progressione); <b>exon-skipping</b> (eteplirsen, exon 51); <b>ataluren</b> (stop codon readthrough, solo per mutazioni stop)",
+      "Prognosi DMD: sedia a rotelle ~12 anni; morte 20–30 anni (insufficienza cardiorespiratoria)"
+    ]},
+    {title:"LGMD, FSH ed Emery-Dreifuss",col:1,items:[
+      "<b>LGMD</b> (Limb Girdle MD): debolezza prossimale bilaterale simmetrica (cingolo scapolare e pelvico); eterogeneità genetica enorme",
+      "<b>FSH</b> (Facio-scapolo-omerale): AD; anomalia 4q35 (D4Z4); faccia + cingolo scapolare + peroneo; asimmetria frequente",
+      "<b>NO cardiomiopatia</b> in FSH (importante differenza da DMD e Emery-Dreifuss)",
+      "<b>Emery-Dreifuss</b>: contrature precoci (gomiti, collo) + cardiomiopatia + aritmie (blocchi AV) → PM profilattico obbligatorio"
+    ]},
+    {title:"Miopatie infiammatorie",col:1,items:[
+      "<b>Polimiosite</b>: infiltrati CD8+ linfociti T che invadono fibre muscolari non necrotiche; prossimale + simmetrica",
+      "<b>Dermatomiosite</b>: infiltrati CD4+ perivascolari; <b>rash di Gottron</b> (papule su nocche), eritema eliotropo (occhi viola), rash a V sul petto; paraneoplastica (↑ rischio neoplasia > 50 anni)",
+      "<b>IBM</b> (Miosite a Corpi Inclusi): più comune delle miopatie infiammatorie > 50 anni; flessori dita + quadricipite; <b>vacuoli orlettati</b> alla biopsia; farmacoresistente",
+      "Anticorpi specifici: anti-Jo1 (sintetasi → miosite + ILD + artrite); anti-MDA5 (forma amiopatica + ILD grave)",
+      "Terapia polimiosite/dermatomiosite: cortisonici + azatioprina o metotrexato; IVIG (refrattari)"
+    ]},
+  ]},
+]},
+
+{id:"tomassini",name:"Tomassini",area:"n",label:"Neurologia",topics:[
+  {id:"tm1",num:"#1",title:"Sclerosi Multipla — patogenesi, clinica, terapia",schema:[
+    {title:"Epidemiologia e fattori di rischio",col:1,items:[
+      "Malattia infiammatoria cronica demielinizzante del SNC (encefalo + midollo + nervo ottico)",
+      "1ª causa di disabilità cronica neurologica in giovani adulti dopo traumi; esordio tipico 18–45 anni",
+      "Gradiente latitudinale: rischio ↑ allontanandosi dall'equatore; <b>Sardegna</b>: alta incidenza in Europa",
+      "F > M (2:1); forme tardive: M ≈ F",
+      "<b>Deficit vitamina D</b>: fattore ambientale principale (spiega gradiente lat.); integrazione raccomandata",
+      "<b>EBV</b>: studio su militari USA → sieroconversione EBV → rischio SM × 32; ipotesi: mimetismo molecolare",
+      "Fumo: fattore di rischio modificabile indipendente",
+      "Genetica: HLA-DRB1*15:01 (più frequente nella SM)"
+    ]},
+    {title:"Fisiopatologia e criteri diagnostici",col:1,items:[
+      "TH1 e TH17 autoreattivi attraversano BEE → attaccano mielina oligodendrocitaria → demielinizzazione + perdita assonale",
+      "<b>Placche</b>: aree di demielinizzazione focale con variabile risparmio assonale",
+      "Infiammazione → demielinizzazione (acuta, reversibile) → perdita assonale (danno permanente tardivo)",
+      "<b>CIS</b> (Clinical Isolated Syndrome): 1° episodio demielinizzante; conversione a SM se RMN+ (lesioni white matter)",
+      "<b>Criteri McDonald 2017</b>: disseminazione nello SPAZIO (≥ 2 delle 4 regioni: periventricolare, juxtacorticale, infratentoriale, midollo) + disseminazione nel TEMPO (lesioni Gd+ + lesioni T2 o 2 RMN separate)"
+    ]},
+    {title:"Forme cliniche",col:1,items:[
+      "<b>RRMS</b> (Recidivante-Remittente): 85%; recidive con recupero parziale/completo; RMN: lesioni T2 e Gd+",
+      "<b>SPMS</b> (Secondariamente Progressiva): da RRMS; progressione graduale con o senza recidive sovrapposte",
+      "<b>PPMS</b> (Primariamente Progressiva): 15%; progressiva dall'esordio; M ≈ F; più tardiva; midollo prevalente",
+      "Sintomi tipici: neurite ottica (visione offuscata + dolore al movimento), atassia, debolezza, spasticità, vescica neurologica, fatigue, OIN (oftalmoplegia internucleare da lesione MLF)"
+    ]},
+    {title:"Terapia disease-modifying (DMT)",col:1,items:[
+      "<b>1ª linea</b>: interferone-β (1a, 1b), glatiramer acetato, teriflunomide, dimetilfumarato",
+      "<b>2ª linea</b>: natalizumab (anti-VLA4 → blocca migrazione linfociti; rischio PML da JCV), fingolimod (sequestro linfociti nei linfonodi), ocrelizumab (anti-CD20 → depleta cellule B)",
+      "<b>PPMS</b>: ocrelizumab (unico farmaco approvato)",
+      "Trattamento recidive: metilprednisolone ev 1g/die × 3–5 giorni (accorcia durata, non cambia esito a lungo termine)",
+      "Sintomatico: fatigue (amantadina, modafinil), spasticità (baclofen, tizanidina, tossina botulinica), vescica (ossibutinina, cateterismo)"
+    ]},
+  ]},
+  {id:"tm2",num:"#2",title:"Esame neurologico — guida pratica",schema:[
+    {title:"Strumenti e struttura dell'esame",col:1,items:[
+      "<b>Martello neurologico</b>: riflessi osteotendinei (bicipite, tricipite, rotulare, achilleo)",
+      "<b>Diapason 128 Hz</b>: VIII NC (udito) + sensibilità vibratoria + Romberg",
+      "<b>Monofilamento/ago</b>: tatto superficiale e dolorifica",
+      "<b>Oftalmoscopio</b>: papilledema (↑ PIC), retina, RAPD (afferent pupillary defect in NO)",
+      "<b>Fonendoscopio</b>: soffio carotideo (stenosi aterosclerotica)",
+      "Tavole di Snellen: acuità visiva; MMSE: screening cognitivo"
+    ]},
+    {title:"Struttura macro esame",col:1,items:[
+      "1. <b>Funzioni cognitive</b>: orientamento, memoria, linguaggio (fluente/non fluente), aprassia, agnosia",
+      "2. <b>Nervi cranici I–XII</b>: sistematicamente (vedi sotto)",
+      "3. <b>Sistema motorio</b>: tono (rigidità vs spasticità), trofismo, forza segmentaria (scale MRC), riflessi, coordinazione (test indice-naso, tallone-ginocchio)",
+      "4. <b>Sistema sensitivo</b>: tattile superficiale, dolorifica, vibratoria (diapason), propriocezione, termica",
+      "5. <b>Autonomica</b>: PA ortostatica (attiva e passiva), disfunzione sfinterale",
+      "6. <b>Andatura e postura</b>: Romberg (piedi uniti, occhi chiusi), tandem, tallone-punta"
+    ]},
+    {title:"Distinzioni terminologiche chiave",col:1,items:[
+      "<b>Ipoestesia</b> (↓ sensazione) ≠ <b>disestesia</b> (sensazione alterata/spiacevole) ≠ <b>parestesia</b> (formicolio spontaneo)",
+      "<b>Rigidità plastica</b> (extrapiramidale, uguale in tutto il range) ≠ <b>spasticità</b> (piramidale, velocity-dependent, 'lama a serramanico')",
+      "<b>Fascicolazioni</b> (2° MN, visibili, contrazioni spontanee) ≠ <b>mioclonie</b> (corticali, spinali, rapide)",
+      "<b>Areflessia</b> (SNP, corna anteriori) ≠ <b>iperreflessia</b> (via piramidale, 1° MN)",
+      "<b>Atassia sensitiva</b> (Romberg +, aggravata da chiusura occhi) ≠ <b>atassia cerebellare</b> (Romberg -, dismetria indipendente dalla vista)"
+    ]},
+    {title:"Nervi cranici — punti chiave esame",col:1,items:[
+      "<b>I (olfattivo)</b>: boccette profumate per narice; iposmia precoce nel Parkinson (stadio Braak 1)",
+      "<b>II (ottico)</b>: acuità (Snellen), campo visivo per confrontazione, fundus, RAPD (Marcus Gunn: luce alternata)",
+      "<b>III-IV-VI</b>: oculomozione (8 direzioni), ptosi, pupille (miosi-midriasi); OIN in SM (MLF)",
+      "<b>V (trigemino)</b>: sensibilità 3 branche (V1: frontale; V2: mascellare; V3: mandibolare) + masticatori (deviazione mandibola)",
+      "<b>VII (facciale)</b>: <i>periferico</i> (tutto volto, anche sopra) vs <i>centrale</i> (solo metà inf., risparmio fronte bilateralmente innervata)",
+      "<b>VIII (vestibolo-cocleare)</b>: Rinne (confronto conduzione ossea/aerea) e Weber (lateralizzazione); nistagmo",
+      "<b>IX-X</b>: disfagia, disfonia, riflesso faringeo (ridotto nei bulbari)",
+      "<b>XII (ipoglosso)</b>: protrusione lingua (deviazione verso lato lesione = LMN; verso lato opposto = UMN)"
+    ]},
+  ]},
+  {id:"tm3",num:"#3",title:"GBS, CIDP, Miller Fisher e neuropatie infiammatorie",schema:[
+    {title:"GBS — Sindrome di Guillain-Barré (AIDP)",col:1,items:[
+      "Poliradicolopatia demielinizzante infiammatoria <b>ACUTA</b>; paralisi ascendente, simmetrica",
+      "Spesso preceduta da infezione (Campylobacter jejuni, CMV, EBV, Zika, SARS-CoV-2) 2–3 settimane prima",
+      "Picco deficit: < 4 settimane; regressione spontanea a partire da 8 settimane",
+      "Triade: areflessia + debolezza simmetrica + dolore radicolare (spesso precede la debolezza)",
+      "<b>URGENZA respiratoria</b>: insufficienza respiratoria nel 30% → monitorare FVC ogni 4h; se < 20 mL/kg → intubazione",
+      "<b>Liquor</b>: dissociazione albumino-citologica (↑↑ proteine, < 10 cellule) → patognomonico",
+      "Trattamento: <b>IgIV ev</b> × 5 giorni o <b>plasmaferesi</b> × 5–6 sedute (equivalenti in efficacia); cortisonici NON efficaci"
+    ]},
+    {title:"Varianti di GBS e anticorpi",col:1,items:[
+      "<b>AIDP</b> (classica, demielinizzante): VCN ↓↓, latenze ↑, onde F assenti/ritardate",
+      "<b>AMAN</b> (assonale motoria pura): Ac anti-GM1, anti-GD1a; associata a Campylobacter; ampiezza CMAP ↓; recupero più lento",
+      "<b>AMSAN</b> (assonale sensitivo-motoria): Ac anti-GM1; prognosi peggiore",
+      "<b>Sindrome di Miller Fisher</b>: Ac anti-<b>GQ1b</b>; triade: <i>oftalmoplegia + atassia + areflessia</i>; benigna e autolimitante → no trattamento specifico necessario",
+      "<b>Encefalite di Bickerstaff</b>: variante centrale di MFS; stessa patogenesi (anti-GQ1b); iperreflessia invece di areflessia + sopore/coma"
+    ]},
+    {title:"CIDP — Poliradicoloneuropatia infiammatoria cronica",col:1,items:[
+      "Forma <b>cronica</b> (> 8 settimane, tipicamente mesi-anni) — vs GBS acuta",
+      "Autoimmune; cause associate: MGUS, mieloma, linfoma, diabete, HIV",
+      "Clinica: debolezza <b>distale e prossimale</b> simmetrica + areflessia + atassia sensitiva",
+      "EMG: demielinizzazione + <b>blocchi di conduzione</b> (riduzione ampiezza prossimale vs distale); poliradicolopatia",
+      "Liquor: ↑ proteine (spesso molto elevate) senza pleocitosi",
+      "<b>Trattamento</b>: cortisonici (1ª scelta) → IgIV ev → plasmaferesi → azatioprina/rituximab",
+      "Decorso: ondulante con recidive (monitoraggio clinico e EMG)"
+    ]},
+    {title:"Diagnosi differenziale neuropatie infiammatorie",col:1,items:[
+      "Ac specifici: anti-GQ1b (MFS), anti-GM1 (AMAN), anti-MAG (neuropatia anti-MAG con IgM)",
+      "Miastenia gravis: fluttuazione diurna + ptosi + diplopia + disfagia; test anticorpi anti-AchR e anti-MuSK; test edrofonio; EMG ripetitiva (decremento 3 Hz)",
+      "SLA: no sensitivo, 1° + 2° MN, fascicolazioni",
+      "Miopatie: CK ↑, pattern EMG miopatico, prossimale",
+      "<i>AIDP vs AMAN</i>: entrambi acuti, ma AMAN ha Ac specifici, VCN quasi normale, ampiezza ↓; prognosi diversa"
+    ]},
+  ]},
+]},
+
+{id:"martinotti",name:"Martinotti",area:"p",label:"Psichiatria",topics:[
+  {id:"mt1",num:"#1–3",title:"Psicopatologia, esame psichiatrico e schizofrenia",schema:[
+    {title:"Psicopatologia — disturbi formali del pensiero",col:1,items:[
+      "<b>FORMA del pensiero</b>: accelerazione (logorrea, tangenzialità) → tipica mania; rallentamento/bradipsichismo → depressione; deragliamento → schizofrenia",
+      "<b>CONTENUTO del pensiero</b>: deliri (persecutori, di riferimento, di grandiosità, somatici)",
+      "<b>Tangenzialità</b>: risposta solo parzialmente pertinente alla domanda",
+      "<b>Deragliamento</b>: saltare da un argomento all'altro senza connessione logica → campanello d'allarme schizofrenia",
+      "<b>Incoerenza</b>: perdita totale nesso logico tra frasi (grave disorganizzazione)",
+      "<b>Ruminazione</b>: pensiero ciclico fisso su argomento depressivo → caratteristica della depressione",
+      "<b>Blocco del pensiero</b>: interruzione improvvisa → catatonia, depressione grave"
+    ]},
+    {title:"Esame psichiatrico — anamnesi in 4 sezioni",col:1,items:[
+      "1. <b>Familiare</b>: vulnerabilità genetica; tipo di relazioni; psicopatologie non diagnosticate ('carattere difficile')",
+      "2. <b>Fisiologica</b>: tappe dello sviluppo, scolarizzazione, bullismo, pubertà, gravidanze, relazioni",
+      "3. <b>Medico-chirurgica</b>: patologie organiche con comorbilità neuropsichiatrica (epilessia, tumori, endocrine)",
+      "4. <b>Psicopatologica/psicologica</b>: motivo consulto, traumi, trattamenti precedenti, sostanze, ricoveri"
+    ]},
+    {title:"Schizofrenia — criteri DSM-5",col:1,items:[
+      "<b>Criterio A</b>: ≥ 2 sintomi (di cui ≥ 1 tra 1-2-3) per ≥ 1 mese: (1) deliri (2) allucinazioni (3) eloquio disorganizzato (4) comportamento disorganizzato/catatonico (5) sintomi negativi",
+      "<b>Criterio B</b>: disfunzione significativa in almeno un'area (lavoro, relazioni, cura di sé)",
+      "<b>Criterio C</b>: durata totale ≥ 6 mesi (include fase prodromica + attiva + residua)",
+      "<b>Criterio D</b>: esclusione disturbi schizoaffettivi e disturbi dell'umore con caratteristiche psicotiche",
+      "<b>Criterio E</b>: esclusione effetti di sostanze o condizione medica generale"
+    ]},
+    {title:"Sintomi positivi vs negativi e rischio suicidio",col:1,items:[
+      "<b>POSITIVI</b> (qualcosa che si aggiunge): deliri (persecutori, riferimento, grandiosità, somatici, controllo), allucinazioni uditive (voci imperative, commentanti, dialoganti), eloquio disorganizzato, catatonia",
+      "<b>NEGATIVI</b> (qualcosa che si perde): alogia (↓ produzione verbale), abulia (↓ volontà), anedonia (↓ piacere), appiattimento affettivo, ritiro sociale (le 5 A)",
+      "<b>Rischio suicidio</b>: elevato — specialmente all'esordio, durante episodi depressivi, nelle fasi di insight (il paziente realizza la propria condizione)",
+      "Perdita della 'futurabilità': il paziente non riesce a immaginare il proprio futuro → riabilitazione con attività a breve termine",
+      "Spettro: psicosi breve (< 1 mese) → schizofreniforme (1–6 mesi) → schizofrenia (> 6 mesi)"
+    ]},
+  ]},
+  {id:"mt2",num:"#5",title:"Terapia della schizofrenia — antipsicotici, ECT, TMS",schema:[
+    {title:"Antipsicotici 1ª generazione (tipici/neurolettici)",col:1,items:[
+      "Meccanismo: potente blocco D2 striatale → efficaci su sintomi <b>POSITIVI</b>",
+      "<b>Effetti extrapiramidali (EPS)</b>: parkinsonismo iatrogeno, acatisia (irrequietezza motoria), distonia acuta (torcicolla, crisi oculogire), discinesia tardiva (movimenti bocca involontari — irreversibile)",
+      "Capostipite: <b>aloperidolo</b> (Serenase) — rapido, disponibile im per urgenza",
+      "LAI tipici: flufenazina decanoato, aloperidolo decanoato → migliorano compliance"
+    ]},
+    {title:"Antipsicotici 2ª generazione (atipici)",col:1,items:[
+      "Meccanismo: blocco D2 + blocco <b>5HT2A</b> → meno EPS; più efficaci su sintomi <b>NEGATIVI</b>",
+      "Effetti metabolici: ↑ peso corporeo, dislipidemia, iperglicemia, sindrome metabolica → monitoraggio regolare",
+      "<b>Clozapina</b>: il più efficace di tutti (farmacoresistenti); <b>agranulocitosi</b> (1–2%) → conta CBC obbligatoria settimanale; basso rischio EPS",
+      "Risperidone, olanzapina, quetiapina, aripiprazolo, ziprasidone",
+      "<b>LAI atipici</b>: paliperidone palmitato (mensile, trimestrale, semestrale) → compliance in pazienti che rifiutano terapia orale"
+    ]},
+    {title:"ECT — Terapia Elettroconvulsivante",col:1,items:[
+      "<b>Invenzione italiana</b>: Cerletti e Bini (Roma, 1938)",
+      "Indicazioni: depressione farmacoresistente, catatonia, manie gravi, SM peripartum",
+      "Tecnica: anestesia generale + miorilassanti → crisi elettrica controllata (30–60 sec); 2–3 sedute/settimana × 6–12 sessioni",
+      "Efficacia in MDD grave: <b>70–90%</b> dei casi (superiore a qualsiasi farmaco)",
+      "Effetti collaterali: amnesia transitoria anterograda (reversibile in settimane), cefalea post-sessione",
+      "Assolutamente sicura (mortalità < chirurgia per anestesia)"
+    ]},
+    {title:"TMS — Stimolazione Magnetica Transcranica",col:1,items:[
+      "<b>rTMS</b>: ripetitiva; approvata FDA per MDD e OCD farmacoresistenti",
+      "Tecnica: coil su corteccia prefrontale dorsolaterale SX (frequenza alta = stimolante) o DX (frequenza bassa = inibitoria)",
+      "Meccanismo: LTP-like sulle connessioni prefrontali → ↑ attività reti disfunzionali",
+      "Sessioni ambulatoriali (20–30 min); no anestesia; effetti: cefalea lieve",
+      "Non indicata in: impianti metallici intracranici, pacemaker, epilessia non controllata"
+    ]},
+  ]},
+  {id:"mt3",num:"#6–7",title:"Disturbi dell'umore — depressione maggiore e bipolare",schema:[
+    {title:"Depressione maggiore — criteri DSM-5",col:1,items:[
+      "≥ 5 dei seguenti sintomi per ≥ 2 settimane (almeno 1 tra i primi 2):",
+      "(1) umore depresso, (2) anedonia, (3) ↑/↓ peso/appetito, (4) insonnia/ipersonnia, (5) agitazione/rallentamento psicomotorio, (6) astenia, (7) senso di inutilità/colpa eccessiva, (8) ↓ concentrazione, (9) pensieri di morte/suicidio",
+      "<b>Sottotipi</b>: con ansia, misto, melanconico (anedonia + agitazione mattutina + colpa), atipico (umore reattivo + ↑ sonno + ↑ peso + sensibilità al rifiuto), psicotico, catatonico, peripartum, stagionale (SAD)",
+      "<b>Distimia</b> (Disturbo depressivo persistente): umore depresso > 2 anni; meno criteri della MDD; evoluzione più subdola"
+    ]},
+    {title:"Fisiopatologia depressione",col:1,items:[
+      "<b>Ipotesi monoaminergica</b>: ↓ serotonina + ↓ noradrenalina + ↓ dopamina (basi farmacologiche SSRI, SNRI, TCA)",
+      "↓ BDNF → ↓ neuroplasticità ippocampale → atrofia ippocampale visibile a RMN longitudinale",
+      "<b>Neuroinfiammazione</b>: ↑ microglia attivata → ↑ citochine pro-infiammatorie → farmacoresistenza",
+      "<b>Asse HPA disregolato</b>: cortisolo: piatto al mattino, ↑ serale → target di nuovi farmaci",
+      "Modello diatesi-stress: genotipo (es. 5HTTLPR) × eventi stressanti precoci → epigenetica",
+      "Target emergente: glutammato (ketamina/esketamina → ↑ BDNF rapido)"
+    ]},
+    {title:"Disturbo bipolare — episodio maniacale",col:1,items:[
+      "<b>Criterio A</b>: umore elevato/euforico O irritabile + ↑ attività/energia per ≥ 7 giorni",
+      "<b>Criterio B</b>: ≥ 3 dei seguenti: grandiosità, ↓ bisogno sonno (dorme 2h e sta bene), logorrea, fuga delle idee, distraibilità, ↑ attività finalizzata, comportamenti rischiosi (investimenti, sessualità)",
+      "<b>Ipomania</b>: stessa presentazione ma < 4 giorni e NO compromissione funzionale grave",
+      "<b>Tipo I</b>: almeno 1 episodio maniacale pieno (+ quasi sempre episodi depressivi)",
+      "<b>Tipo II</b>: ipomania + episodi depressivi maggiori (NO mania piena)",
+      "<b>Ciclotimia</b>: oscillazioni attenuate × 2 anni; può evolvere in bipolare",
+      "Rischio suicidio: 15× ↑ vs popolazione (↑ impulsività nelle fasi miste)"
+    ]},
+    {title:"Terapia disturbi dell'umore",col:1,items:[
+      "<b>SSRI</b> (fluoxetina, sertralina, escitalopram): 1ª scelta MDD; onset 2–4 settimane",
+      "<b>SNRI</b> (venlafaxina, duloxetina): 1ª/2ª scelta; utili per dolore cronico comorbido",
+      "<b>TCA</b> (amitriptilina): efficaci ma più effetti collaterali (anticolinergici); utili per dolore neuropatico",
+      "<b>Litio</b>: gold standard per bipolare (profilassi); finestra terapeutica stretta (0.6–1.2 mEq/L); monitorare tiroidea e rene",
+      "<b>Valproato</b>: mania acuta + profilassi; teratogeno (evitare gravidanza)",
+      "<b>Lamotrigina</b>: prevenzione episodi depressivi nel bipolare; titolazione lenta",
+      "<b>Ketamina/esketamina</b>: MDD farmacoresistente → effetto antidepressivo rapido < 24h (via glutammato/BDNF)",
+      "Psicoterapia: CBT per MDD lieve-moderata; MBCT per prevenzione recidive; psicoeducazione per bipolare"
+    ]},
+  ]},
+  {id:"mt4",num:"#8–9,12,14",title:"Disturbi da uso di sostanze — classificazione e dipendenze",schema:[
+    {title:"Classificazione farmacologica delle sostanze",col:1,items:[
+      "<b>OPPIOIDI</b>: eroina, morfina, codeina, fentanyl (sintetici); agonisti parziali: buprenorfina, metadone",
+      "<b>PSICOSTIMOLANTI</b>: cocaina, amfetamine, metanfetamine, MDMA (ecstasy), caffeina, nicotina",
+      "<b>DEPRESSORI del SNC</b>: benzodiazepine, barbiturici, alcol (GABA-ergici)",
+      "<b>CANNABINOIDI</b>: THC (psicotomimetico, ansiogeno ad alte dosi) + CBD (ansiolitico, non psicotomimetico); > 35–40 tipi",
+      "<b>ALLUCINOGENI</b>: LSD, psilocibina, mescalina, DMT (ayahuasca)",
+      "<b>Nuove Sostanze Psicoattive (NPS)</b>: > 1000 varianti; cannabinoidi sintetici, mefedrone, catinoni"
+    ]},
+    {title:"Meccanismo della dipendenza — piramide rovesciata",col:1,items:[
+      "Progressione: Sperimentatore → Occasionale → Abituale → Dipendente → Addicted",
+      "<b>ADDICTUS</b>: termine latino che significa 'schiavo della sostanza'",
+      "<b>Tolleranza</b>: desensibilizzazione recettoriale → dosi crescenti per stesso effetto",
+      "<b>Astinenza</b>: ipereccitabilità opposta all'effetto acuto (astinenza da oppioidi: dolore, diarrea, piloerezione; da alcol: crisi, delirium)",
+      "<b>Craving</b>: pensiero intrusivo urgente della sostanza → principale ostacolo alla remissione",
+      "<b>Neurobiologia</b>: ↑ dopamina nel nucleo accumbens → distorsione circuito reward (sistema mesolimbico)"
+    ]},
+    {title:"Oppioidi — clinica e terapia",col:1,items:[
+      "<b>Intossicazione</b>: miosi puntiforme, depressione respiratoria (rischio morte), coscienza ridotta, bradicardia — antidoto: <b>naloxone</b> (antagonista puro) im/ev/nasale",
+      "<b>Astinenza</b>: midriasi, piloerezione ('cold turkey'), diarrea, dolori muscolari, ansia, craving — non pericolosa per la vita ma molto invalidante",
+      "<b>Terapia sostitutiva</b>: metadone (agonista pieno) o buprenorfina ± naloxone (Suboxone: agonista parziale) → riduce craving, astinenza, mortalità",
+      "<b>Naltrexone</b>: antagonista; previene effetto euforizzante in caso di ricaduta",
+      "Epidemia fentanyl (USA): decessi per depressione respiratoria in aumento esponenziale (100× più potente della morfina)"
+    ]},
+    {title:"Cocaina e stimolanti",col:1,items:[
+      "<b>Cocaina</b>: blocca reuptake DA + NE + 5HT; modalità: snort (intranasale) > crack (base fumata, più rapido e potente) > ev",
+      "<b>Intossicazione</b>: euforia, ipervigilanza, paranoia, crisi epilettiche, IMA (vasospasmo coronarico + piastrinosi), aritmie",
+      "<b>Astinenza ('down')</b>: apatia, letargia, ipersonnia, craving intenso dopo 24–72h",
+      "<b>NO terapia sostitutiva</b> consolidata per cocaina (≠ oppioidi) → CBT principale strumento",
+      "Diffusione: metaboliti cocaina nel fognario di Pescara > Roma e Milano",
+      "<b>MDMA (ecstasy)</b>: serotonina >> dopamina; ipertermia, iponatriemia da consumo eccessivo acqua, sindrome serotoninergica"
+    ]},
+  ]},
+  {id:"mt5",num:"#11,13,15",title:"DOC, DCA, disturbi di personalità e ansia",schema:[
+    {title:"DOC — Disturbo Ossessivo-Compulsivo",col:1,items:[
+      "<b>Ossessioni</b>: pensieri/immagini/impulsi intrusivi, ripetitivi, riconosciuti come propri ma indesiderati",
+      "<b>Compulsioni</b>: comportamenti rituali o atti mentali per ridurre l'ansia indotta dall'ossessione",
+      "<b>Egodistonia</b>: il paziente riconosce il carattere eccessivo e irrazionale → soffre (≠ disturbo personalità ossessivo che è egosintonico)",
+      "Tempo perso > 1h/die → compromissione funzionale significativa",
+      "<b>Terapia</b>: SSRI ad alti dosaggi (1ª scelta) + ERP (Esposizione con Prevenzione della Risposta = CBT specifica per OCD)",
+      "<b>DBS</b>: nucleo accumbens o capsula interna per casi farmacoresistenti (approvato FDA)",
+      "Comorbilità frequenti: tic (Tourette), ansia generalizzata, DCA"
+    ]},
+    {title:"DCA — Disturbi del Comportamento Alimentare",col:1,items:[
+      "<b>Anoressia nervosa (AN)</b>: restrizione calorica → BMI < 17.5; paura intensa di aumentare di peso; distorsione immagine corporea; amenorrea (secondaria alla perdita di peso)",
+      "Complicanze fisiche AN: ipokaliemia, aritmie (QT lungo → morte improvvisa), osteoporosi, bradicardia, atrofia muscolare, edemi da refeeding",
+      "AN ha la <b>mortalità più alta</b> di tutti i disturbi psichiatrici (5–10%)",
+      "<b>Bulimia nervosa (BN)</b>: abbuffate (grandi quantità in breve tempo + perdita controllo) + condotte compensatorie (vomito autoindotto, lassativi, digiuno, esercizio compulsivo); peso solitamente normale",
+      "<b>BED</b> (Binge Eating Disorder): abbuffate senza condotte compensatorie → sovrappeso/obesità",
+      "Terapia: <b>CBT</b> (efficace per BN e BED); ricovero per AN severa (riabilitazione nutrizionale); antidepressivi (SSRI per BN)"
+    ]},
+    {title:"Disturbi di personalità — classificazione DSM-5",col:1,items:[
+      "<b>CLUSTER A</b> (bizzarri/eccentrici): paranoide (diffidenza pervasiva), schizoide (distacco sociale), schizotipico (bizzarrie cognitive/percettive)",
+      "<b>CLUSTER B</b> (drammatici/emotivi/erratici): antisociale (mancanza empatia + manipolazione), <b>borderline</b> (instabilità affettiva + relazioni caotiche + impulsività + autolesionismo), istrionico, narcisistico",
+      "<b>CLUSTER C</b> (ansiosi/timorosi): evitante, dipendente, ossessivo-compulsivo di personalità",
+      "<b>Borderline</b>: DBT (Dialectical Behavior Therapy di Linehan) → trattamento evidence-based specifico",
+      "<b>Antisociale</b>: nessun trattamento farmacologico efficace; CBT con limiti; alta recidività"
+    ]},
+    {title:"Disturbi d'ansia — fisiopatologia e quadri",col:1,items:[
+      "<b>Curva Yerkes-Dodson</b>: ansia moderata → ↑ performance; troppa ansia → ↓ performance",
+      "Sistema amigdala: risposta fight-or-flight → iperattivazione simpatica (tachicardia, sudorazione, midriasi, tremori)",
+      "<b>Disturbo di panico</b>: attacchi panico ricorrenti + agorafobia; iperventilazione → ↓ CO₂ → vasocostrizione cerebrale → parestesie, capogiro",
+      "<b>Fobia specifica / Fobia sociale</b>: evitamento situazionale; CBT con esposizione",
+      "<b>GAD</b> (Generalizzato): preoccupazione eccessiva > 6 mesi su più domini; tensione, insonnia",
+      "<b>PTSD</b>: dopo trauma → ri-sperimentazione (flashback) + evitamento + ipervigilanza + alterazioni cognitive/umore; EMDR evidence-based",
+      "Trattamento ansia: SSRI/SNRI (1ª scelta); BDZ: solo a breve termine (rischio dipendenza); CBT con esposizione"
+    ]},
+  ]},
+  {id:"mt6",num:"#16,17",title:"TSO, gambling, disturbi dissociativi, disturbi somatici",schema:[
+    {title:"TSO — Trattamento Sanitario Obbligatorio",col:1,items:[
+      "<b>Legge Basaglia (180/1978)</b>: abolizione manicomi → psichiatria territoriale (CSM, SPDC)",
+      "<b>3 CRITERI TUTTI OBBLIGATORI</b>: (1) alterazione psichica urgente che richiede intervento terapeutico; (2) rifiuto esplicito delle cure; (3) impossibilità di garantire cure appropriate extra-ospedaliere",
+      "<b>Aggressività NON è criterio di per sé</b> → ordine pubblico = forze dell'ordine; TSO ≠ misura di polizia",
+      "<b>Procedura</b>: proposta medico (qualsiasi) → convalida 2° medico SSN → decreto sindaco → notifica giudice tutelare (entro 48h)",
+      "Durata: <b>7 giorni</b> rinnovabili; può evolvere in TSV (trattamento sanitario volontario)"
+    ]},
+    {title:"Gambling — Dipendenza dal gioco d'azzardo",col:1,items:[
+      "<b>DSM-5 (2014)</b>: prima dipendenza comportamentale (senza sostanza) riconosciuta ufficialmente",
+      "Meccanismo: ↑ dopamina nel nucleo accumbens durante il gioco → stesso circuito reward delle sostanze",
+      "<b>Tolleranza</b>: puntate sempre maggiori per ottenere lo stesso 'brivido'",
+      "<b>Astinenza</b>: anedonia + ansia + irritabilità quando non si gioca",
+      "Criteri DSM-5: perdita controllo + preoccupazione costante + mentire su gioco + continuare nonostante perdite gravi + compromissione funzionale",
+      "<b>Trattamento</b>: naltrexone (↓ craving), CBT, trattare comorbilità (depressione, ADHD)",
+      "Cluster B personalità frequente in comorbilità (impulsività)"
+    ]},
+    {title:"Disturbi da sintomi somatici",col:1,items:[
+      "Sofferenza psichica espressa attraverso il corpo senza causa organica identificabile",
+      "Prevalenza: <b>25% MMG</b>, 40–50% poliambulatori ospedalieri → enorme impatto economico",
+      "Caratteristica chiave: <b>assenza di insight</b> (il paziente non riconosce l'origine psicologica)",
+      "Pazienti 'difficili': frustrazione da esami negativi, insistenza per ulteriori accertamenti → medicina difensiva",
+      "Gestione: relazione terapeutica solida; evitare over-prescription; psicoterapia (CBT); evitare etichettare come 'simulatori'"
+    ]},
+    {title:"Disturbi dissociativi",col:1,items:[
+      "Dissociazione: interruzione continuità di coscienza, identità, memoria, percezione, comportamento",
+      "Causa fondamentale: <b>trauma</b> (fisico, sessuale, emotivo) — corrente Janet: danno passivo; corrente Freud: difesa attiva",
+      "<b>Amnesia dissociativa</b>: perdita memoria per eventi traumatici specifici (± fuga dissociativa: allontanamento spontaneo)",
+      "<b>DDI</b> (Disturbo di Identità Dissociativo): alter ego con caratteristiche distinte; molto difficile da diagnosticare e da falsificare",
+      "<b>Depersonalizzazione/Derealizzazione</b>: sensazione di estraneità da sé stessi o dal mondo",
+      "Terapia: psicoterapia trauma-focused (<b>EMDR</b>); stabilizzazione prima di rielaborazione del trauma",
+      "Alta comorbilità con PTSD, DCA, dipendenze"
+    ]},
+  ]},
+]},
+
+{id:"dicarlo",name:"Di Carlo",area:"p",label:"Psichiatria",topics:[
+  {id:"dc1",num:"#N",title:"Disturbi correlati agli stimolanti — cocaina, amfetamine, MDMA",schema:[
+    {title:"Cocaina — epidemiologia e farmacologia",col:1,items:[
+      "Più comune sostanza stimolante in ambito clinico in Italia; metaboliti nel fognario di Pescara > Roma/Milano",
+      "Derivata da foglie di coca (Erythroxylum coca); masticazione cerimoniale in Sud America",
+      "<b>Meccanismo</b>: blocco simultaneo del reuptake di DA + NE + 5HT → ↑↑ sinaptico di tutte e tre",
+      "La cocaina venduta illegalmente contiene adulteranti (anestetici locali, caffeina, levamisolo)"
+    ]},
+    {title:"Modalità di assunzione",col:1,items:[
+      "<b>Intranasale</b> (snort): più comune; assorbimento mucosa nasale; rapido ma non istantaneo",
+      "<b>Crack</b> (base libera fumata): cristalli di cocaina + base → vapori → assorbimento polmonare rapidissimo; effetto brevissimo → craving intensissimo → assunzioni ripetute; forma più pericolosa",
+      "<b>Endovenosa</b>: talvolta insieme a eroina (speedball)"
+    ]},
+    {title:"Quadri clinici — intossicazione e astinenza",col:1,items:[
+      "<b>Intossicazione</b>: euforia, ↑ tono umore, ipervigilanza, voglia di socializzare, logorrea",
+      "Effetti indesiderati intossicazione: disforia, irritabilità, paranoia, sintomi psicotici transitori, aggressività, comportamenti sessuali a rischio",
+      "Durata azione: crack = brevissima; snort = 30–60 min",
+      "<b>Complicanze acute</b>: crisi epilettiche, IMA (vasospasmo coronarico), aritmie, stroke ischemico/emorragico, ipertermia",
+      "<b>Astinenza ('down')</b>: apatia, letargia, ipersonnia, craving intenso → inizia 24–72h dopo l'ultima assunzione",
+      "Lo sviluppo della dipendenza è graduale ma può sfociare in uso giornaliero"
+    ]},
+    {title:"Amfetamine e MDMA",col:1,items:[
+      "<b>Amfetamine/metanfetamine</b>: azione stimolante più prolungata vs cocaina; rilascio attivo di monoamine (non solo blocco reuptake)",
+      "Meno diffuse in Italia ma diffusissime in USA/Asia (crystal meth)",
+      "<b>MDMA (ecstasy)</b>: rilascio serotonina >> dopamina → effetti empatogeni e entattogeni",
+      "Rischi MDMA: <b>ipertermia</b> (rischio mortale in ambienti caldi da ballo) + <b>iponatriemia</b> (da consumo eccessivo acqua 'per abbassare temperatura') + sindrome serotoninergica",
+      "<b>No terapia sostitutiva</b> specifica per stimolanti (≠ oppioidi); principale strumento: CBT + trattamento comorbilità",
+      "Prognosi: disintossicarsi è difficile per assenza di terapia farmacologica consolidata"
+    ]},
+  ]},
+]},
+
+{id:"pettorruso",name:"Pettorruso",area:"p",label:"Psichiatria",topics:[
+  {id:"pt1",num:"#1–6",title:"Bipolare, depressione, gambling e suicidalità",schema:[
+    {title:"Carico allostatico nel disturbo bipolare",col:1,items:[
+      "<b>Allostasi</b>: risposta adattiva allo stress; <b>carico allostatico</b> = usura accumulata dei sistemi biologici",
+      "6 sistemi coinvolti: asse HPA (cortisolo), infiammazione, stress ossidativo, ritmi circadiani, microbioma, neuroplasticità",
+      "Con ogni nuovo episodio (maniacale o depressivo): ↑ carico allostatico → ↑ vulnerabilità futura",
+      "La 'fase eutimica' NON è il ritorno al baseline originario ma un baseline con carico accumulato",
+      "Complicanze in fase apparentemente stabile: HTA, prediabete, deficit cognitivi, alterazioni neuroendocrine",
+      "<b>Implicazione terapeutica</b>: stabilizzazione precoce e mantenimento riducono accumulo di carico → litio ha effetto neuroprotettivo"
+    ]},
+    {title:"Fisiopatologia avanzata della depressione",col:1,items:[
+      "Modello <b>diatesi-stress</b>: polimorfismo 5HTTLPR (gene trasportatore 5-HT) × eventi stressanti precoci",
+      "Maltrattamento infantile → epigenetica: metilazione gene CRH → iperattivazione HPA cronica",
+      "<b>Microglia attivata</b>: ↑ citochine (IL-6, TNF-α) → degradazione triptofano via kinurenina (non serotonina) → ↓ 5HT + ↑ QUIN (neurotossico) → possibile target anti-infiammatorio",
+      "Asse intestino-cervello: microbiota → triptofano → serotonina → umore",
+      "RMN longitudinale: ↓ volume ippocampale con recidive multiple (↓ BDNF)"
+    ]},
+    {title:"Bipolare tipo I vs II — diagnosi differenziale",col:1,items:[
+      "<b>Tipo I</b>: ≥ 1 episodio maniacale pieno (ospedalizzazione comune); depressioni frequenti ma non necessarie per diagnosi",
+      "<b>Tipo II</b>: ipomania + depressioni maggiori; spesso sottodiagnosticato come MDD unipolare",
+      "<b>Diagnosi differenziale con Borderline</b>: in bipolare oscillazioni EPISODICHE (giorni-settimane); in BPD oscillazioni REATTIVE a eventi interpersonali (ore-giorni)",
+      "Comorbilità frequente: disturbi da uso di sostanze (alcol, cannabis, cocaina in fase maniacale)",
+      "<b>Litio</b>: dosaggio sierico 0.6–1.2 mEq/L; monitoraggio ogni 3–6 mesi: funzionalità renale, tiroidea; effetti tossici: tremore, poliuria, ipotiroidismo"
+    ]},
+    {title:"Suicidio — valutazione e prevenzione",col:1,items:[
+      "<b>Chiedere del suicidio RIDUCE il rischio</b> del 38–40% nelle 2 settimane successive → non ha 'effetto suggestione'",
+      "Scalare l'indagine: umore → brutti pensieri → pensiero fisso → piano concreto → modalità specifica → accesso ai mezzi",
+      "Modalità più frequente: F → farmaci/veleni; M → defenestrazione, impiccagione, armi",
+      "<b>Autolesionismo</b> ≠ ideazione suicidaria: funzione di regolazione emotiva (non intento mortale) → ma aumenta rischio futuro",
+      "Fattori di rischio: tentativi precedenti (più forte predittore), familiarità, abuso sostanze, isolamento, accesso a mezzi letali, fase mista bipolare",
+      "<b>Litio e clozapina</b>: unici farmaci con evidenza di riduzione della suicidalità",
+      "<i>Ospedalizzazione</i>: se piano concreto o accesso imminente a mezzi letali"
+    ]},
+  ]},
+]},
+
+{id:"mangiola",name:"Mangiola",area:"c",label:"Neurochirurgia",topics:[
+  {id:"mn1",num:"#1",title:"Pressione intracranica e traumatologia cranica",schema:[
+    {title:"Fisiologia della PIC — legge di Monro-Kellie",col:1,items:[
+      "Contenitore rigido (ossa cranio e vertebre) + contenuto incompressibile: <b>parenchima 80%</b> + <b>LCS 10%</b> + <b>vasi 10%</b>",
+      "<b>Legge di Monro-Kellie</b>: volume intracranico totale deve rimanere costante",
+      "Analogia professore: cervello come spugna in stanza con 2 porte (arterie entrano, vene escono) → equilibrio costante",
+      "<b>PIC normale</b>: 5–15 mmHg; patologica: > 20 mmHg",
+      "<b>Compliance cranica</b>: inizialmente compensazione (LCS si sposta nel rachide); curva pressione-volume esponenziale → una volta saturata, ogni piccolo aumento di volume → ↑↑↑ PIC",
+      "<b>CPP</b> (Cerebral Perfusion Pressure) = MAP – PIC; target > 60 mmHg"
+    ]},
+    {title:"Storia della neurochirurgia",col:1,items:[
+      "Trapanazioni craniche risalgono a 10.000 anni fa (spiriti cattivi)",
+      "Metà 1800: primi interventi su base sintomi clinici, senza imaging, senza anestesia",
+      "Anni '50: electrofisiologia → Homunculus → comprensione idrocefalo e patologie ipofisarie",
+      "Strumenti diagnostici storici: <b>pneumoencefalografia</b> (aria nel liquor → distribuzione asimmetrica = compressione), <b>mielografia</b>, <b>angiografia</b>",
+      "<b>Turkish</b>: il più grande neurochirurgo del XX secolo → microneurochirurgia + microscopio operatorio → ↓↓ mortalità",
+      "Neurochirurgia funzionale: DBS, VNS per dolore, Parkinson, spasticità"
+    ]},
+    {title:"Traumatologia cranica — classificazione GCS",col:1,items:[
+      "<b>Trauma lieve</b>: GCS 14–15; osservazione 24h; TC se sospetto (perdita coscienza, vomito, cefalea intensa, coagulopatia)",
+      "<b>Trauma moderato</b>: GCS 9–13; TC obbligatoria; ricovero per monitoraggio",
+      "<b>Trauma grave</b>: GCS ≤ 8; intubazione + TC urgente + monitoraggio PIC",
+      "<b>Glasgow Coma Scale</b>: apertura occhi (1–4) + risposta verbale (1–5) + risposta motoria (1–6); max 15, min 3"
+    ]},
+    {title:"Ematomi — epidurale, subdurale, parenchimale",col:1,items:[
+      "<b>Epidurale</b>: rottura arteria meningea media (trauma temporale); 'intervallo libero' (lucido) → poi rapida deteriorazione; lenticolare alla TC; URGENZA chirurgica",
+      "<b>Subdurale acuto</b>: rottura vene a ponte; impatto ad alta velocità; mortalità elevata; chirurgia se > 10 mm spessore o shift > 5 mm della linea mediana",
+      "<b>Subdurale cronico</b>: anziani/alcolici; raccolta lenta; cefalea + deficit graduale; drenaggio burr-hole",
+      "<b>Contusione/ematoma intraparenchimale</b>: impatto diretto; edema perilesionale; lesione da contrecoup (opposta all'impatto)",
+      "<b>Gestione PIC ↑</b>: posizione 30°, mannitolo ev, iperventilazione temporanea, barbiturici, craniectomia decompressiva"
+    ]},
+  ]},
+  {id:"mn2",num:"#2",title:"Traumatologia spinale",schema:[
+    {title:"Anatomia e dati epidemiologici",col:1,items:[
+      "3 componenti: vertebre + dischi + legamenti → tipo di frattura dipende da quale componente è coinvolta",
+      "<b>700.000 fratture toraco-lombari/anno</b>; distretto più frequente: T11-D1/D2; 20% ha lesioni addominali associate",
+      "Traumi cervicali: meno frequenti ma più gravi; 25% associa danno nervoso (mielico o radicolare)",
+      "Cause: incidenti stradali (↓ grazie a caschi nei giovani) → anziani: cadute domestiche, raccolta olive (Abruzzo), attività domestiche",
+      "<b>REGOLA</b>: mai mobilizzare il paziente senza stabilizzazione → collare cervicale immediato sul luogo dell'incidente",
+      "Valutazione: ABC (Airway, Breathing, Circulation) → imaging → neurologia"
+    ]},
+    {title:"Classificazione di Magerl (toraco-lombare)",col:1,items:[
+      "<b>Tipo A</b> (solo componente ossea): A0 = processo spinoso/trasverso (no trattamento); A1 = piatto vertebrale; A2 = split; A3 = scoppio incompleto; A4 = scoppio completo",
+      "<b>Tipo B</b> (ossea + legamentosa): stabilità dubbia → spesso indicazione chirurgica",
+      "<b>Tipo C</b> (frattura-dislocazione): molto grave; chirurgia quasi sempre necessaria",
+      "Classificazione vecchia (3 colonne di Davis): colonna anteriore (2/3 ant.), media (1/3 post. corpo), posteriore (archi)"
+    ]},
+    {title:"Scala TLICS e scala ASIA",col:1,items:[
+      "<b>TLICS</b>: morfologia (A/B/C) + integrità legamenti PLC + stato neurologico; score > 4 → chirurgia",
+      "<b>ASIA A</b>: lesione completa (no motilità, no sensibilità sotto il livello)",
+      "<b>ASIA B</b>: incompleta sensitiva (sensibilità preservata, no motilità sotto il livello)",
+      "<b>ASIA C</b>: incompleta motoria (< MRC 3/5 nei muscoli chiave sotto il livello)",
+      "<b>ASIA D</b>: incompleta motoria (≥ MRC 3/5 nei muscoli chiave sotto il livello)",
+      "<b>ASIA E</b>: funzione neurologica normale",
+      "NX: paziente non valutabile (intubato, politrauma)"
+    ]},
+    {title:"Sindromi midollari incomplete e trattamento",col:1,items:[
+      "<b>Sindrome del cono midollare</b>: lesione S1-S5 → misto UMN + LMN; disfunzione sfinterale (vescica 'autonoma')",
+      "<b>Sindrome della cauda equina</b>: radici lombosacrali; solo LMN (flaccida); disfunzione sfinterale (vescica 'atonica'); URGENZA chirurgica",
+      "<b>Conservativo</b>: corsetti/ortesi per Magerl A0-A1 stabili",
+      "<b>Chirurgico</b>: stabilizzazione ± decompressione per B, C, deficit neurologici progressivi",
+      "Timing: urgenza neurochirurgica se deficit acuto progressivo (< 8h idealmente)",
+      "Complicanze: TVP/embolia (profilassi LMWH), piaghe da decubito (cambio posizione ogni 2h), infezioni urinarie (cateterismo)"
+    ]},
+  ]},
+  {id:"mn3",num:"#3",title:"Neuroncologia — tumori cerebrali primitivi",schema:[
+    {title:"Epidemiologia e peculiarità dei tumori cerebrali",col:1,items:[
+      "~2% di tutte le neoplasie; alta mortalità e disabilità sproporzionata rispetto alla frequenza",
+      "I tumori primitivi cerebrali <b>NON metastatizzano fuori dal SNC</b> (casi eccezionali rarissimi)",
+      "<b>Paradosso terapeutico</b>: 40 anni di ricerca intensa → prognosi dei tumori maligni pressoché invariata",
+      "Motivo: ogni area può essere eloquente → impossibile resezione ampia come in colon/mammella",
+      "SNC tradizionalmente immunoprivilegiato (BEE) → difficoltà immunoterapia",
+      "Classificazione WHO: aggiornata quasi ogni 2 anni, ora prevalentemente <b>biomolecolare</b>"
+    ]},
+    {title:"Gliomi — classificazione WHO e molecolare",col:1,items:[
+      "<b>Astrocitoma IDH-mutato gr I–III</b>: lentamente progressivi; IDH = fattore prognostico favorevole (sopravvivenza molto migliore vs wildtype)",
+      "<b>Glioblastoma (GBL, gr IV)</b>: IDH wildtype = più aggressivo; sopravvivenza mediana 14–16 mesi anche con trattamento; prevalente in anziani",
+      "<b>Oligodendroglioma</b>: codelezione 1p/19q + IDH mutato → miglior risposta a chemio (temozolomide/PCV); prognosi favorevole",
+      "<b>Ependimoma</b>: da cellule ependimali (rivestimento ventricoli); fossa cranica posteriore nei bambini; midollo spinale negli adulti",
+      "<b>Medulloblastoma</b>: fossa cranica posteriore in bambini; subgruppi molecolari con prognosi molto diversa (Wnt = ottima, SHH, gr3 = pessima)"
+    ]},
+    {title:"Tumori non gliali",col:1,items:[
+      "<b>Meningioma</b>: da meningi; spesso benigno gr I; crescita lenta; 'incidentaloma' frequente; chirurgia ± RT se residuo",
+      "<b>Schwannoma (neurinoma acustico)</b>: VIII NC (vestibolococleare); perdita udito + tinnito + atassia; associato a NF2 (bilaterali)",
+      "<b>Craniofaringioma</b>: derivazione ectodermica (tasca di Rathke); regione sellare-ipotalamica → disfunzione ipofisaria + deficit visivo + ipotalamo (obesità, sonnolenza diurna)",
+      "<b>Linfoma primitivo cerebrale</b>: immunocompromessi (HIV) o anziani; periventricolare; chemio con MTX ad alte dosi (no chirurgia)",
+      "Tumori pinealoma, papilloma plesso coroideo: rari ma importanti in pediatria"
+    ]},
+    {title:"Diagnostica e trattamento",col:1,items:[
+      "RMN con e senza MDC: T1, T2, FLAIR, diffusione (DWI/ADC), perfusione, spettroscopia",
+      "TC: urgenza (emorragia, sospetto tumore acuto), pianificazione craniotomia",
+      "<b>Biopsia stereotassica</b>: diagnosi istologica + molecolare quando non resecabile",
+      "<b>Chirurgia</b>: resezione massimale sicura; neuronavigazione, ecografia intraoperatoria, <b>5-ALA</b> (acido 5-aminolevulinico → fluorescenza rosa del GBL in luce UV → margini chirurgici)",
+      "<b>Standard GBL</b> (trial Stupp EORTC): temozolomide + RT concomitante → poi temozolomide adiuvante",
+      "<b>Bevacizumab</b>: anti-VEGF; GBL recidivante (↓ edema, possibile beneficio OS)",
+      "Sfida immunoterapia: BEE + microambiente immunosoppressivo → trial in corso"
+    ]},
+  ]},
+  {id:"mn4",num:"#4",title:"Patologie sellari — adenomi ipofisari e craniofaringiomi",schema:[
+    {title:"Anatomia della regione sellare",col:1,items:[
+      "Ipofisi nella sella turcica (osso sfenoide); dimensioni: ~12–13 mm",
+      "<b>Lobo anteriore (adenoipofisi)</b>: GH, TSH, ACTH, LH, FSH, PRL",
+      "<b>Lobo posteriore (neuroipofisi)</b>: ADH + ossitocina (sintetizzati in ipotalamo, stoccati qui)",
+      "<b>Peduncolo</b>: collega ipofisi-ipotalamo; passa attraverso piccolo foro nell'aracnoide",
+      "<b>LATERALMENTE</b>: seni cavernosi → carotide + III, IV, VI, V1, V2 NC → coinvolgimento in patologie espansive",
+      "<b>SUPERIORMENTE</b>: chiasma ottico → compressione → emianopsia bitemporale",
+      "L'ipofisi NON è spazio intracranico classico: non a contatto diretto con parenchima"
+    ]},
+    {title:"Fisiologia ipofisaria — releasing hormones",col:1,items:[
+      "Tutti gli ormoni ipofisari sono regolati da tono eccitatorio (releasing hormones dall'ipotalamo) + long feedback dalla periferia + short feedback ipofisi→ipotalamo",
+      "<b>ECCEZIONE FONDAMENTALE</b>: <b>prolattina</b> è l'unico ormone sotto tono INIBITORIO (dopamina da ipotalamo)",
+      "GnRH → LH + FSH; TRH → TSH; CRH → ACTH; GHRH → GH; Somatostatina → ↓ GH",
+      "ADH (vasopressina): regola osmolarità e bilancio idrico; disfunzione → diabete insipido o SIADH",
+      "Scompenso del metabolismo idrico: può essere segno iniziale di patologia sellare o grave complicanza post-chirurgica"
+    ]},
+    {title:"Adenomi ipofisari — classificazione e clinica",col:1,items:[
+      "Studi autoptici: incidenza REALE molto superiore ai casi diagnosticati → molti incidentalomi",
+      "<b>MICROADENOMA</b>: < 10 mm; <b>MACROADENOMA</b>: > 10 mm",
+      "<b>Prolattinoma</b>: più frequente; ↑ PRL → galattorrea + amenorrea (F) o impotenza (M); 1ª scelta <b>MEDICA</b> con cabergolina/bromocriptina (dopaminoagonisti)",
+      "<b>Acromegalia</b>: ↑ GH → ↑ IGF-1 → crescita acrale, macroglossia, HTA, diabete; chirurgia transfenoidale 1ª scelta",
+      "<b>Morbo di Cushing</b>: ↑ ACTH → ipercortisolismo → obesità centripeta, striature, ipertensione, diabete, osteoporosi; difficile da trattare",
+      "<b>Non secernenti</b>: sintomi da massa → emianopsia bitemporale (compressione chiasma), paralisi NC (invasione seni cavernosi), ipopituitarismo",
+      "<b>APOPLESSIA IPOFISARIA</b>: infarto o emorragia nell'adenoma → cefalea fulminante + oftalmoplegia acuta → urgenza"
+    ]},
+    {title:"Craniofaringiomi e altre patologie sellari",col:1,items:[
+      "<b>Craniofaringioma</b>: derivazione dalla tasca di Rathke (ectoderma orale); spesso coinvolge l'ipotalamo",
+      "Due picchi d'età: infanzia (tipo adamantinomatoso con calcificazioni) + adulti (tipo papillare)",
+      "Sintomi: disfunzione ipofisaria totale (GH, cortisolo, TSH, gonadotropine) + deficit visivo + disfunzione ipotalamica (obesità, iperarousal, disturbi temperatura)",
+      "<b>Cisti della tasca di Rathke</b>: lesione benigna frequente; spesso incidentale; trattamento se sintomatica",
+      "<b>Cisti aracnoidee</b>: possono simulare adenoma alla RMN",
+      "<b>Meningioma del basicranio</b> e <b>Aneurisma del sifone carotideo</b>: diagnosi differenziale obbligatoria prima di qualsiasi intervento sellare"
+    ]},
+  ]},
+]},
+];
+
+// ═══════════════ STATE ═══════════════
+let calDone = {};
+let topicLearned = {};
+try { calDone = JSON.parse(localStorage.getItem('msn_cal') || '{}'); } catch(e){}
+try { topicLearned = JSON.parse(localStorage.getItem('msn_topic') || '{}'); } catch(e){}
+
+// ═══════════════ NAV ═══════════════
+function show(id) {
+  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('act'));
+  document.getElementById(id).classList.add('act');
+  document.querySelectorAll('nav a').forEach(a=>a.classList.remove('act'));
+  const nav = document.getElementById('nav-'+id);
+  if(nav) nav.classList.add('act');
+  window.scrollTo(0,0);
+  if(id==='home'||id==='stats') updateStats();
 }
 
-// Mark as done
-function markDone(event, topicId) {
-  event.stopPropagation();
-  const btn = event.target;
-  btn.classList.toggle('done');
-  const isDone = btn.classList.contains('done');
-  btn.textContent = isDone ? '✓ Fatto!' : 'Studiato ✓';
-
-  // Update sidebar
-  const navLink = document.querySelector(`.nav-link[data-topic="${topicId}"]`);
-  if (navLink) navLink.classList.toggle('done', isDone);
-
-  updateProgress();
-  saveState();
-}
-
-function updateProgress() {
-  const total = document.querySelectorAll('.mark-done').length;
-  const done = document.querySelectorAll('.mark-done.done').length;
-  const pct = Math.round((done / total) * 100);
-  document.getElementById('progressFill').style.width = pct + '%';
-  document.getElementById('progressCount').textContent = done + ' / ' + total;
-}
-
-function revealAnswer(el) {
-  el.classList.toggle('revealed');
-}
-
-// Persist state in localStorage
-function saveState() {
-  const state = {};
-  document.querySelectorAll('.mark-done').forEach(btn => {
-    const topicCard = btn.closest('.topic-card');
-    if (topicCard) state[topicCard.id] = btn.classList.contains('done');
-  });
-  try { localStorage.setItem('emergenze_study_state', JSON.stringify(state)); } catch(e) {}
-}
-
-function loadState() {
-  try {
-    const state = JSON.parse(localStorage.getItem('emergenze_study_state') || '{}');
-    Object.entries(state).forEach(([id, done]) => {
-      const card = document.getElementById(id);
-      if (!card || !done) return;
-      const btn = card.querySelector('.mark-done');
-      if (btn) {
-        btn.classList.add('done');
-        btn.textContent = '✓ Fatto!';
+// ═══════════════ BUILD CAL ═══════════════
+function buildCal() {
+  const cnt = document.getElementById('cal-container');
+  const tmap = {n:'tn',p:'tp',c:'tc',r:'tr',e:'te'};
+  CAL.forEach(wk=>{
+    const wb = document.createElement('div');
+    wb.className='wk-block';
+    wb.innerHTML=`<div class="wk-lbl">${wk.w}</div><div class="days-g" id="wg${Math.random().toString(36).substr(2,5)}"></div>`;
+    cnt.appendChild(wb);
+    const g = wb.querySelector('.days-g');
+    wk.days.forEach(day=>{
+      const c = document.createElement('div');
+      c.className='day-c'+(calDone[day.id]?' done':'');
+      c.dataset.id=day.id;
+      const sessHtml = day.sess.map(s=>`<span class="tag ${tmap[s.t]||''}">${s.tx}</span>`).join('');
+      c.innerHTML=`<div class="chk">✓</div><div class="d-content"><div class="d-date">${day.date}</div><div class="d-sess">${sessHtml}</div></div>`;
+      if(day.date&&day.sess.length>0){
+        c.addEventListener('click',()=>{
+          calDone[day.id]=!calDone[day.id];
+          c.classList.toggle('done',calDone[day.id]);
+          try{localStorage.setItem('msn_cal',JSON.stringify(calDone));}catch(e){}
+          updateStats();
+        });
       }
-      const navLink = document.querySelector(`.nav-link[data-topic="${id}"]`);
-      if (navLink) navLink.classList.add('done');
+      g.appendChild(c);
     });
-    updateProgress();
-  } catch(e) {}
+  });
 }
 
-// Animate progress fill on load
-window.addEventListener('load', () => {
-  loadState();
-  setTimeout(() => {
-    document.getElementById('progressFill').style.transition = 'width 1s ease';
-  }, 100);
-});
+// ═══════════════ BUILD SCHEMAS ═══════════════
+function buildSchemas() {
+  const bar = document.getElementById('prof-bar');
+  const panels = document.getElementById('prof-panels');
+  const acls = {n:'an',p:'ap',c:'ac'};
+  let first = null;
+
+  PROFS.forEach((prof,pi)=>{
+    const btn = document.createElement('button');
+    btn.className='pbtn';
+    btn.textContent=prof.name+' — '+prof.label;
+    btn.dataset.pid=prof.id;
+    btn.onclick=()=>selectProf(prof.id);
+    bar.appendChild(btn);
+
+    const pan = document.createElement('div');
+    pan.className='prof-pan';
+    pan.id='pan-'+prof.id;
+
+    prof.topics.forEach(topic=>{
+      const card = document.createElement('div');
+      card.className='topic-c';
+
+      const aColors = {
+        n:{bg:'var(--nb)',fg:'var(--n)',br:'var(--nbd)'},
+        p:{bg:'var(--pb)',fg:'var(--p)',br:'var(--pbd)'},
+        c:{bg:'var(--cb)',fg:'var(--c)',br:'var(--cbd)'}
+      };
+      const col = aColors[prof.area];
+      const learned = topicLearned[topic.id];
+
+      const schBoxes = topic.schema.map(box=>{
+        const items = box.items.map(it=>`<li>${it}</li>`).join('');
+        return `<div class="sch-box${box.col===2?' sch-full':''}"><div class="sch-ttl" style="color:${col.fg}">${box.title}</div><ul>${items}</ul></div>`;
+      }).join('');
+
+      card.innerHTML=`
+        <div class="topic-h" onclick="toggleTopic(this)">
+          <div class="t-badge" style="background:${col.bg};color:${col.fg};border:1px solid ${col.br}">${topic.num}</div>
+          <div class="t-title">${topic.title}</div>
+          <div class="t-arrow">▾</div>
+        </div>
+        <div class="topic-body">
+          <div class="sch-grid">${schBoxes}</div>
+          <button class="learn-btn${learned?' learned':''}" data-id="${topic.id}" onclick="toggleLearned(this)">
+            ${learned?'✓ Imparato':'◯ Segna come imparato'}
+          </button>
+        </div>`;
+      pan.appendChild(card);
+    });
+
+    panels.appendChild(pan);
+    if(!first) first=prof.id;
+  });
+  selectProf(first);
+}
+
+function selectProf(id){
+  const prof = PROFS.find(p=>p.id===id);
+  const acls = {n:'an',p:'ap',c:'ac'};
+  document.querySelectorAll('.pbtn').forEach(b=>{
+    b.classList.remove('an','ap','ac');
+    if(b.dataset.pid===id) b.classList.add(acls[prof.area]);
+  });
+  document.querySelectorAll('.prof-pan').forEach(p=>p.classList.remove('act'));
+  const pan = document.getElementById('pan-'+id);
+  if(pan) pan.classList.add('act');
+}
+
+function toggleTopic(h){h.classList.toggle('open')}
+
+function toggleLearned(btn){
+  const id=btn.dataset.id;
+  topicLearned[id]=!topicLearned[id];
+  btn.classList.toggle('learned',topicLearned[id]);
+  btn.textContent=topicLearned[id]?'✓ Imparato':'◯ Segna come imparato';
+  try{localStorage.setItem('msn_topic',JSON.stringify(topicLearned));}catch(e){}
+  updateStats();
+}
+
+// ═══════════════ STATS ═══════════════
+function updateStats(){
+  const exam=new Date('2026-06-25');
+  const today=new Date();
+  const daysLeft=Math.max(0,Math.ceil((exam-today)/(1000*60*60*24)));
+  const totalDays=CAL.reduce((a,w)=>a+w.days.filter(d=>d.date&&d.sess.length>0).length,0);
+  const doneDays=Object.values(calDone).filter(Boolean).length;
+  const allTopics=PROFS.reduce((a,p)=>a+p.topics.length,0);
+  const doneTopics=Object.values(topicLearned).filter(Boolean).length;
+  const pct=allTopics>0?Math.round(doneTopics/allTopics*100):0;
+
+  const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
+  set('hs-g',daysLeft); set('hs-d',doneDays); set('hs-t',doneTopics); set('hs-p',pct+'%');
+  set('st-d',doneDays); set('st-t',doneTopics); set('st-p',pct+'%'); set('st-g',daysLeft);
+  set('st-frac',doneTopics+' / '+allTopics);
+
+  const fill=(id,w)=>{const el=document.getElementById(id);if(el)el.style.width=w+'%';};
+  fill('home-bar',pct); fill('st-bar',pct);
+
+  const bd=document.getElementById('area-bd');
+  if(bd){
+    const areas=[
+      {name:'Neurologia',color:'var(--n)',profs:PROFS.filter(p=>p.area==='n')},
+      {name:'Psichiatria',color:'var(--p)',profs:PROFS.filter(p=>p.area==='p')},
+      {name:'Neurochirurgia',color:'var(--c)',profs:PROFS.filter(p=>p.area==='c')},
+    ];
+    bd.innerHTML=areas.map(a=>{
+      const tot=a.profs.reduce((x,p)=>x+p.topics.length,0);
+      const done=a.profs.reduce((x,p)=>x+p.topics.filter(t=>topicLearned[t.id]).length,0);
+      const p2=tot>0?Math.round(done/tot*100):0;
+      return `<div class="area-row">
+        <div class="area-info">
+          <div class="area-name" style="color:${a.color}">${a.name}</div>
+          <div class="area-pb"><div class="area-pf" style="background:${a.color};width:${p2}%"></div></div>
+        </div>
+        <div class="area-ct">${done}/${tot}</div>
+      </div>`;
+    }).join('');
+  }
+}
+
+// ═══════════════ INIT ═══════════════
+buildCal();
+buildSchemas();
+updateStats();
 </script>
 </body>
 </html>
+Output
+
+Command argument is 112_573 bytes, exceeding the 100_000-byte per-argument limit. For large content, pipe via stdin or use a file-write API instead of embedding the content inline in the command. Argument preview: 'cat > /home/claude/msn_study.html << \'ENDOFFILE\'\n<!DOCTYPE html>\n<html lang="it">\n<head>\n<meta charset="UTF-8">\n<meta name="viewport" content="width=device-width, initial-scale=1.0">\n<title>MSN 2026 —'
